@@ -1,0 +1,343 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */; };
+		BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */; };
+		BA88CAFC15BE7FFD00DBCEFE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */; };
+		BA88CAFE15BE7FFD00DBCEFE /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAFD15BE7FFD00DBCEFE /* CoreData.framework */; };
+		BA88CB0415BE7FFD00DBCEFE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BA88CB0215BE7FFD00DBCEFE /* InfoPlist.strings */; };
+		BA88CB0615BE7FFD00DBCEFE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB0515BE7FFD00DBCEFE /* main.m */; };
+		BA88CB0A15BE7FFD00DBCEFE /* TDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */; };
+		BA88CB0D15BE7FFD00DBCEFE /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */; };
+		BA88CB1015BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB0E15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld */; };
+		BA88CB1315BE7FFD00DBCEFE /* TDMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB1215BE7FFD00DBCEFE /* TDMasterViewController.m */; };
+		BA88CB1615BE7FFE00DBCEFE /* TDDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB1515BE7FFE00DBCEFE /* TDDetailViewController.m */; };
+		BA88CB2615BE830500DBCEFE /* JTTableViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2115BE830500DBCEFE /* JTTableViewGestureRecognizer.m */; };
+		BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2315BE830500DBCEFE /* TransformableTableViewCell.m */; };
+		BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */; };
+		BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CB2915BE834700DBCEFE /* QuartzCore.framework */; };
+		BA88CB2C15BE8DBF00DBCEFE /* TDMasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA88CB2B15BE8DBE00DBCEFE /* TDMasterViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BA88CAFD15BE7FFD00DBCEFE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		BA88CB0115BE7FFD00DBCEFE /* ToDoDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ToDoDemo-Info.plist"; sourceTree = "<group>"; };
+		BA88CB0315BE7FFD00DBCEFE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		BA88CB0515BE7FFD00DBCEFE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		BA88CB0715BE7FFD00DBCEFE /* ToDoDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ToDoDemo-Prefix.pch"; sourceTree = "<group>"; };
+		BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDAppDelegate.h; sourceTree = "<group>"; };
+		BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TDAppDelegate.m; sourceTree = "<group>"; };
+		BA88CB0C15BE7FFD00DBCEFE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoDemo.xcdatamodel; sourceTree = "<group>"; };
+		BA88CB1115BE7FFD00DBCEFE /* TDMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDMasterViewController.h; sourceTree = "<group>"; };
+		BA88CB1215BE7FFD00DBCEFE /* TDMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TDMasterViewController.m; sourceTree = "<group>"; };
+		BA88CB1415BE7FFD00DBCEFE /* TDDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDDetailViewController.h; sourceTree = "<group>"; };
+		BA88CB1515BE7FFE00DBCEFE /* TDDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TDDetailViewController.m; sourceTree = "<group>"; };
+		BA88CB2015BE830500DBCEFE /* JTTableViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTTableViewGestureRecognizer.h; sourceTree = "<group>"; };
+		BA88CB2115BE830500DBCEFE /* JTTableViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTTableViewGestureRecognizer.m; sourceTree = "<group>"; };
+		BA88CB2215BE830500DBCEFE /* TransformableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformableTableViewCell.h; sourceTree = "<group>"; };
+		BA88CB2315BE830500DBCEFE /* TransformableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransformableTableViewCell.m; sourceTree = "<group>"; };
+		BA88CB2415BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
+		BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
+		BA88CB2915BE834700DBCEFE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BA88CB2B15BE8DBE00DBCEFE /* TDMasterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDMasterViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BA88CAF015BE7FFD00DBCEFE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */,
+				BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */,
+				BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */,
+				BA88CAFC15BE7FFD00DBCEFE /* CoreGraphics.framework in Frameworks */,
+				BA88CAFE15BE7FFD00DBCEFE /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BA88CAE815BE7FFD00DBCEFE = {
+			isa = PBXGroup;
+			children = (
+				BA88CB2915BE834700DBCEFE /* QuartzCore.framework */,
+				BA88CAFF15BE7FFD00DBCEFE /* ToDoDemo */,
+				BA88CAF615BE7FFD00DBCEFE /* Frameworks */,
+				BA88CAF415BE7FFD00DBCEFE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BA88CAF415BE7FFD00DBCEFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA88CAF615BE7FFD00DBCEFE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */,
+				BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */,
+				BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */,
+				BA88CAFD15BE7FFD00DBCEFE /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BA88CAFF15BE7FFD00DBCEFE /* ToDoDemo */ = {
+			isa = PBXGroup;
+			children = (
+				BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */,
+				BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */,
+				BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */,
+				BA88CB1115BE7FFD00DBCEFE /* TDMasterViewController.h */,
+				BA88CB1215BE7FFD00DBCEFE /* TDMasterViewController.m */,
+				BA88CB2B15BE8DBE00DBCEFE /* TDMasterViewController.xib */,
+				BA88CB1415BE7FFD00DBCEFE /* TDDetailViewController.h */,
+				BA88CB1515BE7FFE00DBCEFE /* TDDetailViewController.m */,
+				BA88CB0E15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld */,
+				BA88CB0015BE7FFD00DBCEFE /* Supporting Files */,
+			);
+			path = ToDoDemo;
+			sourceTree = "<group>";
+		};
+		BA88CB0015BE7FFD00DBCEFE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BA88CB1F15BE830500DBCEFE /* GestureBasedTableViewClasses */,
+				BA88CB0115BE7FFD00DBCEFE /* ToDoDemo-Info.plist */,
+				BA88CB0215BE7FFD00DBCEFE /* InfoPlist.strings */,
+				BA88CB0515BE7FFD00DBCEFE /* main.m */,
+				BA88CB0715BE7FFD00DBCEFE /* ToDoDemo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BA88CB1F15BE830500DBCEFE /* GestureBasedTableViewClasses */ = {
+			isa = PBXGroup;
+			children = (
+				BA88CB2015BE830500DBCEFE /* JTTableViewGestureRecognizer.h */,
+				BA88CB2115BE830500DBCEFE /* JTTableViewGestureRecognizer.m */,
+				BA88CB2215BE830500DBCEFE /* TransformableTableViewCell.h */,
+				BA88CB2315BE830500DBCEFE /* TransformableTableViewCell.m */,
+				BA88CB2415BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.h */,
+				BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */,
+			);
+			path = GestureBasedTableViewClasses;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BA88CAF215BE7FFD00DBCEFE /* ToDoDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA88CB1915BE7FFE00DBCEFE /* Build configuration list for PBXNativeTarget "ToDoDemo" */;
+			buildPhases = (
+				BA88CAEF15BE7FFD00DBCEFE /* Sources */,
+				BA88CAF015BE7FFD00DBCEFE /* Frameworks */,
+				BA88CAF115BE7FFD00DBCEFE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ToDoDemo;
+			productName = ToDoDemo;
+			productReference = BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BA88CAEA15BE7FFD00DBCEFE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = TD;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = BA88CAED15BE7FFD00DBCEFE /* Build configuration list for PBXProject "ToDoDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = BA88CAE815BE7FFD00DBCEFE;
+			productRefGroup = BA88CAF415BE7FFD00DBCEFE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BA88CAF215BE7FFD00DBCEFE /* ToDoDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BA88CAF115BE7FFD00DBCEFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA88CB0415BE7FFD00DBCEFE /* InfoPlist.strings in Resources */,
+				BA88CB0D15BE7FFD00DBCEFE /* MainStoryboard.storyboard in Resources */,
+				BA88CB2C15BE8DBF00DBCEFE /* TDMasterViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BA88CAEF15BE7FFD00DBCEFE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA88CB0615BE7FFD00DBCEFE /* main.m in Sources */,
+				BA88CB0A15BE7FFD00DBCEFE /* TDAppDelegate.m in Sources */,
+				BA88CB1015BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld in Sources */,
+				BA88CB1315BE7FFD00DBCEFE /* TDMasterViewController.m in Sources */,
+				BA88CB1615BE7FFE00DBCEFE /* TDDetailViewController.m in Sources */,
+				BA88CB2615BE830500DBCEFE /* JTTableViewGestureRecognizer.m in Sources */,
+				BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */,
+				BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		BA88CB0215BE7FFD00DBCEFE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA88CB0315BE7FFD00DBCEFE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA88CB0C15BE7FFD00DBCEFE /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BA88CB1715BE7FFE00DBCEFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		BA88CB1815BE7FFE00DBCEFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BA88CB1A15BE7FFE00DBCEFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ToDoDemo/ToDoDemo-Prefix.pch";
+				INFOPLIST_FILE = "ToDoDemo/ToDoDemo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		BA88CB1B15BE7FFE00DBCEFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ToDoDemo/ToDoDemo-Prefix.pch";
+				INFOPLIST_FILE = "ToDoDemo/ToDoDemo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA88CAED15BE7FFD00DBCEFE /* Build configuration list for PBXProject "ToDoDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA88CB1715BE7FFE00DBCEFE /* Debug */,
+				BA88CB1815BE7FFE00DBCEFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA88CB1915BE7FFE00DBCEFE /* Build configuration list for PBXNativeTarget "ToDoDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA88CB1A15BE7FFE00DBCEFE /* Debug */,
+				BA88CB1B15BE7FFE00DBCEFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		BA88CB0E15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */,
+			);
+			currentVersion = BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */;
+			path = ToDoDemo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = BA88CAEA15BE7FFD00DBCEFE /* Project object */;
+}
