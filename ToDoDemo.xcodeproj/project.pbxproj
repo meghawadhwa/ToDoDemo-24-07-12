@@ -323,6 +323,7 @@
 				BA88CB1B15BE7FFE00DBCEFE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
