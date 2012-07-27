@@ -215,6 +215,7 @@
         cell.imageView.image = nil;
         cell.textLabel.text = @"Just Added!";
         //[cell labelTapped];
+        //cell.nameTextField.text = @"";
         //insert in db here
     }
 }

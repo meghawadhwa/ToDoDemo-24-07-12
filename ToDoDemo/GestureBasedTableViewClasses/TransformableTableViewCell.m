@@ -214,7 +214,7 @@
     self.nameTextField.center = self.center;
     self.nameTextField.text = self.textLabel.text;
     self.nameTextField.textColor = [UIColor whiteColor];
-    self.nameTextField.backgroundColor = [UIColor blueColor];
+    self.nameTextField.backgroundColor = [UIColor clearColor];
     self.nameTextField.font = [UIFont boldSystemFontOfSize:18];
     self.nameTextField.delegate = self;
     self.nameTextField.returnKeyType = UIReturnKeyDone;
