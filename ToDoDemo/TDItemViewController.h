@@ -1,5 +1,5 @@
 //
-//  TDMasterViewController.h
+//  TDItemViewController.h
 //  ToDoDemo
 //
 //  Created by Megha Wadhwa on 24/07/12.
@@ -10,9 +10,9 @@
 
 #import <CoreData/CoreData.h>
 
-@interface TDMasterViewController : UITableViewController // <NSFetchedResultsControllerDelegate>
+@interface TDItemViewController : UITableViewController // <NSFetchedResultsControllerDelegate>
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-
+ 
 @end

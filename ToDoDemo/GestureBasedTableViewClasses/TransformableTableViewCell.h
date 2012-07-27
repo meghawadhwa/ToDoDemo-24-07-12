@@ -11,6 +11,7 @@
 typedef enum {
     TransformableTableViewCellStyleUnfolding,
     TransformableTableViewCellStylePullDown,
+    TransformableTableViewCellStyleDefault,
 } TransformableTableViewCellStyle;
 
 
@@ -18,14 +19,18 @@ typedef enum {
 
 @property (nonatomic, assign) CGFloat  finishedHeight;
 @property (nonatomic, strong) UIColor *tintColor;   // default is white color
+@property(nonatomic,retain)UITextField *nameTextField;
+@property(nonatomic,retain)UITapGestureRecognizer *labelTapGestureRecognizer;
+@property (strong,nonatomic) UIView *doneOverlayView;
 
 @end
 
 
-@interface TransformableTableViewCell : UITableViewCell <TransformableTableViewCell>
+@interface TransformableTableViewCell : UITableViewCell <TransformableTableViewCell,UITextFieldDelegate>
 
 // Use this factory method instead of 
 // - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 + (TransformableTableViewCell *)transformableTableViewCellWithStyle:(TransformableTableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
-
+- (void)addTapGestureForTextLabel;
+- (void)labelTapped;
 @end
