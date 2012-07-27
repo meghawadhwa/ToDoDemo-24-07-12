@@ -25,6 +25,8 @@
 		BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CB2915BE834700DBCEFE /* QuartzCore.framework */; };
 		BAC3CBC515C134AD00039226 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAC3CBC315C134AD00039226 /* TDListViewController.m */; };
 		BAC3CBC615C134AD00039226 /* TDListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAC3CBC415C134AD00039226 /* TDListViewController.xib */; };
+		BAF44B0E15C27A0D00101872 /* ToDoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B0D15C27A0D00101872 /* ToDoItem.m */; };
+		BAF44B1115C27A3800101872 /* ToDoList.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1015C27A3800101872 /* ToDoList.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,10 @@
 		BAC3CBC215C134AD00039226 /* TDListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDListViewController.h; sourceTree = "<group>"; };
 		BAC3CBC315C134AD00039226 /* TDListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDListViewController.m; sourceTree = "<group>"; };
 		BAC3CBC415C134AD00039226 /* TDListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDListViewController.xib; sourceTree = "<group>"; };
+		BAF44B0715C279B800101872 /* ToDoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoList.h; sourceTree = "<group>"; };
+		BAF44B0C15C27A0D00101872 /* ToDoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoItem.h; sourceTree = "<group>"; };
+		BAF44B0D15C27A0D00101872 /* ToDoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoItem.m; sourceTree = "<group>"; };
+		BAF44B1015C27A3800101872 /* ToDoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoList.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +112,7 @@
 		BA88CAFF15BE7FFD00DBCEFE /* ToDoDemo */ = {
 			isa = PBXGroup;
 			children = (
+				BAF44B0B15C279CD00101872 /* Models */,
 				BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */,
 				BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */,
 				BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */,
@@ -146,6 +153,17 @@
 				BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */,
 			);
 			path = GestureBasedTableViewClasses;
+			sourceTree = "<group>";
+		};
+		BAF44B0B15C279CD00101872 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BAF44B0715C279B800101872 /* ToDoList.h */,
+				BAF44B1015C27A3800101872 /* ToDoList.m */,
+				BAF44B0C15C27A0D00101872 /* ToDoItem.h */,
+				BAF44B0D15C27A0D00101872 /* ToDoItem.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,6 +240,8 @@
 				BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
 				BA19CF1915C12FE700C94078 /* TDItemViewController.m in Sources */,
 				BAC3CBC515C134AD00039226 /* TDListViewController.m in Sources */,
+				BAF44B0E15C27A0D00101872 /* ToDoItem.m in Sources */,
+				BAF44B1115C27A3800101872 /* ToDoList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
