@@ -164,9 +164,8 @@
         //tobe commented
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
-        if ([object isEqual:DONE_CELL]) {
+        if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
             cell.textLabel.hidden = NO;
-            //cell.nameTextField.hidden = YES;
             cell.textLabel.textColor = [UIColor grayColor];
             cell.contentView.backgroundColor = [UIColor darkGrayColor];
         } else if ([object isEqual:DUMMY_CELL]) {
@@ -265,6 +264,7 @@
     return YES;
 }
 
+
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableView *tableView = gestureRecognizer.tableView;
     [tableView beginUpdates];
@@ -276,7 +276,13 @@
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else if (state == JTTableViewCellEditingStateRight) {
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
-        [self.rows replaceObjectAtIndex:indexPath.row withObject:DONE_CELL];
+        ToDoList * list = [self.rows objectAtIndex:indexPath.row];
+        if ([list.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
+            list.doneStatus = [NSNumber numberWithBool:TRUE];
+        }
+        else {
+            list.doneStatus = [NSNumber numberWithBool:FALSE];
+        }
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else {
         // JTTableViewCellEditingStateMiddle shouldn't really happen in
