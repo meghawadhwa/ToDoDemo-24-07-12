@@ -7,6 +7,7 @@
  */
 
 #import <UIKit/UIKit.h>
+@class TDDelegates;
 
 typedef enum {
     TransformableTableViewCellStyleUnfolding,
@@ -22,6 +23,7 @@ typedef enum {
 @property(nonatomic,retain)UITextField *nameTextField;
 @property(nonatomic,retain)UITapGestureRecognizer *labelTapGestureRecognizer;
 @property (strong,nonatomic) UIView *doneOverlayView;
+@property(nonatomic,retain)NSString *previousLabelText;
 
 @end
 

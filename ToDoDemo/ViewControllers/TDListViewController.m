@@ -26,6 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self fetchObjectsFromDb];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -48,29 +49,7 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
-}
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    // Configure the cell...
-    
-    return cell;
-}
 
 /*
 // Override to support conditional editing of the table view.
@@ -110,6 +89,39 @@
     return YES;
 }
 */
+
+#pragma mark-
+- (void)fetchObjectsFromDb
+{
+    // Test listing all ToDoList from the store
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ToDoList"
+                                              inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSError *error = nil;
+    
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    self.rows = [NSMutableArray arrayWithArray:fetchedObjects];
+    for (ToDoList *lists in fetchedObjects) {
+        NSLog(@"Name: %@", lists.listName);
+    }   
+}
+
+-(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
+ {
+    
+     // u can change the list if u want
+     //ToDoList *newList = [self.rows objectAtIndex:indexpath.row];
+     
+       
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in adding a new list %@, %@", error, [error userInfo]);
+        abort();
+    } 
+    
+}
+
 
 #pragma mark - Table view delegate
 

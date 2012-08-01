@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BA19CF1915C12FE700C94078 /* TDItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA19CF1715C12FE600C94078 /* TDItemViewController.m */; };
-		BA19CF1A15C12FE700C94078 /* TDItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA19CF1815C12FE700C94078 /* TDItemViewController.xib */; };
 		BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */; };
 		BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */; };
 		BA88CAFC15BE7FFD00DBCEFE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */; };
@@ -23,16 +21,20 @@
 		BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2315BE830500DBCEFE /* TransformableTableViewCell.m */; };
 		BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CB2915BE834700DBCEFE /* QuartzCore.framework */; };
-		BAC3CBC515C134AD00039226 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAC3CBC315C134AD00039226 /* TDListViewController.m */; };
-		BAC3CBC615C134AD00039226 /* TDListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAC3CBC415C134AD00039226 /* TDListViewController.xib */; };
-		BAF44B0E15C27A0D00101872 /* ToDoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B0D15C27A0D00101872 /* ToDoItem.m */; };
-		BAF44B1115C27A3800101872 /* ToDoList.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1015C27A3800101872 /* ToDoList.m */; };
+		BAF44B1B15C27FF700101872 /* ToDoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1815C27FF700101872 /* ToDoItem.m */; };
+		BAF44B1C15C27FF700101872 /* ToDoList.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1A15C27FF700101872 /* ToDoList.m */; };
+		BAF44B2B15C2801500101872 /* TDCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1F15C2801500101872 /* TDCommon.m */; };
+		BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2315C2801500101872 /* TDParentViewController.m */; };
+		BAF44B2D15C2801500101872 /* TDItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF44B2415C2801500101872 /* TDItemViewController.xib */; };
+		BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2615C2801500101872 /* TDListViewController.m */; };
+		BAF44B2F15C2801500101872 /* TDListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF44B2715C2801500101872 /* TDListViewController.xib */; };
+		BAF44B3015C2801500101872 /* TDMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2915C2801500101872 /* TDMenuViewController.m */; };
+		BAF44B3115C2801500101872 /* TDMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF44B2A15C2801500101872 /* TDMenuViewController.xib */; };
+		BAF44B3415C2A57000101872 /* TDItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B3315C2A57000101872 /* TDItemViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BA19CF1615C12FE600C94078 /* TDItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDItemViewController.h; sourceTree = "<group>"; };
-		BA19CF1715C12FE600C94078 /* TDItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDItemViewController.m; sourceTree = "<group>"; };
-		BA19CF1815C12FE700C94078 /* TDItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDItemViewController.xib; sourceTree = "<group>"; };
+		BA27D8BB15C9168F00A895FE /* TDDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDDelegates.h; sourceTree = "<group>"; };
 		BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -43,7 +45,7 @@
 		BA88CB0515BE7FFD00DBCEFE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BA88CB0715BE7FFD00DBCEFE /* ToDoDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ToDoDemo-Prefix.pch"; sourceTree = "<group>"; };
 		BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDAppDelegate.h; sourceTree = "<group>"; };
-		BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TDAppDelegate.m; sourceTree = "<group>"; };
+		BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TDAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BA88CB0C15BE7FFD00DBCEFE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoDemo.xcdatamodel; sourceTree = "<group>"; };
 		BA88CB1415BE7FFD00DBCEFE /* TDDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDDetailViewController.h; sourceTree = "<group>"; };
@@ -55,13 +57,24 @@
 		BA88CB2415BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
 		BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
 		BA88CB2915BE834700DBCEFE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BAC3CBC215C134AD00039226 /* TDListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDListViewController.h; sourceTree = "<group>"; };
-		BAC3CBC315C134AD00039226 /* TDListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDListViewController.m; sourceTree = "<group>"; };
-		BAC3CBC415C134AD00039226 /* TDListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDListViewController.xib; sourceTree = "<group>"; };
-		BAF44B0715C279B800101872 /* ToDoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoList.h; sourceTree = "<group>"; };
-		BAF44B0C15C27A0D00101872 /* ToDoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoItem.h; sourceTree = "<group>"; };
-		BAF44B0D15C27A0D00101872 /* ToDoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoItem.m; sourceTree = "<group>"; };
-		BAF44B1015C27A3800101872 /* ToDoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoList.m; sourceTree = "<group>"; };
+		BAF44B1715C27FF700101872 /* ToDoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToDoItem.h; path = Models/ToDoItem.h; sourceTree = "<group>"; };
+		BAF44B1815C27FF700101872 /* ToDoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToDoItem.m; path = Models/ToDoItem.m; sourceTree = "<group>"; };
+		BAF44B1915C27FF700101872 /* ToDoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToDoList.h; path = Models/ToDoList.h; sourceTree = "<group>"; };
+		BAF44B1A15C27FF700101872 /* ToDoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToDoList.m; path = Models/ToDoList.m; sourceTree = "<group>"; };
+		BAF44B1E15C2801500101872 /* TDCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDCommon.h; sourceTree = "<group>"; };
+		BAF44B1F15C2801500101872 /* TDCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDCommon.m; sourceTree = "<group>"; };
+		BAF44B2015C2801500101872 /* TDConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDConstants.h; sourceTree = "<group>"; };
+		BAF44B2215C2801500101872 /* TDParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TDParentViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		BAF44B2315C2801500101872 /* TDParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TDParentViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		BAF44B2415C2801500101872 /* TDItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDItemViewController.xib; sourceTree = "<group>"; };
+		BAF44B2515C2801500101872 /* TDListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDListViewController.h; sourceTree = "<group>"; };
+		BAF44B2615C2801500101872 /* TDListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDListViewController.m; sourceTree = "<group>"; };
+		BAF44B2715C2801500101872 /* TDListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDListViewController.xib; sourceTree = "<group>"; };
+		BAF44B2815C2801500101872 /* TDMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDMenuViewController.h; sourceTree = "<group>"; };
+		BAF44B2915C2801500101872 /* TDMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDMenuViewController.m; sourceTree = "<group>"; };
+		BAF44B2A15C2801500101872 /* TDMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDMenuViewController.xib; sourceTree = "<group>"; };
+		BAF44B3215C2A57000101872 /* TDItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDItemViewController.h; sourceTree = "<group>"; };
+		BAF44B3315C2A57000101872 /* TDItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDItemViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,15 +126,11 @@
 			isa = PBXGroup;
 			children = (
 				BAF44B0B15C279CD00101872 /* Models */,
+				BAF44B2115C2801500101872 /* ViewControllers */,
+				BAF44B1D15C2801500101872 /* Common */,
 				BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */,
 				BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */,
 				BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */,
-				BAC3CBC215C134AD00039226 /* TDListViewController.h */,
-				BAC3CBC315C134AD00039226 /* TDListViewController.m */,
-				BAC3CBC415C134AD00039226 /* TDListViewController.xib */,
-				BA19CF1615C12FE600C94078 /* TDItemViewController.h */,
-				BA19CF1715C12FE600C94078 /* TDItemViewController.m */,
-				BA19CF1815C12FE700C94078 /* TDItemViewController.xib */,
 				BA88CB1415BE7FFD00DBCEFE /* TDDetailViewController.h */,
 				BA88CB1515BE7FFE00DBCEFE /* TDDetailViewController.m */,
 				BA88CB0E15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld */,
@@ -158,12 +167,41 @@
 		BAF44B0B15C279CD00101872 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BAF44B0715C279B800101872 /* ToDoList.h */,
-				BAF44B1015C27A3800101872 /* ToDoList.m */,
-				BAF44B0C15C27A0D00101872 /* ToDoItem.h */,
-				BAF44B0D15C27A0D00101872 /* ToDoItem.m */,
+				BAF44B1715C27FF700101872 /* ToDoItem.h */,
+				BAF44B1815C27FF700101872 /* ToDoItem.m */,
+				BAF44B1915C27FF700101872 /* ToDoList.h */,
+				BAF44B1A15C27FF700101872 /* ToDoList.m */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		BAF44B1D15C2801500101872 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				BAF44B1E15C2801500101872 /* TDCommon.h */,
+				BAF44B1F15C2801500101872 /* TDCommon.m */,
+				BAF44B2015C2801500101872 /* TDConstants.h */,
+				BA27D8BB15C9168F00A895FE /* TDDelegates.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		BAF44B2115C2801500101872 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				BAF44B2215C2801500101872 /* TDParentViewController.h */,
+				BAF44B2315C2801500101872 /* TDParentViewController.m */,
+				BAF44B2515C2801500101872 /* TDListViewController.h */,
+				BAF44B2615C2801500101872 /* TDListViewController.m */,
+				BAF44B2715C2801500101872 /* TDListViewController.xib */,
+				BAF44B2815C2801500101872 /* TDMenuViewController.h */,
+				BAF44B2915C2801500101872 /* TDMenuViewController.m */,
+				BAF44B2A15C2801500101872 /* TDMenuViewController.xib */,
+				BAF44B3215C2A57000101872 /* TDItemViewController.h */,
+				BAF44B3315C2A57000101872 /* TDItemViewController.m */,
+				BAF44B2415C2801500101872 /* TDItemViewController.xib */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,8 +257,9 @@
 			files = (
 				BA88CB0415BE7FFD00DBCEFE /* InfoPlist.strings in Resources */,
 				BA88CB0D15BE7FFD00DBCEFE /* MainStoryboard.storyboard in Resources */,
-				BA19CF1A15C12FE700C94078 /* TDItemViewController.xib in Resources */,
-				BAC3CBC615C134AD00039226 /* TDListViewController.xib in Resources */,
+				BAF44B2D15C2801500101872 /* TDItemViewController.xib in Resources */,
+				BAF44B2F15C2801500101872 /* TDListViewController.xib in Resources */,
+				BAF44B3115C2801500101872 /* TDMenuViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,10 +277,13 @@
 				BA88CB2615BE830500DBCEFE /* JTTableViewGestureRecognizer.m in Sources */,
 				BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */,
 				BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
-				BA19CF1915C12FE700C94078 /* TDItemViewController.m in Sources */,
-				BAC3CBC515C134AD00039226 /* TDListViewController.m in Sources */,
-				BAF44B0E15C27A0D00101872 /* ToDoItem.m in Sources */,
-				BAF44B1115C27A3800101872 /* ToDoList.m in Sources */,
+				BAF44B1B15C27FF700101872 /* ToDoItem.m in Sources */,
+				BAF44B1C15C27FF700101872 /* ToDoList.m in Sources */,
+				BAF44B2B15C2801500101872 /* TDCommon.m in Sources */,
+				BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */,
+				BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */,
+				BAF44B3015C2801500101872 /* TDMenuViewController.m in Sources */,
+				BAF44B3415C2A57000101872 /* TDItemViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

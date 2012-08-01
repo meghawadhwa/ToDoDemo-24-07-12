@@ -150,7 +150,7 @@
 #pragma mark -
 
 @implementation TransformableTableViewCell
-@synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView;
+@synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView,previousLabelText;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -197,6 +197,7 @@
 - (void)labelTapped
 {   
     [self createTextField];
+    self.previousLabelText = self.textLabel.text;
         self.textLabel.text = @"";
     [[self superview] addSubview:self.nameTextField];
     [[self superview] bringSubviewToFront:self.nameTextField]; 
@@ -207,7 +208,6 @@
 {
     if (self.nameTextField !=nil) {
         self.nameTextField.hidden = NO;
-        //self.nameTextField.center = self.center;
         return;
     }
     self.nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 10, 300, 20)];
@@ -223,12 +223,16 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (![self.nameTextField.text isEqualToString:@""]) {
+        if (![self.previousLabelText isEqualToString:self.nameTextField.text]) {
+            NSLog(@"UPDATE");
+        }
     self.textLabel.text = self.nameTextField.text;
     }
     else {
         //delete
     }
     [self.nameTextField resignFirstResponder];
+    self.previousLabelText = nil;
     [self.nameTextField removeFromSuperview];
     self.nameTextField = nil;
     if (self.doneOverlayView !=nil) {
@@ -284,9 +288,20 @@ return YES;
         [superView setFrame:CGRectMake(0,0, 320, superView.frame.size.height)];
     }];
     if (self.nameTextField !=nil) {
-        self.textLabel.text = self.nameTextField.text;
+        
+        if (![self.nameTextField.text isEqualToString:@""]) {
+            if (![self.previousLabelText isEqualToString:self.nameTextField.text]) {
+                NSLog(@"UPDATE");
+            }
+            self.textLabel.text = self.nameTextField.text;
+        }
+
+        else {
+            //DELETE
+        }
         [self.nameTextField removeFromSuperview];
         self.nameTextField = nil;
+        self.previousLabelText = nil;
     }
 }
 

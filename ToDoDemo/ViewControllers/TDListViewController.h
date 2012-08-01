@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface TDListViewController : UITableViewController
+#import "TDParentViewController.h"
+@interface TDListViewController : TDParentViewController 
 
 @end

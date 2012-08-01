@@ -7,7 +7,7 @@
 //
 
 #import "TDAppDelegate.h"
-#import "TDItemViewController.h"
+#import "TDParentViewController.h"
 
 @implementation TDAppDelegate
 
@@ -20,7 +20,7 @@
 {
     // Override point for customization after application launch.
 //    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-//    TDItemViewController *controller = (TDItemViewController *)navigationController.topViewController;
+//    TDParentViewController *controller = (TDParentViewController *)navigationController.topViewController;
 //    controller.managedObjectContext = self.managedObjectContext;
     return YES;
 }
