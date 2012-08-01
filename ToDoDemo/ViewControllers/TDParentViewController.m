@@ -159,6 +159,7 @@
             cell.textLabel.backgroundColor = [UIColor clearColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.updateDelegate = self;
+            cell.deleteDelegate = self;
         }
         //tobe commented
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];

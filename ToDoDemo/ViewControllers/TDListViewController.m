@@ -130,10 +130,30 @@
     
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in adding a new list %@, %@", error, [error userInfo]);
+        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
         abort();
     }
     [self reloadFromUpdatedDB];
+}
+
+- (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+    [self.managedObjectContext deleteObject:currentList];
+    [self.rows removeObjectAtIndex:indexpath.row];
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [self fetchObjectsFromDb];
+    [self.tableView beginUpdates];
+    [UIView animateWithDuration:2 animations:^{
+    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+    }];
+    [self.tableView endUpdates];
+    
+
 }
 
 - (void)reloadFromUpdatedDB

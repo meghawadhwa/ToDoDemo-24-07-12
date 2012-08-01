@@ -17,3 +17,7 @@
 
 @end
 
+@protocol TDDeleteFromDbDelegate<NSObject>
+- (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath;
+
+@end

@@ -73,12 +73,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDParentViewController.m"
-         timestampString = "365509813.467253"
+         timestampString = "365512722.617897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "226"
-         endingLineNumber = "226"
+         startingLineNumber = "227"
+         endingLineNumber = "227"
          landmarkName = "-gestureRecognizer:needsDiscardRowAtIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
+         timestampString = "365512686.956079"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "139"
+         endingLineNumber = "139"
+         landmarkName = "-deleteCurrentRowAtIndexpath:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

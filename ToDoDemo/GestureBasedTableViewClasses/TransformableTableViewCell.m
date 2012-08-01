@@ -150,7 +150,7 @@
 
 @implementation TransformableTableViewCell
 @synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView,previousLabelText;
-@synthesize updateDelegate;
+@synthesize updateDelegate,deleteDelegate;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -231,40 +231,56 @@
             NSLog(@"Updating to %@",self.nameTextField.text);
             [self.updateDelegate updateCurrentRowAtIndexpath:indexpath];
         }
+        [self removeOverlayAndTextField];
     }
     else {
         //delete
+        [self removeOverlayAndTextField];
+        NSLog(@"Deleting");
+//        [UIView animateWithDuration:0.25 animations:^{
+//            CGRect cellFrame = self.frame;
+//            cellFrame.origin.x = -320;
+//            self.frame = cellFrame;
+//        } completion:^(BOOL finished){
+//            if (finished) {
+                [self.deleteDelegate deleteCurrentRowAtIndexpath:indexpath];
+//            }
+//        }];
+        
+    }
+}
+
+- (void)removeOverlayAndTextField
+{
+    if (self.nameTextField !=nil) {
+        [self.nameTextField removeFromSuperview];
+        self.nameTextField = nil;
+        self.previousLabelText = nil;
+    }
+   
+    if (self.doneOverlayView != nil) {
+        [self.doneOverlayView removeFromSuperview];
+        self.doneOverlayView = nil;
     }
 }
 
 #pragma mark - text field delegates
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self updateOrDeleteCell];    
-    [self.nameTextField resignFirstResponder];
-    self.previousLabelText = nil;
-    [self.nameTextField removeFromSuperview];
-    self.nameTextField = nil;
-    if (self.doneOverlayView !=nil) {
-    [self.doneOverlayView removeFromSuperview];
-    self.doneOverlayView = nil;
-    }
     UITableView * superView = (UITableView *)[self superview];
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         [superView setFrame:CGRectMake(0,0, superView.frame.size.width , superView.frame.size.height)];
     }];
+    [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
+    [self.nameTextField resignFirstResponder];
 
 return YES;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if ([self.nameTextField.text isEqualToString:@""]) {
-        self.nameTextField.enablesReturnKeyAutomatically= NO;
-    }
-    else {
-        self.nameTextField.enablesReturnKeyAutomatically = YES;
-    }
+   
+    self.nameTextField.enablesReturnKeyAutomatically = YES;
     
     UITableView * superView = (UITableView *)[self superview];
     [UIView animateWithDuration:0.3 animations:^{
@@ -294,16 +310,11 @@ return YES;
     self.doneOverlayView = nil;
     
     UITableView * superView = (UITableView *)[self superview];
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         [superView setFrame:CGRectMake(0,0, 320, superView.frame.size.height)];
     }];
-    if (self.nameTextField !=nil) {
-        
-        [self updateOrDeleteCell];
-        [self.nameTextField removeFromSuperview];
-        self.nameTextField = nil;
-        self.previousLabelText = nil;
-    }
+    [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
+
 }
 
 

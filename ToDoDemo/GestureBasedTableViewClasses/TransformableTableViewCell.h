@@ -38,4 +38,6 @@ typedef enum {
 - (void)addTapGestureForTextLabel;
 - (void)labelTapped;
 @property(nonatomic,assign)id<TDUpdateDbDelegate> updateDelegate;
+@property(nonatomic,assign)id<TDDeleteFromDbDelegate> deleteDelegate;
+
 @end

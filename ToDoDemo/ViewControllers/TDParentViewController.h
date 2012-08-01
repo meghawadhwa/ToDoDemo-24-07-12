@@ -15,7 +15,7 @@
 #import <CoreData/CoreData.h>
 #import "TDDelegates.h"
 
-@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate, JTTableViewGestureMoveRowDelegate,TDUpdateDbDelegate>
+@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate, JTTableViewGestureMoveRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @property (nonatomic, strong) id grabbedObject;
