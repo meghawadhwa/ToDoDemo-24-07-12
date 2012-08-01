@@ -25,4 +25,5 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
+- (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
 @end

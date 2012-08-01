@@ -156,6 +156,18 @@
 
 }
 
+- (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+    [self.managedObjectContext deleteObject:currentList];
+    [self.rows removeObjectAtIndex:indexpath.row];
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+        abort();
+    }    
+}
+
 - (void)reloadFromUpdatedDB
 {
     [self fetchObjectsFromDb];

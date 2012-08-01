@@ -270,7 +270,9 @@
     [tableView beginUpdates];
     if (state == JTTableViewCellEditingStateLeft) {
         // An example to discard the cell at JTTableViewCellEditingStateLeft
-        [self.rows removeObjectAtIndex:indexPath.row];
+        //[self.rows removeObjectAtIndex:indexPath.row];
+        [self deleteCurrentRowAfterSwipeAtIndexpath:indexPath];
+        [self fetchObjectsFromDb];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else if (state == JTTableViewCellEditingStateRight) {
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
