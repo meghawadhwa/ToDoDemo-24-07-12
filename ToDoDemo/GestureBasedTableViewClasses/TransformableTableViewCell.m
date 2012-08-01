@@ -10,7 +10,6 @@
 #import "UIColor+JTGestureBasedTableViewHelper.h"
 #import <QuartzCore/QuartzCore.h>
 
-
 @interface JTUnfoldingTableViewCell : TransformableTableViewCell
 @end
 
@@ -151,6 +150,7 @@
 
 @implementation TransformableTableViewCell
 @synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView,previousLabelText;
+@synthesize updateDelegate;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -219,18 +219,28 @@
     self.nameTextField.delegate = self;
     self.nameTextField.returnKeyType = UIReturnKeyDone;
 }
-#pragma mark - text field delegates
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+
+- (void)updateOrDeleteCell
 {
+    UITableView *tableView = (UITableView *)[self superview];
+    NSIndexPath *indexpath = [tableView indexPathForCell:self]; 
     if (![self.nameTextField.text isEqualToString:@""]) {
+        self.textLabel.text = self.nameTextField.text;
+        
         if (![self.previousLabelText isEqualToString:self.nameTextField.text]) {
-            NSLog(@"UPDATE");
+            NSLog(@"Updating to %@",self.nameTextField.text);
+            [self.updateDelegate updateCurrentRowAtIndexpath:indexpath];
         }
-    self.textLabel.text = self.nameTextField.text;
     }
     else {
         //delete
     }
+}
+
+#pragma mark - text field delegates
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self updateOrDeleteCell];    
     [self.nameTextField resignFirstResponder];
     self.previousLabelText = nil;
     [self.nameTextField removeFromSuperview];
@@ -289,16 +299,7 @@ return YES;
     }];
     if (self.nameTextField !=nil) {
         
-        if (![self.nameTextField.text isEqualToString:@""]) {
-            if (![self.previousLabelText isEqualToString:self.nameTextField.text]) {
-                NSLog(@"UPDATE");
-            }
-            self.textLabel.text = self.nameTextField.text;
-        }
-
-        else {
-            //DELETE
-        }
+        [self updateOrDeleteCell];
         [self.nameTextField removeFromSuperview];
         self.nameTextField = nil;
         self.previousLabelText = nil;

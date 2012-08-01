@@ -122,6 +122,25 @@
     
 }
 
+- (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
+{
+     ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    currentList.listName = cell.textLabel.text;
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in adding a new list %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [self reloadFromUpdatedDB];
+}
+
+- (void)reloadFromUpdatedDB
+{
+    [self fetchObjectsFromDb];
+    [self.tableView reloadData];
+}
 
 #pragma mark - Table view delegate
 

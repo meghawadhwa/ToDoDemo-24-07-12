@@ -12,9 +12,8 @@
 
 @end
 
-@protocol TDUpdateDbDelegate <NSObject>
-
-- (void)updateCurrentRowAtIndexpath:(NSIndexpath *) indexpath;
+@protocol TDUpdateDbDelegate<NSObject>
+- (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath;
 
 @end
 

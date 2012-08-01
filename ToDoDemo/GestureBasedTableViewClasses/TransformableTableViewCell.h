@@ -7,6 +7,8 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "TDDelegates.h"
+
 @class TDDelegates;
 
 typedef enum {
@@ -35,4 +37,5 @@ typedef enum {
 + (TransformableTableViewCell *)transformableTableViewCellWithStyle:(TransformableTableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 - (void)addTapGestureForTextLabel;
 - (void)labelTapped;
+@property(nonatomic,assign)id<TDUpdateDbDelegate> updateDelegate;
 @end

@@ -158,6 +158,7 @@
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
             cell.textLabel.backgroundColor = [UIColor clearColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.updateDelegate = self;
         }
         //tobe commented
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
