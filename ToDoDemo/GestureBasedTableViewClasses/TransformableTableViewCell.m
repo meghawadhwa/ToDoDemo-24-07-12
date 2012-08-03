@@ -9,6 +9,7 @@
 #import "TransformableTableViewCell.h"
 #import "UIColor+JTGestureBasedTableViewHelper.h"
 #import <QuartzCore/QuartzCore.h>
+#import "TDCommon.h"
 
 @interface JTUnfoldingTableViewCell : TransformableTableViewCell
 @end
@@ -19,6 +20,8 @@
 @interface DefaultTableViewCell : TransformableTableViewCell
 @end
 
+@interface DefaultWithCountTableViewCell : TransformableTableViewCell
+@end
 #pragma mark -
 
 @implementation JTUnfoldingTableViewCell
@@ -146,11 +149,54 @@
 
 @end 
 
+@implementation DefaultWithCountTableViewCell
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        // Initialization code
+        [self addTapGestureForTextLabel];
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.tintColor = [UIColor whiteColor];
+        UILabel *backgroundLabel = [[UILabel alloc] initWithFrame:CGRectMake(260, 0, 60, 60)];
+        backgroundLabel.backgroundColor = [TDCommon getColorByPriority:-6];
+        [self.contentView addSubview:backgroundLabel];
+        self.countLabel = [[UILabel alloc] initWithFrame:backgroundLabel.frame];
+        self.countLabel.center = backgroundLabel.center;
+        self.countLabel.backgroundColor = [UIColor clearColor];
+        self.countLabel.text = @" 0 ";
+        self.countLabel.textAlignment = UITextAlignmentCenter;
+        self.countLabel.textColor = [UIColor whiteColor];
+        [self.contentView addSubview:self.countLabel];
+        self.detailTextLabel.backgroundColor = [UIColor clearColor];
+        self.detailTextLabel.textColor = [UIColor clearColor];
+        self.detailTextLabel.text = @""; 
+        self.textLabel.backgroundColor = [UIColor redColor];
+
+    }
+    return self;
+}
+
+//- (void)layoutSubviews {
+//    [super layoutSubviews];  //The default implementation of the layoutSubviews
+//    
+//    CGRect textLabelFrame = self.textLabel.frame;
+//    CGSize textSize = [self.textLabel.text sizeWithFont:[self.textLabel font]];
+//
+//    textLabelFrame.size.width = textSize.width +5;
+//     textLabelFrame.size.height = textSize.height +5;
+//    self.textLabel.frame = textLabelFrame;
+//}
+
+@end 
+
 #pragma mark -
 
 @implementation TransformableTableViewCell
 @synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView,previousLabelText;
 @synthesize updateDelegate,deleteDelegate;
+@synthesize countLabel;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -171,6 +217,11 @@
 }
 
 
++ (TransformableTableViewCell *)defaultWithCountTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
+    DefaultWithCountTableViewCell *cell = (id)[[DefaultWithCountTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
+    return cell;
+}
+
 + (TransformableTableViewCell *)transformableTableViewCellWithStyle:(TransformableTableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     switch (style) {
         case TransformableTableViewCellStylePullDown:
@@ -179,7 +230,12 @@
         
         case TransformableTableViewCellStyleDefault:
          return [TransformableTableViewCell defaultTableViewCellWithReuseIdentifier:reuseIdentifier];
-        
+            break;
+            
+        case TransformableTableViewCellStyleDefaultWithCount:
+            return [TransformableTableViewCell defaultWithCountTableViewCellWithReuseIdentifier:reuseIdentifier];
+            break;
+            
         case TransformableTableViewCellStyleUnfolding:
         default:
             return [TransformableTableViewCell unfoldingTableViewCellWithReuseIdentifier:reuseIdentifier];
@@ -190,8 +246,9 @@
 
 - (void)addTapGestureForTextLabel
 {
+    self.textLabel.userInteractionEnabled = YES;
     self.labelTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(labelTapped)];
-    [self addGestureRecognizer:self.labelTapGestureRecognizer];
+    [self.textLabel addGestureRecognizer:self.labelTapGestureRecognizer];
 }
 
 - (void)labelTapped

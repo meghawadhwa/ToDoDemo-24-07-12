@@ -7,6 +7,7 @@
 //
 
 #import "TDListViewController.h"
+#import "TDItemViewController.h"
 
 @interface TDListViewController ()
 
@@ -71,8 +72,6 @@
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.textColor = [UIColor whiteColor];
                 cell.textLabel.textAlignment = UITextAlignmentCenter;
-                cell.nameTextField.adjustsFontSizeToFitWidth = YES;
-                cell.textLabel.textAlignment = UITextAlignmentCenter;
             }
             
             
@@ -129,14 +128,20 @@
         static NSString *cellIdentifier = @"DefaultTableViewCell";
         TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
-            cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.backgroundColor = [UIColor clearColor];
+            cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleDefaultWithCount reuseIdentifier:cellIdentifier];
+            cell.textLabel.adjustsFontSizeToFitWidth = NO;
+            CGRect frame = cell.textLabel.frame;
+            CGSize textSize = [cell.textLabel.text sizeWithFont:[cell.textLabel font]];
+            frame.size.width = textSize.width + 5;
+            frame.size.height = textSize.height + 5;
+            cell.textLabel.frame = frame;
+            //[cell.contentView bringSubviewToFront:cell.detailTextLabel];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.updateDelegate = self;
             cell.deleteDelegate = self;
         }
         //tobe commented
+        cell.countLabel.text = [NSString stringWithFormat:@"%d",[list.items count]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
         if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
@@ -153,6 +158,17 @@
         return cell;
     }
     
+}
+
+- (int)getItemCount
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity: [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.managedObjectContext]];
+    
+    NSError *error = nil;
+    NSUInteger count = [self.managedObjectContext countForFetchRequest: request error: &error];
+    NSLog(@"count %d",count);    
+    return count;
 }
 
 /*
@@ -290,11 +306,7 @@
     }    
 }
 
-- (void)reloadFromUpdatedDB
-{
-    [self fetchObjectsFromDb];
-    [self.tableView reloadData];
-}
+
 
 #pragma mark- Delegates
 
@@ -334,6 +346,39 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     return YES;
 }
 
+#pragma mark -
+#pragma mark JTTableViewGestureAddingRowDelegate
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
+    ToDoList *newList = (ToDoList *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoList"
+                                                                  inManagedObjectContext:self.managedObjectContext];
+    newList.listName = ADDING_CELL;
+    newList.priority = [NSNumber numberWithInt:indexPath.row];
+    newList.doneStatus = [NSNumber numberWithBool:FALSE];
+    [self.rows insertObject:newList atIndex:indexPath.row];
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
+    ToDoList * list = [self.rows objectAtIndex:indexPath.row];
+    list.listName = @"Newly Added"; 
+    TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+        [self.rows removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+        // Return to list
+    }
+    else {
+        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
+        cell.imageView.image = nil;
+        cell.textLabel.text = @"Just Added!";
+        //[cell labelTapped];
+        //cell.nameTextField.text = @"";
+        [self addNewRowInDBAtIndexPath:indexPath];
+        
+        //insert in db here
+    }
+}
+
 #pragma mark - 
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
 {
@@ -345,13 +390,15 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    TDListViewController *src = (TDListViewController *) self;
+    TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
+    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
+    destination.parentList = list;
+    //destination.parentName = @"Menu";
+    //destination.goingDownByPullUp = NO;
+    //src.goingDownByPullUp = NO;
+    destination.managedObjectContext = self.managedObjectContext;
+    [src.navigationController pushViewController:destination animated:YES];
 }
 
 @end

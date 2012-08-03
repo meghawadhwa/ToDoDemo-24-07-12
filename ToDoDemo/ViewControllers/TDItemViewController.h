@@ -10,5 +10,5 @@
 #import "TDParentViewController.h"
 
 @interface TDItemViewController : TDParentViewController
-
+@property(nonatomic,retain)ToDoList *parentList; 
 @end

@@ -15,6 +15,7 @@ typedef enum {
     TransformableTableViewCellStyleUnfolding,
     TransformableTableViewCellStylePullDown,
     TransformableTableViewCellStyleDefault,
+    TransformableTableViewCellStyleDefaultWithCount,
 } TransformableTableViewCellStyle;
 
 
@@ -39,5 +40,6 @@ typedef enum {
 - (void)labelTapped;
 @property(nonatomic,assign)id<TDUpdateDbDelegate> updateDelegate;
 @property(nonatomic,assign)id<TDDeleteFromDbDelegate> deleteDelegate;
+@property (nonatomic,retain) UILabel *countLabel;
 
 @end

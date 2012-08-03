@@ -13,6 +13,7 @@
 @end
 
 @implementation TDItemViewController
+@synthesize parentList;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -26,7 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    [TDCommon setTheme:THEME_HEAT_MAP];
+    self.rows = [NSMutableArray arrayWithArray:[parentList.items allObjects]];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -46,12 +48,93 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+-(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
+{
+    
+    // u can change the list if u want
+    //ToDoList *newList = [self.rows objectAtIndex:indexpath.row];
+    
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in adding a new list %@, %@", error, [error userInfo]);
+        abort();
+    } 
+    
+}
+
+- (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoItem * item = [self.rows objectAtIndex:indexpath.row];
+    if ([item.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
+        item.doneStatus = [NSNumber numberWithBool:TRUE];
+    }
+    else {
+        item.doneStatus = [NSNumber numberWithBool:FALSE];
+    }
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [self reloadFromUpdatedDB];
+}
+
+- (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    currentItem.itemName = cell.textLabel.text;
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [self reloadFromUpdatedDB];
+}
+
+- (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+    [self.managedObjectContext deleteObject:currentItem];
+    [self.rows removeObjectAtIndex:indexpath.row];
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [self fetchObjectsFromDb];
+    [self.tableView beginUpdates];
+    [UIView animateWithDuration:2 animations:^{
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+    }];
+    [self.tableView endUpdates];
+    
+    
+}
+
+- (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoItem *currentList = [self.rows objectAtIndex:indexpath.row];
+    [self.managedObjectContext deleteObject:currentList];
+    [self.rows removeObjectAtIndex:indexpath.row];
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+        abort();
+    }    
+}
+
+
+
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
-    NSObject *object = list.listName;
+    ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
+    NSObject *object = item.itemName;
     UIColor *backgroundColor = [TDCommon getColorByPriority:indexPath.row];
     //[[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
@@ -137,7 +220,7 @@
         //tobe commented
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
-        if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+        if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
             cell.textLabel.hidden = NO;
             cell.textLabel.textColor = [UIColor grayColor];
             cell.contentView.backgroundColor = [UIColor darkGrayColor];
@@ -189,6 +272,40 @@
     return YES;
 }
 
+#pragma mark -
+#pragma mark JTTableViewGestureAddingRowDelegate
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
+    ToDoItem *newItem = (ToDoItem *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem"
+                                                                  inManagedObjectContext:self.managedObjectContext];
+    newItem.itemName = ADDING_CELL;
+    newItem.priority = [NSNumber numberWithInt:indexPath.row];
+    newItem.doneStatus = [NSNumber numberWithBool:FALSE];
+    newItem.list = self.parentList;
+    [self.rows insertObject:newItem atIndex:indexPath.row];
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
+    ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
+    item.itemName = @"New To Do"; 
+    TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+        [self.rows removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+        // Return to list
+    }
+    else {
+        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
+        cell.imageView.image = nil;
+        cell.textLabel.text = @"Just Added!";
+        //[cell labelTapped];
+        //cell.nameTextField.text = @"";
+        [self addNewRowInDBAtIndexPath:indexPath];
+        
+        //insert in db here
+    }
+}
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -228,17 +345,12 @@
 }
 */
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - 
+- (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    ToDoItem *currentItem = [self.rows objectAtIndex:indexPath.row];
+    return [currentItem.doneStatus boolValue];
 }
+
 
 @end

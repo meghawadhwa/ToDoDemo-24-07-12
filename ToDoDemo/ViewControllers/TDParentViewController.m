@@ -58,6 +58,12 @@
     self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
 }
 
+- (void)reloadFromUpdatedDB
+{
+    [self fetchObjectsFromDb];
+    [self.tableView reloadData];
+}
+
 #pragma mark UITableViewDatasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -75,7 +81,7 @@
 #pragma mark UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NORMAL_CELL_FINISHING_HEIGHT;
+    return NORMAL_CELL_FINISHING_HEIGHT + 1;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -85,35 +91,6 @@
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
 
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
-    ToDoList *newList = (ToDoList *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoList"
-                                                                  inManagedObjectContext:self.managedObjectContext];
-    newList.listName = ADDING_CELL;
-    newList.priority = [NSNumber numberWithInt:indexPath.row];
-    newList.doneStatus = [NSNumber numberWithBool:FALSE];
-    [self.rows insertObject:newList atIndex:indexPath.row];
-}
-
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
-    ToDoList * list = [self.rows objectAtIndex:indexPath.row];
-    list.listName = @"Newly Added"; 
-    TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
-        [self.rows removeObjectAtIndex:indexPath.row];
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
-        // Return to list
-    }
-    else {
-        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
-        cell.imageView.image = nil;
-        cell.textLabel.text = @"Just Added!";
-        //[cell labelTapped];
-        //cell.nameTextField.text = @"";
-        [self addNewRowInDBAtIndexPath:indexPath];
-       
-        //insert in db here
-    }
-}
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.managedObjectContext rollback];
@@ -190,7 +167,7 @@
 }
 
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath{
-
+    return NO;
 }
 /*
  - (void)insertNewObject:(id)sender
