@@ -366,6 +366,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         [self.rows removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         // Return to list
+        [self removeCurrentView];
     }
     else {
         cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
@@ -388,6 +389,23 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 #pragma mark - Table view delegate
 
+- (void)removeCurrentView
+{
+    [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGRect myFrame = self.view.frame;
+        myFrame.origin.y = 480;
+        self.view.frame = myFrame; 
+    } completion:^ (BOOL finished) {
+        [self.navigationController popViewControllerAnimated:NO]; 
+        //            TDMainViewController * mainController =(TDMainViewController *)[self.navigationController topViewController];
+        //            CGRect myFrame = mainController.view.frame;
+        //            myFrame.origin.y = -480;
+        //            mainController.view.frame = myFrame;
+        //            mainController.goingBackFlag = YES;
+    }];
+    
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TDListViewController *src = (TDListViewController *) self;
@@ -401,4 +419,13 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     [src.navigationController pushViewController:destination animated:YES];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [TDCommon setTheme:THEME_BLUE];   
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+
+}
 @end

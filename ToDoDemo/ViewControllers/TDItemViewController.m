@@ -293,6 +293,7 @@
         [self.rows removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         // Return to list
+        [self removeCurrentView];
     }
     else {
         cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
@@ -304,6 +305,20 @@
         
         //insert in db here
     }
+}
+
+- (void)removeCurrentView
+{
+    [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGRect myFrame = self.view.frame;
+        myFrame.origin.y = 480;
+        self.view.frame = myFrame; 
+    } completion:^ (BOOL finished) {
+        if (finished) {
+            [self.navigationController popViewControllerAnimated:NO]; 
+        }
+    }];
+    
 }
 
 /*
@@ -352,5 +367,9 @@
     return [currentItem.doneStatus boolValue];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [TDCommon setTheme:THEME_HEAT_MAP];   
+}
 
 @end
