@@ -23,11 +23,7 @@
 @synthesize grabbedObject;
 //@synthesize doneOverlayView;
 
-#define ADDING_CELL @"Continue..."
-#define DONE_CELL @"Done"
-#define DUMMY_CELL @"Dummy"
-#define COMMITING_CREATE_CELL_HEIGHT 60
-#define NORMAL_CELL_FINISHING_HEIGHT 60
+
 
 - (void)awakeFromNib
 {
@@ -75,110 +71,6 @@
     return [self.rows count];
 }
 
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
-    NSObject *object = list.listName;
-    UIColor *backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
-    if ([object isEqual:ADDING_CELL]) {
-        NSString *cellIdentifier = nil;
-        TransformableTableViewCell *cell = nil;
-        
-        // IndexPath.row == 0 is the case we wanted to pick the pullDown style
-        if (indexPath.row == 0) {
-            cellIdentifier = @"PullDownTableViewCell";
-            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            
-            if (cell == nil) {
-                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStylePullDown
-                                                                       reuseIdentifier:cellIdentifier];
-                cell.textLabel.adjustsFontSizeToFitWidth = YES;
-                cell.textLabel.textColor = [UIColor whiteColor];
-                cell.textLabel.textAlignment = UITextAlignmentCenter;
-                cell.nameTextField.adjustsFontSizeToFitWidth = YES;
-                cell.textLabel.textAlignment = UITextAlignmentCenter;
-            }
-            
-            
-            cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
-                cell.imageView.image = [UIImage imageNamed:@"reload.png"];
-                cell.tintColor = [UIColor blackColor];
-                cell.textLabel.text = @"Return to list...";
-                cell.nameTextField.text = cell.textLabel.text;
-            } else if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
-                cell.imageView.image = nil;
-                // Setup tint color
-                cell.tintColor = backgroundColor;
-                cell.textLabel.text = @"Release to create cell...";
-                cell.nameTextField.text = cell.textLabel.text;
-            } else {
-                cell.imageView.image = nil;
-                // Setup tint color
-                cell.tintColor = backgroundColor;
-            }
-            cell.contentView.backgroundColor = [UIColor clearColor];
-            cell.detailTextLabel.text = @" ";
-            return cell;
-            
-        } else {
-            // Otherwise is the case we wanted to pick the pullDown style
-            cellIdentifier = @"UnfoldingTableViewCell";
-            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            
-            if (cell == nil) {
-                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleUnfolding
-                                                                       reuseIdentifier:cellIdentifier];
-                cell.textLabel.adjustsFontSizeToFitWidth = YES;
-                cell.textLabel.textColor = [UIColor whiteColor];
-                cell.textLabel.textAlignment = UITextAlignmentCenter;
-            }
-            
-            // Setup tint color
-            cell.tintColor = backgroundColor;
-            
-            cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
-                cell.textLabel.text = @"Release to create cell...";
-            } else {
-                cell.textLabel.text = @"Continue Pinching...";
-            }
-            cell.contentView.backgroundColor = [UIColor clearColor];
-            cell.detailTextLabel.text = @" ";
-            return cell;
-        }
-        
-    } else {
-        
-        static NSString *cellIdentifier = @"DefaultTableViewCell";
-        TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (cell == nil) {
-            cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.backgroundColor = [UIColor clearColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.updateDelegate = self;
-            cell.deleteDelegate = self;
-        }
-        //tobe commented
-        cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
-        cell.detailTextLabel.text = @" ";
-        if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
-            cell.textLabel.hidden = NO;
-            cell.textLabel.textColor = [UIColor grayColor];
-            cell.contentView.backgroundColor = [UIColor darkGrayColor];
-        } else if ([object isEqual:DUMMY_CELL]) {
-            cell.textLabel.text = @"";
-            cell.contentView.backgroundColor = [UIColor clearColor];
-        } else {
-            cell.textLabel.textColor = [UIColor whiteColor];
-            cell.contentView.backgroundColor = backgroundColor;
-        }
-        return cell;
-    }
-    
-}
 
 #pragma mark UITableViewDelegate
 
@@ -238,31 +130,9 @@
 
 #pragma mark JTTableViewGestureEditingRowDelegate
 
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    
-    UIColor *backgroundColor = nil;
-    switch (state) {
-        case JTTableViewCellEditingStateMiddle:
-            backgroundColor = [[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:self.tableView numberOfRowsInSection:indexPath.section]];
-            break;
-        case JTTableViewCellEditingStateRight:
-            backgroundColor = [UIColor greenColor];
-            break;
-        default:
-            backgroundColor = [UIColor darkGrayColor];
-            break;
-    }
-    cell.contentView.backgroundColor = backgroundColor;
-    if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
-        ((TransformableTableViewCell *)cell).tintColor = backgroundColor;
-    }
-}
 
 // This is needed to be implemented to let our delegate choose whether the panning gesture should work
-- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
+
 
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -276,13 +146,7 @@
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else if (state == JTTableViewCellEditingStateRight) {
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
-        ToDoList * list = [self.rows objectAtIndex:indexPath.row];
-        if ([list.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
-            list.doneStatus = [NSNumber numberWithBool:TRUE];
-        }
-        else {
-            list.doneStatus = [NSNumber numberWithBool:FALSE];
-        }
+        [self updateCurrentRowsDoneStatusAtIndexpath:indexPath]; 
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else {
         // JTTableViewCellEditingStateMiddle shouldn't really happen in
@@ -317,9 +181,16 @@
 }
 
 #pragma mark-
-- (void)fetchObjectsFromDb
-{
+- (void)fetchObjectsFromDb{
     
+}
+         
+- (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath{
+             
+}
+
+- (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath{
+
 }
 /*
  - (void)insertNewObject:(id)sender

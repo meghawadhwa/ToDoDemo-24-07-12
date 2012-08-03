@@ -73,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDParentViewController.m"
-         timestampString = "365520768.501431"
+         timestampString = "365665465.057059"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "226"
-         endingLineNumber = "226"
+         startingLineNumber = "118"
+         endingLineNumber = "118"
          landmarkName = "-gestureRecognizer:needsDiscardRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365512686.956079"
+         timestampString = "365668754.572339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "139"
-         endingLineNumber = "139"
+         startingLineNumber = "261"
+         endingLineNumber = "261"
          landmarkName = "-deleteCurrentRowAtIndexpath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDParentViewController.m"
-         timestampString = "365520768.501431"
+         timestampString = "365665465.057059"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "205"
-         endingLineNumber = "205"
+         startingLineNumber = "97"
+         endingLineNumber = "97"
          landmarkName = "-gestureRecognizer:needsCommitRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -111,25 +111,12 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "ToDoDemo/ViewControllers/TDParentViewController.m"
-         timestampString = "365520768.501431"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "241"
-         endingLineNumber = "241"
-         landmarkName = "-gestureRecognizer:didEnterEditingState:forRowAtIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365517132.131979"
+         timestampString = "365668754.572339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "126"
-         endingLineNumber = "126"
+         startingLineNumber = "248"
+         endingLineNumber = "248"
          landmarkName = "-updateCurrentRowAtIndexpath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -138,11 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365517134.736184"
+         timestampString = "365668754.572339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "110"
-         endingLineNumber = "110"
+         startingLineNumber = "214"
+         endingLineNumber = "214"
          landmarkName = "-addNewRowInDBAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>

@@ -33,3 +33,8 @@
 #define kListName @"listName"
 #define kListId @"id"
 #define kDoneStatus @"doneStatus"
+#define ADDING_CELL @"Continue..."
+#define DONE_CELL @"Done"
+#define DUMMY_CELL @"Dummy"
+#define COMMITING_CREATE_CELL_HEIGHT 60
+#define NORMAL_CELL_FINISHING_HEIGHT 60

@@ -14,6 +14,8 @@
 #import "UIColor+JTGestureBasedTableViewHelper.h"
 #import <CoreData/CoreData.h>
 #import "TDDelegates.h"
+#import "TDConstants.h"
+#import "TDCommon.h"
 
 @interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate, JTTableViewGestureMoveRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
@@ -26,4 +28,6 @@
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
+- (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath;
+- (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
 @end

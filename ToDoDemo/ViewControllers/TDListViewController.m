@@ -26,6 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [TDCommon setTheme:THEME_BLUE];
     [self fetchObjectsFromDb];
 
     // Uncomment the following line to preserve selection between presentations.
@@ -49,7 +50,110 @@
 
 #pragma mark - Table view data source
 
-
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
+    NSObject *object = list.listName;
+    UIColor *backgroundColor = [TDCommon getColorByPriority:indexPath.row];
+    //[[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
+    if ([object isEqual:ADDING_CELL]) {
+        NSString *cellIdentifier = nil;
+        TransformableTableViewCell *cell = nil;
+        
+        // IndexPath.row == 0 is the case we wanted to pick the pullDown style
+        if (indexPath.row == 0) {
+            cellIdentifier = @"PullDownTableViewCell";
+            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil) {
+                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStylePullDown
+                                                                       reuseIdentifier:cellIdentifier];
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
+                cell.textLabel.textColor = [UIColor whiteColor];
+                cell.textLabel.textAlignment = UITextAlignmentCenter;
+                cell.nameTextField.adjustsFontSizeToFitWidth = YES;
+                cell.textLabel.textAlignment = UITextAlignmentCenter;
+            }
+            
+            
+            cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+                cell.imageView.image = [UIImage imageNamed:@"reload.png"];
+                cell.tintColor = [UIColor blackColor];
+                cell.textLabel.text = @"Return to list...";
+                cell.nameTextField.text = cell.textLabel.text;
+            } else if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
+                cell.imageView.image = nil;
+                // Setup tint color
+                cell.tintColor = backgroundColor;
+                cell.textLabel.text = @"Release to create cell...";
+                cell.nameTextField.text = cell.textLabel.text;
+            } else {
+                cell.imageView.image = nil;
+                // Setup tint color
+                cell.tintColor = backgroundColor;
+            }
+            cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.detailTextLabel.text = @" ";
+            return cell;
+            
+        } else {
+            // Otherwise is the case we wanted to pick the pullDown style
+            cellIdentifier = @"UnfoldingTableViewCell";
+            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            
+            if (cell == nil) {
+                cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleUnfolding
+                                                                       reuseIdentifier:cellIdentifier];
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
+                cell.textLabel.textColor = [UIColor whiteColor];
+                cell.textLabel.textAlignment = UITextAlignmentCenter;
+            }
+            
+            // Setup tint color
+            cell.tintColor = backgroundColor;
+            
+            cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
+                cell.textLabel.text = @"Release to create cell...";
+            } else {
+                cell.textLabel.text = @"Continue Pinching...";
+            }
+            cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.detailTextLabel.text = @" ";
+            return cell;
+        }
+        
+    } else {
+        
+        static NSString *cellIdentifier = @"DefaultTableViewCell";
+        TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (cell == nil) {
+            cell = [TransformableTableViewCell transformableTableViewCellWithStyle:TransformableTableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.textLabel.adjustsFontSizeToFitWidth = YES;
+            cell.textLabel.backgroundColor = [UIColor clearColor];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.updateDelegate = self;
+            cell.deleteDelegate = self;
+        }
+        //tobe commented
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
+        cell.detailTextLabel.text = @" ";
+        if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+            cell.textLabel.hidden = NO;
+            cell.textLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
+            cell.contentView.backgroundColor = [TDCommon getColorByPriority:indexPath.row];
+        } else if ([object isEqual:DUMMY_CELL]) {
+            cell.textLabel.text = @"";
+            cell.contentView.backgroundColor = [UIColor clearColor];
+        } else {
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.contentView.backgroundColor = backgroundColor;
+        }
+        return cell;
+    }
+    
+}
 
 /*
 // Override to support conditional editing of the table view.
@@ -122,6 +226,24 @@
     
 }
 
+- (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
+{
+    ToDoList * list = [self.rows objectAtIndex:indexpath.row];
+    if ([list.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
+        list.doneStatus = [NSNumber numberWithBool:TRUE];
+    }
+    else {
+        list.doneStatus = [NSNumber numberWithBool:FALSE];
+    }
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [self reloadFromUpdatedDB];
+}
+
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
      ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
@@ -172,6 +294,51 @@
 {
     [self fetchObjectsFromDb];
     [self.tableView reloadData];
+}
+
+#pragma mark- Delegates
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+//BOOL checked = [self getCheckedStatusForRowAtIndex:indexPath];
+UIColor *backgroundColor = nil;
+switch (state) {
+    case JTTableViewCellEditingStateMiddle:
+//        if (checked) {
+//            backgroundColor = [[TDCommon getColorByPriority:indexPath.row] colorWithAlphaComponent:0.8];
+//        }
+//        else {
+            backgroundColor = [TDCommon getColorByPriority:indexPath.row];
+//        }
+        break;
+    case JTTableViewCellEditingStateRight:
+        backgroundColor = [UIColor greenColor];
+        break;
+    default:
+//        if (checked) {
+            backgroundColor = [TDCommon getColorByPriority:indexPath.row];
+//        }
+//        else {
+//            backgroundColor = [[TDCommon getColorByPriority:indexPath.row] colorWithAlphaComponent:0.8];        }
+        break;
+}
+cell.contentView.backgroundColor = backgroundColor;
+if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
+    ((TransformableTableViewCell *)cell).tintColor = backgroundColor;
+}
+}
+
+- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+//    BOOL checked = [self getCheckedStatusForRowAtIndex:indexPath];
+//    return (!checked);
+    return YES;
+}
+
+#pragma mark - 
+- (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
+{
+ ToDoList *currentList = [self.rows objectAtIndex:indexPath.row];
+    return [currentList.doneStatus boolValue];
 }
 
 #pragma mark - Table view delegate
