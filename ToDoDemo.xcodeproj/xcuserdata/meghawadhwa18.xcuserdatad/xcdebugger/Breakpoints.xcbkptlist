@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365941251.040233"
+         timestampString = "365947309.257491"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "278"
-         endingLineNumber = "278"
+         startingLineNumber = "288"
+         endingLineNumber = "288"
          landmarkName = "-deleteCurrentRowAtIndexpath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365941251.040233"
+         timestampString = "365947309.257491"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "265"
-         endingLineNumber = "265"
+         startingLineNumber = "275"
+         endingLineNumber = "275"
          landmarkName = "-updateCurrentRowAtIndexpath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365941251.040233"
+         timestampString = "365947309.257491"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "231"
-         endingLineNumber = "231"
+         startingLineNumber = "228"
+         endingLineNumber = "228"
          landmarkName = "-addNewRowInDBAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -125,11 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365941251.040233"
+         timestampString = "365947309.257491"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "427"
-         endingLineNumber = "427"
+         startingLineNumber = "447"
+         endingLineNumber = "447"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -164,59 +164,33 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDItemViewController.m"
-         timestampString = "365936287.863088"
+         timestampString = "365943047.065332"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "572"
-         endingLineNumber = "572">
+         startingLineNumber = "533"
+         endingLineNumber = "533">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDItemViewController.m"
-         timestampString = "365936287.863088"
+         timestampString = "365943047.065332"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "575"
-         endingLineNumber = "575">
+         startingLineNumber = "536"
+         endingLineNumber = "536">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "ToDoDemo/ViewControllers/TDItemViewController.m"
-         timestampString = "365936287.863088"
+         timestampString = "365943047.065332"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "659"
-         endingLineNumber = "659">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365941251.040233"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "447"
-         endingLineNumber = "447"
-         landmarkName = "-viewDidAppear:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
-         timestampString = "365941251.040233"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "440"
-         endingLineNumber = "440"
-         landmarkName = "-viewWillAppear:"
-         landmarkType = "5">
+         startingLineNumber = "620"
+         endingLineNumber = "620">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -229,6 +203,19 @@
          startingLineNumber = "118"
          endingLineNumber = "118"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "ToDoDemo/ViewControllers/TDListViewController.m"
+         timestampString = "365947309.257491"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "211"
+         endingLineNumber = "211"
+         landmarkName = "-checkAllItemsForSelectedList"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

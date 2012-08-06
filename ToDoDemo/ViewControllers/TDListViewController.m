@@ -14,6 +14,7 @@
 @end
 
 @implementation TDListViewController
+@synthesize rowIndexToBeUpdated;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -143,15 +144,17 @@
         cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getItemCountForIndexpath:indexPath]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
-        if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+        if ([cell.countLabel.text isEqualToString:@"0"]) {
             cell.textLabel.hidden = NO;
             cell.textLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
+            cell.countLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
             cell.contentView.backgroundColor = [TDCommon getColorByPriority:indexPath.row];
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
             cell.contentView.backgroundColor = [UIColor clearColor];
         } else {
             cell.textLabel.textColor = [UIColor whiteColor];
+            cell.countLabel.textColor = [ UIColor whiteColor];
             cell.contentView.backgroundColor = backgroundColor;
         }
         return cell;
@@ -168,48 +171,25 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"doneStatus == %@ AND list == %@",[NSNumber numberWithInt:0],list];
     [request setPredicate:predicate];
     NSUInteger count = [self.managedObjectContext countForFetchRequest:request error: &error];
-    NSLog(@"count %d",count);    
+    NSLog(@"count %d",count);  
+    if (count >0 && [list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+        [self refreshCurrentRowsDoneStatusAtIndexpath:indexPath];   
+    }
     return count;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)refreshCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
+    list.doneStatus = [NSNumber numberWithBool:FALSE];
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in refreshing done status of items within the list %@, %@", error, [error userInfo]);
+        abort();
+    } 
+      // do we need to fetch lists again? 
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark-
 - (void)fetchObjectsFromDb
@@ -228,6 +208,25 @@
     }   
 }
 
+- (void)checkAllItemsForSelectedList
+{
+    ToDoList *list = [self.rows objectAtIndex:self.rowIndexToBeUpdated];
+    for (ToDoItem *item in list.items) {
+        if ([ item.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
+            item.doneStatus = [NSNumber numberWithBool:TRUE];
+        }
+    }
+    //OR
+    //[list.items makeObjectsPerformSelector:@selector(setDoneStatus:) withObject:[NSNumber numberWithBool:TRUE]];
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in saving done status of items within the list %@, %@", error, [error userInfo]);
+        abort();
+    } 
+    [self reloadFromUpdatedDB];
+}
+
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
  {
     
@@ -237,7 +236,7 @@
        
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in adding a new list %@, %@", error, [error userInfo]);
+        NSLog(@"Error in saving list %@, %@", error, [error userInfo]);
         abort();
     } 
     
@@ -245,20 +244,33 @@
 
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
 {
+     NSError *error = nil;
     ToDoList * list = [self.rows objectAtIndex:indexpath.row];
     if ([list.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
-        list.doneStatus = [NSNumber numberWithBool:TRUE];
+        TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+        if (![cell.countLabel.text isEqualToString:@"0"])
+        {
+            self.rowIndexToBeUpdated = indexpath.row;
+            [self createActionSheet];
+        }
+        else {
+            list.doneStatus = [NSNumber numberWithBool:TRUE];
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+                abort();
+            }
+            [self reloadFromUpdatedDB];
+        }
     }
     else {
+   
         list.doneStatus = [NSNumber numberWithBool:FALSE];
+        if (![self.managedObjectContext save:&error]) {
+            NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+            abort();
+        }
+        [self reloadFromUpdatedDB];
     }
-    
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
-        abort();
-    }
-    [self reloadFromUpdatedDB];
 }
 
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
@@ -307,7 +319,17 @@
     }    
 }
 
-
+#pragma mark - action sheet delegates
+- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        ToDoList *list = [self.rows objectAtIndex:self.rowIndexToBeUpdated];
+        list.doneStatus = [NSNumber numberWithBool:TRUE];
+        [self checkAllItemsForSelectedList];
+    }
+    else {
+    }
+}
 
 #pragma mark- Delegates
 
@@ -435,6 +457,18 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
     [src.navigationController pushViewController:destination animated:YES];
+}
+
+
+
+#pragma mark- view related
+
+- (void)createActionSheet
+{
+    UIActionSheet *completeListActionSheet = [[UIActionSheet alloc] initWithTitle:@"List Completion" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Complete" otherButtonTitles:nil];
+    [completeListActionSheet setTitle:@"Are you sure you want to complete all items within this list?"];
+    [completeListActionSheet setActionSheetStyle:UIActionSheetStyleBlackTranslucent];
+    [completeListActionSheet showInView:self.view];
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "TDParentViewController.h"
-@interface TDListViewController : TDParentViewController 
-
+@interface TDListViewController : TDParentViewController <UIActionSheetDelegate>
+@property(nonatomic,assign) int rowIndexToBeUpdated;
 @end
