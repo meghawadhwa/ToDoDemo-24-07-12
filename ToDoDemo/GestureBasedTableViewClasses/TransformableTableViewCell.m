@@ -101,7 +101,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSLog(@"here");
     CGFloat fraction = (self.frame.size.height / self.finishedHeight);
     fraction = MAX(MIN(1, fraction), 0);
     

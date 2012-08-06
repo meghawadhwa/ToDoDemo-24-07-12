@@ -140,7 +140,7 @@
             cell.deleteDelegate = self;
         }
         //tobe commented
-        cell.countLabel.text = [NSString stringWithFormat:@"%d",[list.items count]];
+        cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getItemCountForIndexpath:indexPath]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
         if ([list.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
@@ -159,13 +159,15 @@
     
 }
 
-- (int)getItemCount
+- (int)getItemCountForIndexpath:(NSIndexPath *)indexPath
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity: [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.managedObjectContext]];
-    
+    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
     NSError *error = nil;
-    NSUInteger count = [self.managedObjectContext countForFetchRequest: request error: &error];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"doneStatus == %@ AND list == %@",[NSNumber numberWithInt:0],list];
+    [request setPredicate:predicate];
+    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error: &error];
     NSLog(@"count %d",count);    
     return count;
 }
@@ -461,6 +463,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         self.goingDownByPullUp = NO;
     }
     else {
+        [self.tableView reloadData];
         float originY = [self getLastRowHeight];
         [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
             CGRect myFrame = self.view.frame;
