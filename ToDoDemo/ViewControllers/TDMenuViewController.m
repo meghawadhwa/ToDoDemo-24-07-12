@@ -16,6 +16,7 @@
 
 @implementation TDMenuViewController
 @synthesize menuContentsArray,managedObjectContext;
+@synthesize goingDownByPullUp;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -57,7 +58,44 @@
 {
     [super viewWillAppear:YES];
     [TDCommon setTheme:THEME_MAIN_GRAY];
+    [self.tableView setHidden:YES];
 }
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (self.goingDownByPullUp) {
+        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+            CGRect myFrame = self.view.frame;
+            myFrame.origin.y = 480;
+            self.view.frame = myFrame;
+        } completion:^(BOOL fin){
+            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                [self.tableView setHidden:NO];
+                CGRect myFrame = self.view.frame;
+                myFrame.origin.y = 0.0;
+                self.view.frame = myFrame;
+            } 
+                             completion: nil];
+        }];
+        self.goingDownByPullUp = NO;
+    }
+    else {
+        float originY = [self getLastRowHeight];
+        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+            CGRect myFrame = self.view.frame;
+            myFrame.origin.y = -originY;
+            self.view.frame = myFrame;
+        } completion:^(BOOL fin){
+            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                [self.tableView setHidden:NO];
+                CGRect myFrame = self.view.frame;
+                myFrame.origin.y = 0.0;
+                self.view.frame = myFrame;
+            } 
+                             completion: nil];
+        }];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -131,44 +169,18 @@
     NSLog(@"count %d",count);    
     return count;
 }
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+#pragma mark - Utility methods
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+- (float)getLastRowHeight
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    float lastRowheight = 480;
+    lastRowheight = [self.menuContentsArray count] * NORMAL_CELL_FINISHING_HEIGHT; 
+    
+    return lastRowheight;
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+#pragma mark - view methods
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -177,8 +189,8 @@
     TDMenuViewController *src = (TDMenuViewController *) self;
     TDListViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
     //destination.parentName = @"Menu";
-    //destination.goingDownByPullUp = NO;
-    //src.goingDownByPullUp = NO;
+    destination.goingDownByPullUp = NO;
+    src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
     [src.navigationController pushViewController:destination animated:YES];
 }

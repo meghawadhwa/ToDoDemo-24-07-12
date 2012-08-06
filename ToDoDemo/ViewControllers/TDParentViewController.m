@@ -22,7 +22,7 @@
 @synthesize tableViewRecognizer;
 @synthesize grabbedObject;
 //@synthesize doneOverlayView;
-
+@synthesize goingDownByPullUp;
 
 
 - (void)awakeFromNib
@@ -301,7 +301,39 @@
 // // In the simplest, most efficient, case, reload the table view.
 // [self.tableView reloadData];
 // }
- 
+
+#pragma mark - Utility methods
+
+- (float)getLastRowHeight
+{
+    float lastRowheight = 480;
+//    if ([self.checkedViewsArray lastObject]) {
+//        lastRowheight = [TDCommon getLastRowMaxYFromArray:self.checkedViewsArray];
+//    }
+//    else if([self.customViewsArray lastObject]){
+//        lastRowheight = [TDCommon getLastRowMaxYFromArray:self.customViewsArray];
+//    }
+    lastRowheight = [self.rows count] * NORMAL_CELL_FINISHING_HEIGHT; 
+    
+    return lastRowheight;
+}
+
+#pragma mark - view methods
+- (void)toggleSubViews:(BOOL)hide
+{
+    if (hide) {
+        for (UIView *subview in self.view.subviews)
+        {
+            subview.hidden = YES;
+        }
+    }
+    else {
+        for (UIView *subview in self.view.subviews)
+        {
+            subview.hidden = NO;
+        }
+    }
+}
 
 
 

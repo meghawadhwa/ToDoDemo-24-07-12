@@ -25,10 +25,14 @@
 
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property(nonatomic,assign) BOOL goingDownByPullUp;
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath;
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
 - (void)reloadFromUpdatedDB;
+- (void)toggleSubViews:(BOOL)hide;
+- (float)getLastRowHeight;
+
 @end

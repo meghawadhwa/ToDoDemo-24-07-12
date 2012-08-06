@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA0B80D315CFBDEA00FCAA96 /* TDItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA0B80D115CFBDEA00FCAA96 /* TDItemViewController.m */; };
+		BA0B80D415CFBDEA00FCAA96 /* TDItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA0B80D215CFBDEA00FCAA96 /* TDItemViewController.xib */; };
 		BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */; };
 		BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */; };
 		BA88CAFC15BE7FFD00DBCEFE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */; };
@@ -25,15 +27,16 @@
 		BAF44B1C15C27FF700101872 /* ToDoList.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1A15C27FF700101872 /* ToDoList.m */; };
 		BAF44B2B15C2801500101872 /* TDCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1F15C2801500101872 /* TDCommon.m */; };
 		BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2315C2801500101872 /* TDParentViewController.m */; };
-		BAF44B2D15C2801500101872 /* TDItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF44B2415C2801500101872 /* TDItemViewController.xib */; };
 		BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2615C2801500101872 /* TDListViewController.m */; };
 		BAF44B2F15C2801500101872 /* TDListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF44B2715C2801500101872 /* TDListViewController.xib */; };
 		BAF44B3015C2801500101872 /* TDMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2915C2801500101872 /* TDMenuViewController.m */; };
 		BAF44B3115C2801500101872 /* TDMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF44B2A15C2801500101872 /* TDMenuViewController.xib */; };
-		BAF44B3415C2A57000101872 /* TDItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B3315C2A57000101872 /* TDItemViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BA0B80D015CFBDEA00FCAA96 /* TDItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDItemViewController.h; sourceTree = "<group>"; };
+		BA0B80D115CFBDEA00FCAA96 /* TDItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDItemViewController.m; sourceTree = "<group>"; };
+		BA0B80D215CFBDEA00FCAA96 /* TDItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDItemViewController.xib; sourceTree = "<group>"; };
 		BA27D8BB15C9168F00A895FE /* TDDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDDelegates.h; sourceTree = "<group>"; };
 		BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -66,15 +69,12 @@
 		BAF44B2015C2801500101872 /* TDConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDConstants.h; sourceTree = "<group>"; };
 		BAF44B2215C2801500101872 /* TDParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TDParentViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BAF44B2315C2801500101872 /* TDParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TDParentViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		BAF44B2415C2801500101872 /* TDItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDItemViewController.xib; sourceTree = "<group>"; };
 		BAF44B2515C2801500101872 /* TDListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDListViewController.h; sourceTree = "<group>"; };
 		BAF44B2615C2801500101872 /* TDListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDListViewController.m; sourceTree = "<group>"; };
 		BAF44B2715C2801500101872 /* TDListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDListViewController.xib; sourceTree = "<group>"; };
 		BAF44B2815C2801500101872 /* TDMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDMenuViewController.h; sourceTree = "<group>"; };
 		BAF44B2915C2801500101872 /* TDMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDMenuViewController.m; sourceTree = "<group>"; };
 		BAF44B2A15C2801500101872 /* TDMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDMenuViewController.xib; sourceTree = "<group>"; };
-		BAF44B3215C2A57000101872 /* TDItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDItemViewController.h; sourceTree = "<group>"; };
-		BAF44B3315C2A57000101872 /* TDItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDItemViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,9 +197,9 @@
 				BAF44B2815C2801500101872 /* TDMenuViewController.h */,
 				BAF44B2915C2801500101872 /* TDMenuViewController.m */,
 				BAF44B2A15C2801500101872 /* TDMenuViewController.xib */,
-				BAF44B3215C2A57000101872 /* TDItemViewController.h */,
-				BAF44B3315C2A57000101872 /* TDItemViewController.m */,
-				BAF44B2415C2801500101872 /* TDItemViewController.xib */,
+				BA0B80D015CFBDEA00FCAA96 /* TDItemViewController.h */,
+				BA0B80D115CFBDEA00FCAA96 /* TDItemViewController.m */,
+				BA0B80D215CFBDEA00FCAA96 /* TDItemViewController.xib */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -257,9 +257,9 @@
 			files = (
 				BA88CB0415BE7FFD00DBCEFE /* InfoPlist.strings in Resources */,
 				BA88CB0D15BE7FFD00DBCEFE /* MainStoryboard.storyboard in Resources */,
-				BAF44B2D15C2801500101872 /* TDItemViewController.xib in Resources */,
 				BAF44B2F15C2801500101872 /* TDListViewController.xib in Resources */,
 				BAF44B3115C2801500101872 /* TDMenuViewController.xib in Resources */,
+				BA0B80D415CFBDEA00FCAA96 /* TDItemViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +283,7 @@
 				BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */,
 				BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */,
 				BAF44B3015C2801500101872 /* TDMenuViewController.m in Sources */,
-				BAF44B3415C2A57000101872 /* TDItemViewController.m in Sources */,
+				BA0B80D315CFBDEA00FCAA96 /* TDItemViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

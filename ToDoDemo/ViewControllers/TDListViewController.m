@@ -28,7 +28,6 @@
 {
     [super viewDidLoad];
     [TDCommon setTheme:THEME_BLUE];
-    [self fetchObjectsFromDb];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -363,6 +362,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     list.listName = @"Newly Added"; 
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
     if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+        [self.managedObjectContext rollback];
         [self.rows removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         // Return to list
@@ -389,19 +389,35 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 #pragma mark - Table view delegate
 
+- (void)addChildView
+{
+    TDListViewController *src = (TDListViewController *) self;
+    TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
+//    destination.parentName = @"Lists";
+//    destination.childName = nil;
+//    destination.goingDownByPullUp = YES;
+    //destination.parentDelegate = self;
+    [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGRect myFrame = self.view.frame;
+        myFrame.origin.y = -480;
+        self.view.frame = myFrame; 
+    } completion:^ (BOOL finished) {
+        [src.navigationController pushViewController:destination animated:NO];
+        CGRect myFrame = self.view.frame;
+        myFrame.origin.y = 0;
+        self.view.frame = myFrame; 
+    }];
+}
+
 - (void)removeCurrentView
 {
-    [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect myFrame = self.view.frame;
         myFrame.origin.y = 480;
         self.view.frame = myFrame; 
     } completion:^ (BOOL finished) {
+        [self.tableView setHidden:YES];
         [self.navigationController popViewControllerAnimated:NO]; 
-        //            TDMainViewController * mainController =(TDMainViewController *)[self.navigationController topViewController];
-        //            CGRect myFrame = mainController.view.frame;
-        //            myFrame.origin.y = -480;
-        //            mainController.view.frame = myFrame;
-        //            mainController.goingBackFlag = YES;
     }];
     
 }
@@ -413,8 +429,8 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     ToDoList *list = [self.rows objectAtIndex:indexPath.row];
     destination.parentList = list;
     //destination.parentName = @"Menu";
-    //destination.goingDownByPullUp = NO;
-    //src.goingDownByPullUp = NO;
+    destination.goingDownByPullUp = NO;
+    src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
     [src.navigationController pushViewController:destination animated:YES];
 }
@@ -422,10 +438,44 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [TDCommon setTheme:THEME_BLUE];   
+    self.tableView.hidden = YES;
+    [self fetchObjectsFromDb];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-
+    if (self.goingDownByPullUp) {
+        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+            CGRect myFrame = self.view.frame;
+            myFrame.origin.y = 480;
+            self.view.frame = myFrame;
+        } completion:^(BOOL fin){
+            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                [self.tableView setHidden:NO];
+                CGRect myFrame = self.view.frame;
+                myFrame.origin.y = 0.0;
+                self.view.frame = myFrame;
+            } 
+                             completion: nil];
+        }];
+        self.goingDownByPullUp = NO;
+    }
+    else {
+        float originY = [self getLastRowHeight];
+        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+            CGRect myFrame = self.view.frame;
+            myFrame.origin.y = -originY;
+            self.view.frame = myFrame;
+        } completion:^(BOOL fin){
+            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                //[self toggleSubViews:NO];
+                [self.tableView setHidden:NO];
+                CGRect myFrame = self.view.frame;
+                myFrame.origin.y = 0.0;
+                self.view.frame = myFrame;
+            } 
+                             completion: nil];
+        }];
+    }
 }
 @end

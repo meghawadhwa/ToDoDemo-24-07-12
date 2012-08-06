@@ -12,4 +12,6 @@
 @interface TDMenuViewController : UITableViewController
 @property(nonatomic,retain) NSArray *menuContentsArray;
 @property(nonatomic,retain)NSManagedObjectContext *managedObjectContext;
+@property(nonatomic,assign) BOOL goingDownByPullUp;
+
 @end
