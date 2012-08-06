@@ -194,12 +194,12 @@
 				BAF44B2515C2801500101872 /* TDListViewController.h */,
 				BAF44B2615C2801500101872 /* TDListViewController.m */,
 				BAF44B2715C2801500101872 /* TDListViewController.xib */,
-				BAF44B2815C2801500101872 /* TDMenuViewController.h */,
-				BAF44B2915C2801500101872 /* TDMenuViewController.m */,
-				BAF44B2A15C2801500101872 /* TDMenuViewController.xib */,
 				BA0B80D015CFBDEA00FCAA96 /* TDItemViewController.h */,
 				BA0B80D115CFBDEA00FCAA96 /* TDItemViewController.m */,
 				BA0B80D215CFBDEA00FCAA96 /* TDItemViewController.xib */,
+				BAF44B2815C2801500101872 /* TDMenuViewController.h */,
+				BAF44B2915C2801500101872 /* TDMenuViewController.m */,
+				BAF44B2A15C2801500101872 /* TDMenuViewController.xib */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";

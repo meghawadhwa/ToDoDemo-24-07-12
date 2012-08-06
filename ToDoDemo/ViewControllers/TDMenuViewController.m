@@ -62,6 +62,7 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
+    [self.tableView reloadData];
     if (self.goingDownByPullUp) {
         [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
             CGRect myFrame = self.view.frame;
@@ -128,7 +129,6 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:listCellIdentifier];
             UILabel *backgroundLabel = [[UILabel alloc] initWithFrame:CGRectMake(260, 0, 60, 60)];
             backgroundLabel.backgroundColor = [TDCommon getColorByPriority:-3];
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d",[self getListCount]];
             cell.detailTextLabel.textColor = [UIColor whiteColor];
             [cell.contentView addSubview:backgroundLabel];
             [cell.contentView bringSubviewToFront:cell.detailTextLabel];
@@ -145,6 +145,9 @@
              cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         }
     }
+     if (indexPath.row == 0) {
+         cell.detailTextLabel.text = [NSString stringWithFormat:@"%d",[self getListCount]];
+     }
     cell.textLabel.text = cellName;
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.backgroundColor = [UIColor clearColor];
@@ -165,7 +168,7 @@
     [request setEntity: [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.managedObjectContext]];
     
     NSError *error = nil;
-    NSUInteger count = [self.managedObjectContext countForFetchRequest: request error: &error];
+    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error: &error];
     NSLog(@"count %d",count);    
     return count;
 }
