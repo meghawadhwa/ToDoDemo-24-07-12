@@ -11,5 +11,6 @@
 
 @interface TDItemViewController : TDParentViewController
 @property(nonatomic,retain)ToDoList *parentList; 
-
+@property(nonatomic,retain) NSMutableArray *checkedArray;
+@property(nonatomic,retain) NSMutableArray *uncheckedArray;
 @end

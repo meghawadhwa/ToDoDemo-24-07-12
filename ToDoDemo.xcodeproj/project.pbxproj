@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		BA0B80D315CFBDEA00FCAA96 /* TDItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA0B80D115CFBDEA00FCAA96 /* TDItemViewController.m */; };
 		BA0B80D415CFBDEA00FCAA96 /* TDItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA0B80D215CFBDEA00FCAA96 /* TDItemViewController.xib */; };
+		BA28CD9015D1169F0052164F /* arrow-down.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8815D1169F0052164F /* arrow-down.png */; };
+		BA28CD9115D1169F0052164F /* arrow-up.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8915D1169F0052164F /* arrow-up.png */; };
+		BA28CD9215D1169F0052164F /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8A15D1169F0052164F /* arrow.png */; };
+		BA28CD9315D1169F0052164F /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8B15D1169F0052164F /* check.png */; };
+		BA28CD9415D1169F0052164F /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8C15D1169F0052164F /* delete.png */; };
+		BA28CD9515D1169F0052164F /* empty_box.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8D15D1169F0052164F /* empty_box.png */; };
+		BA28CD9615D1169F0052164F /* full_box.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8E15D1169F0052164F /* full_box.png */; };
+		BA28CD9715D1169F0052164F /* smilie.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8F15D1169F0052164F /* smilie.png */; };
 		BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */; };
 		BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */; };
 		BA88CAFC15BE7FFD00DBCEFE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */; };
@@ -38,6 +46,14 @@
 		BA0B80D115CFBDEA00FCAA96 /* TDItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDItemViewController.m; sourceTree = "<group>"; };
 		BA0B80D215CFBDEA00FCAA96 /* TDItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TDItemViewController.xib; sourceTree = "<group>"; };
 		BA27D8BB15C9168F00A895FE /* TDDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDDelegates.h; sourceTree = "<group>"; };
+		BA28CD8815D1169F0052164F /* arrow-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-down.png"; sourceTree = "<group>"; };
+		BA28CD8915D1169F0052164F /* arrow-up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-up.png"; sourceTree = "<group>"; };
+		BA28CD8A15D1169F0052164F /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		BA28CD8B15D1169F0052164F /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
+		BA28CD8C15D1169F0052164F /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
+		BA28CD8D15D1169F0052164F /* empty_box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_box.png; sourceTree = "<group>"; };
+		BA28CD8E15D1169F0052164F /* full_box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = full_box.png; sourceTree = "<group>"; };
+		BA28CD8F15D1169F0052164F /* smilie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smilie.png; sourceTree = "<group>"; };
 		BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -93,6 +109,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA28CD8715D1169F0052164F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				BA28CD8815D1169F0052164F /* arrow-down.png */,
+				BA28CD8915D1169F0052164F /* arrow-up.png */,
+				BA28CD8A15D1169F0052164F /* arrow.png */,
+				BA28CD8B15D1169F0052164F /* check.png */,
+				BA28CD8C15D1169F0052164F /* delete.png */,
+				BA28CD8D15D1169F0052164F /* empty_box.png */,
+				BA28CD8E15D1169F0052164F /* full_box.png */,
+				BA28CD8F15D1169F0052164F /* smilie.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		BA88CAE815BE7FFD00DBCEFE = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +162,7 @@
 				BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */,
 				BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */,
 				BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */,
+				BA28CD8715D1169F0052164F /* Images */,
 				BA88CB1415BE7FFD00DBCEFE /* TDDetailViewController.h */,
 				BA88CB1515BE7FFE00DBCEFE /* TDDetailViewController.m */,
 				BA88CB0E15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld */,
@@ -260,6 +292,14 @@
 				BAF44B2F15C2801500101872 /* TDListViewController.xib in Resources */,
 				BAF44B3115C2801500101872 /* TDMenuViewController.xib in Resources */,
 				BA0B80D415CFBDEA00FCAA96 /* TDItemViewController.xib in Resources */,
+				BA28CD9015D1169F0052164F /* arrow-down.png in Resources */,
+				BA28CD9115D1169F0052164F /* arrow-up.png in Resources */,
+				BA28CD9215D1169F0052164F /* arrow.png in Resources */,
+				BA28CD9315D1169F0052164F /* check.png in Resources */,
+				BA28CD9415D1169F0052164F /* delete.png in Resources */,
+				BA28CD9515D1169F0052164F /* empty_box.png in Resources */,
+				BA28CD9615D1169F0052164F /* full_box.png in Resources */,
+				BA28CD9715D1169F0052164F /* smilie.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

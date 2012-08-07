@@ -23,7 +23,7 @@
 @synthesize grabbedObject;
 //@synthesize doneOverlayView;
 @synthesize goingDownByPullUp;
-
+@synthesize parentName,childName;
 
 - (void)awakeFromNib
 {

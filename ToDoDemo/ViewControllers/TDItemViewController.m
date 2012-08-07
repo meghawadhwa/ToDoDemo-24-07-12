@@ -14,6 +14,7 @@
 
 @implementation TDItemViewController
 @synthesize parentList;
+@synthesize checkedArray,uncheckedArray;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -29,6 +30,16 @@
     [super viewDidLoad];
     [TDCommon setTheme:THEME_HEAT_MAP];
     self.rows = [NSMutableArray arrayWithArray:[parentList.items allObjects]];
+    self.checkedArray = [[NSMutableArray alloc] init];
+    self.uncheckedArray = [[NSMutableArray alloc] init];
+    for (ToDoItem *item in self.rows) {
+        if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
+            [self.uncheckedArray addObject:item];
+        }
+        else {
+            [self.uncheckedArray addObject:item];
+        }
+    }
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -64,9 +75,14 @@
 }
 
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
-{
+{ 
     ToDoItem * item = [self.rows objectAtIndex:indexpath.row];
     if ([item.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
+        //TODO :animation
+//        if ([[self.checkedArray objectAtIndex:indexpath.row] isEqual:item]) {
+//            [self.checkedArray removeObjectAtIndex:indexpath.row];
+//        }
+//        // animate To go Down
         item.doneStatus = [NSNumber numberWithBool:TRUE];
     }
     else {
@@ -127,8 +143,31 @@
     }    
 }
 
+#pragma mark - animation
 
-
+- (void)moveRowDown
+{
+    //NSMutableArray * requiredArray = uncheckedArray;
+}
+- (void)animateRowsAfterDeletionAtIndex:(int)index FromArray:(NSMutableArray *) requiredArray withDeletionFlag:(BOOL)flag
+    {
+//        
+//        if (requiredArray != self.checkedArray) {
+//            if (flag) {
+//                int lastCheckedObjectIndex = [self.checkedViewsArray count]-1;  //First Move ALL Checked Rows Up-Frm ChckdViewarray
+//                TDListCustomRow * lastCheckedRow = [self.checkedViewsArray lastObject];
+//                TDListCustomRow *lastCustomRow = [self.customViewsArray lastObject];
+//                [self moveCheckedRowsUptoIndex:lastCheckedObjectIndex WithDeletionFlag:flag];
+//                [UIView animateWithDuration:ROWS_SHIFTING_DURATION delay:DELETION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//                    lastCheckedRow.frame = CGRectMake(0, lastCustomRow.frame.origin.y, lastCustomRow.frame.size.width, lastCustomRow.frame.size.height);} completion:nil]; 
+//            }
+//            //Then Move Custom Unchecked Rows Up till the required Index
+//            [self shiftRowsBackFromIndex:index withDeletionFlag:flag];
+//            
+//        }    
+//        else [self moveCheckedRowsUptoIndex:index WithDeletionFlag:flag];
+//    }
+}
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -159,9 +198,9 @@
             
             cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
             if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
-                cell.imageView.image = [UIImage imageNamed:@"reload.png"];
+                cell.imageView.image = [UIImage imageNamed:@"arrow-up.png"];
                 cell.tintColor = [UIColor blackColor];
-                cell.textLabel.text = @"Return to list...";
+                cell.textLabel.text = [NSString stringWithFormat:@"Return to %@",self.parentName];
                 cell.nameTextField.text = cell.textLabel.text;
             } else if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
                 cell.imageView.image = nil;

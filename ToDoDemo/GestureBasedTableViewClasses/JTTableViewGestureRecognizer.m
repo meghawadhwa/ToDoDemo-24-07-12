@@ -15,6 +15,7 @@ typedef enum {
     JTTableViewGestureRecognizerStatePinching,
     JTTableViewGestureRecognizerStatePanning,
     JTTableViewGestureRecognizerStateMoving,
+    JTTableViewGestureRecognizerStatePullingUp,
 } JTTableViewGestureRecognizerState;
 
 CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
@@ -480,7 +481,23 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             [self.tableView endUpdates];
         }
     }
-    
+//    else if (scrollView.contentOffset.y > 120 ) {
+//        NSLog(@"PULL UP DETECTED**************");
+//        if ( self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating) {
+//         self.state = JTTableViewGestureRecognizerStatePullingUp;
+//        
+//        }
+//        
+//        //If tableView does not become scrollable
+//    }
+//     else {
+//         NSLog(@"confused %f %f",scrollView.contentOffset.y,self.tableView.frame.size.height );
+//     }
+//    
+//    if (self.state = JTTableViewGestureRecognizerStatePullingUp) {
+//        NSLog(@"After Pull Up Detected");
+//    }
+//    
     if (self.state == JTTableViewGestureRecognizerStateDragging) {
         self.addingRowHeight += scrollView.contentOffset.y * -1;
         [self.tableView reloadData];

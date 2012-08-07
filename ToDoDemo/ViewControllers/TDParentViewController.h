@@ -26,6 +26,9 @@
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property(nonatomic,assign) BOOL goingDownByPullUp;
+@property(nonatomic,retain) NSString *parentName;
+@property(nonatomic,retain) NSString *childName;
+
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;

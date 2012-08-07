@@ -77,9 +77,9 @@
             
             cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
             if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
-                cell.imageView.image = [UIImage imageNamed:@"reload.png"];
+                cell.imageView.image = [UIImage imageNamed:@"arrow-up.png"];
                 cell.tintColor = [UIColor blackColor];
-                cell.textLabel.text = @"Return to list...";
+                cell.textLabel.text = [NSString stringWithFormat:@"Return to %@",self.parentName];
                 cell.nameTextField.text = cell.textLabel.text;
             } else if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT) {
                 cell.imageView.image = nil;
@@ -452,7 +452,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
     ToDoList *list = [self.rows objectAtIndex:indexPath.row];
     destination.parentList = list;
-    //destination.parentName = @"Menu";
+    destination.parentName = @"Lists";
     destination.goingDownByPullUp = NO;
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;

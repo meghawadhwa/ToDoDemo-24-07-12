@@ -191,7 +191,7 @@
 {
     TDMenuViewController *src = (TDMenuViewController *) self;
     TDListViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
-    //destination.parentName = @"Menu";
+    destination.parentName = @"Menu";
     destination.goingDownByPullUp = NO;
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
