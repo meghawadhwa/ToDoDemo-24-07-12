@@ -191,7 +191,7 @@
 @end 
 
 #pragma mark -
-
+float lastContentOffset = 0;
 @implementation TransformableTableViewCell
 @synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView,previousLabelText;
 @synthesize updateDelegate,deleteDelegate;
@@ -324,8 +324,9 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     UITableView * superView = (UITableView *)[self superview];
-    [UIView animateWithDuration:0.2 animations:^{
-        [superView setFrame:CGRectMake(0,0, superView.frame.size.width , superView.frame.size.height)];
+    [UIView animateWithDuration:0.3 animations:^{
+        [superView setContentOffset:CGPointMake(0, lastContentOffset) animated:NO];
+        
     }];
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
     [self.nameTextField resignFirstResponder];
@@ -339,8 +340,10 @@ return YES;
     self.nameTextField.enablesReturnKeyAutomatically = YES;
     
     UITableView * superView = (UITableView *)[self superview];
+    lastContentOffset = superView.contentOffset.y;
     [UIView animateWithDuration:0.3 animations:^{
-        [superView setFrame:CGRectMake(0,0 - self.frame.origin.y, superView.frame.size.width, superView.frame.size.height)];}];
+        [superView setContentOffset:CGPointMake(0, CGRectGetMinY(self.frame)) animated:NO];
+}];
     [self createDoneOverlayAtHeight:CGRectGetMaxY(self.frame)];
     [superView addSubview:self.doneOverlayView];
                                  
@@ -366,8 +369,9 @@ return YES;
     self.doneOverlayView = nil;
     
     UITableView * superView = (UITableView *)[self superview];
-    [UIView animateWithDuration:0.2 animations:^{
-        [superView setFrame:CGRectMake(0,0, 320, superView.frame.size.height)];
+    [UIView animateWithDuration:0.3 animations:^{
+        [superView setContentOffset:CGPointMake(0, lastContentOffset) animated:NO];
+
     }];
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
 
