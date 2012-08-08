@@ -54,6 +54,7 @@
 		BA28CD8D15D1169F0052164F /* empty_box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_box.png; sourceTree = "<group>"; };
 		BA28CD8E15D1169F0052164F /* full_box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = full_box.png; sourceTree = "<group>"; };
 		BA28CD8F15D1169F0052164F /* smilie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smilie.png; sourceTree = "<group>"; };
+		BA76C39D15D25B22004FE8E0 /* ToDoDemo 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ToDoDemo 2.xcdatamodel"; sourceTree = "<group>"; };
 		BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -443,6 +444,7 @@
 		BA88CB0E15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				BA76C39D15D25B22004FE8E0 /* ToDoDemo 2.xcdatamodel */,
 				BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */,
 			);
 			currentVersion = BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */;

@@ -203,6 +203,9 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"ToDoList"
                                               inManagedObjectContext:self.managedObjectContext];
+   
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"priority" ascending:NO];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
     [fetchRequest setEntity:entity];
     NSError *error = nil;
     
@@ -401,10 +404,10 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
         cell.imageView.image = nil;
         cell.textLabel.text = @"Just Added!";
-        //[cell labelTapped];
-        //cell.nameTextField.text = @"";
+        //[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+       // [self.tableView reloadData];
+
         [self addNewRowInDBAtIndexPath:indexPath];
-        
         //insert in db here
     }
 }

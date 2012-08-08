@@ -8,6 +8,7 @@
 
 #import "JTTableViewGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
+#import "TransformableTableViewCell.h"
 
 typedef enum {
     JTTableViewGestureRecognizerStateNone,
@@ -111,6 +112,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 #pragma mark Logic
 
 - (void)commitOrDiscardCell {
+    BOOL addedCell = NO;
     UITableViewCell *cell = (UITableViewCell *)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
     [self.tableView beginUpdates];
     
@@ -123,6 +125,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     
     if (cell.frame.size.height >= commitingCellHeight) {
         [self.delegate gestureRecognizer:self needsCommitRowAtIndexPath:self.addingIndexPath];
+        addedCell = YES;
     } else {
         [self.delegate gestureRecognizer:self needsDiscardRowAtIndexPath:self.addingIndexPath];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
@@ -131,8 +134,18 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     // We would like to reload other rows as well
     [self.tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:self.addingIndexPath afterDelay:JTTableViewRowAnimationDuration];
 
-    self.addingIndexPath = nil;
     [self.tableView endUpdates];
+    
+    //To make it editable
+    if (addedCell) {
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+
+    TransformableTableViewCell *newCell = (id)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
+    [newCell labelTapped];
+    newCell.nameTextField.text = @"";
+    }
+    
+    self.addingIndexPath = nil;
     
     // Restore contentInset while touch ends
     [UIView beginAnimations:@"" context:nil];
@@ -491,7 +504,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             [self.tableView endUpdates];
         }
     }
-    else if(self.tableView.contentOffset.y >= fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)) {
+    else if(self.tableView.contentOffset.y >= fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)  && self.state == JTTableViewGestureRecognizerStateNone) {
         NSLog(@"Pull Up Detected");
         
         //if (! self.switchUpView && self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating)
