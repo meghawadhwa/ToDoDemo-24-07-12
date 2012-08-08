@@ -7,6 +7,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "TDDelegates.h"
 
 typedef enum {
     JTTableViewCellEditingStateMiddle,
@@ -27,6 +28,9 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 @interface JTTableViewGestureRecognizer : NSObject <UITableViewDelegate>
 
 @property (nonatomic, weak, readonly) UITableView *tableView;
+@property (nonatomic, assign) id<TDExtraPullDelegate> extraPullDelegate;
+@property (nonatomic, assign) id<TDPullUpToMoveDownDelegate> pullUpToMoveDownDelegate;
+
 
 + (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate;
 

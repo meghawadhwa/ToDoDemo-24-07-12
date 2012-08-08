@@ -15,6 +15,7 @@
 
 @implementation TDListViewController
 @synthesize rowIndexToBeUpdated;
+@synthesize lastVisitedList;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -25,16 +26,20 @@
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.lastVisitedList = nil;
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [TDCommon setTheme:THEME_BLUE];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.tableViewRecognizer.pullUpToMoveDownDelegate = self;
 }
 
 - (void)viewDidUnload
@@ -413,14 +418,23 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 #pragma mark - Table view delegate
 
+- (BOOL)lastVisitedListIsNotNil
+{
+    return (self.lastVisitedList !=nil);
+}
+
 - (void)addChildView
 {
+    if (!lastVisitedList) {
+        return;
+    }
+    
     TDListViewController *src = (TDListViewController *) self;
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
-//    destination.parentName = @"Lists";
-//    destination.childName = nil;
-//    destination.goingDownByPullUp = YES;
-    //destination.parentDelegate = self;
+    destination.parentName = @"Lists";
+    destination.parentList = lastVisitedList;
+    destination.childName = nil;
+    destination.goingDownByPullUp = YES;
     [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect myFrame = self.view.frame;
         myFrame.origin.y = -480;
@@ -451,6 +465,9 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     TDListViewController *src = (TDListViewController *) self;
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
     ToDoList *list = [self.rows objectAtIndex:indexPath.row];
+    src.childName = list.listName;
+    destination.childName = nil;
+    src.lastVisitedList = list;
     destination.parentList = list;
     destination.parentName = @"Lists";
     destination.goingDownByPullUp = NO;

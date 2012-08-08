@@ -19,5 +19,14 @@
 
 @protocol TDDeleteFromDbDelegate<NSObject>
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath;
+@end
 
+@protocol TDExtraPullDelegate<NSObject>
+- (NSString *)getParentName;
+- (NSString *)getChildName;
+@end
+
+@protocol TDPullUpToMoveDownDelegate<NSObject>
+- (void)addChildView;
+- (BOOL)lastVisitedListIsNotNil;
 @end

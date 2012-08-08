@@ -193,6 +193,8 @@
     TDListViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
     destination.parentName = @"Menu";
     destination.goingDownByPullUp = NO;
+//    src.childName = @"Lists";
+//    src.parentName = @"";
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
     [src.navigationController pushViewController:destination animated:YES];

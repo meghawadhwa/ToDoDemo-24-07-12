@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TDParentViewController.h"
-@interface TDListViewController : TDParentViewController <UIActionSheetDelegate>
+@interface TDListViewController : TDParentViewController <UIActionSheetDelegate,TDPullUpToMoveDownDelegate>
 @property(nonatomic,assign) int rowIndexToBeUpdated;
+@property(nonatomic,assign) ToDoList *lastVisitedList;
 @end

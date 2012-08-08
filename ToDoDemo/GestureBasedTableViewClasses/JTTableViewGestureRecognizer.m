@@ -37,6 +37,13 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @property (nonatomic, assign) CGFloat                        scrollingRate;
 @property (nonatomic, strong) NSTimer                       *movingTimer;
 
+// pull up image views
+@property(nonatomic,retain)  UIImageView *upArrowImageView;
+@property(nonatomic,retain)  UIImageView *smileyImageView;
+@property(nonatomic,retain)  UIView *switchUpView;
+
+- (NSString *)getSwitchLabelTextForPullDown;
+
 - (void)updateAddingIndexPathForCurrentLocation;
 - (void)commitOrDiscardCell;
 
@@ -50,6 +57,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @synthesize pinchRecognizer, panRecognizer, longPressRecognizer;
 @synthesize state, addingCellState;
 @synthesize cellSnapshot, scrollingRate, movingTimer;
+
+@synthesize upArrowImageView,smileyImageView,switchUpView,extraPullDelegate,pullUpToMoveDownDelegate;
 
 - (void)scrollTable {
     // Scroll tableview while touch point is on top or bottom part
@@ -459,6 +468,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         }
         return;
     }
+        NSLog(@" Content Offset %f  bounds %f",scrollView.contentOffset.y,fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height));
 
     // We try to create a new cell when the user tries to drag the content to and offset of negative value
     if (scrollView.contentOffset.y < 0) {
@@ -481,23 +491,20 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             [self.tableView endUpdates];
         }
     }
-//    else if (scrollView.contentOffset.y > 120 ) {
-//        NSLog(@"PULL UP DETECTED**************");
-//        if ( self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating) {
-//         self.state = JTTableViewGestureRecognizerStatePullingUp;
-//        
-//        }
-//        
-//        //If tableView does not become scrollable
-//    }
-//     else {
-//         NSLog(@"confused %f %f",scrollView.contentOffset.y,self.tableView.frame.size.height );
-//     }
-//    
-//    if (self.state = JTTableViewGestureRecognizerStatePullingUp) {
-//        NSLog(@"After Pull Up Detected");
-//    }
-//    
+    else if(self.tableView.contentOffset.y >= fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)) {
+        NSLog(@"Pull Up Detected");
+        
+        //if (! self.switchUpView && self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating)
+        self.state = JTTableViewGestureRecognizerStatePullingUp;
+        [self createViewForPullUp];
+    }
+
+    else if ((self.tableView.contentOffset.y < fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)) && self.state == JTTableViewGestureRecognizerStatePullingUp){
+        self.state = JTTableViewGestureRecognizerStateNone;
+        if (self.switchUpView != nil) self.switchUpView.hidden = YES;
+        if (self.upArrowImageView != nil) self.upArrowImageView.hidden = YES;
+        if (self.smileyImageView != nil)self.smileyImageView.hidden = YES;
+}
     if (self.state == JTTableViewGestureRecognizerStateDragging) {
         self.addingRowHeight += scrollView.contentOffset.y * -1;
         [self.tableView reloadData];
@@ -513,10 +520,181 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         return;
     }
 
+    if (self.state == JTTableViewGestureRecognizerStatePullingUp)
+    {
+        [self.pullUpToMoveDownDelegate addChildView];
+        self.state = JTTableViewGestureRecognizerStateNone;
+        [self.switchUpView removeFromSuperview];
+        self.switchUpView = nil;
+        [self.upArrowImageView removeFromSuperview];
+        self.upArrowImageView = nil;
+    }
+    
+    if (self.state == JTTableViewGestureRecognizerStateNone)
+    {
+        if (self.switchUpView != nil) {
+            [self.switchUpView removeFromSuperview];
+            self.switchUpView = nil;
+        }
+        if (self.upArrowImageView != nil) {
+            [self.upArrowImageView removeFromSuperview];
+            self.upArrowImageView = nil;
+        }
+        if (self.smileyImageView != nil) {
+            [self.smileyImageView removeFromSuperview];
+            self.smileyImageView = nil;
+        }
+    }
+
     if (self.state == JTTableViewGestureRecognizerStateDragging) {
         self.state = JTTableViewGestureRecognizerStateNone;
         [self commitOrDiscardCell];
     }
+}
+
+# pragma mark - PULL UP METHODS by Megha Wadhwa
+
+#define EMPTY_BOX [UIImage imageNamed:@"empty_box.png"]
+#define FULL_BOX [UIImage imageNamed:@"full_box.png"]
+#define BIG_ARROW_UP @"arrow-up.png"
+#define BIG_ARROW_DOWN @"arrow-down.png"
+#define SMILEY @"smilie.png"
+#define EXTRA_PULL_UP_ORIGINY 485
+#define EXTRA_PULL_DOWN_ORIGINY -50
+
+- (void)createViewForPullUp
+{
+    // check If it is Items view controller,then create pull up view to remove checked items
+    
+    //if ([self.extraPullDownDelegate getParentName] == @"Lists")  [self createPullUpViewToComplete];
+   // else 
+        [self createPullUpViewToMoveDown];
+}
+
+-(void)createPullUpViewToMoveDown
+{
+    if(self.state == JTTableViewGestureRecognizerStatePullingUp && !([[self.extraPullDelegate getParentName] isEqualToString:@"Menu"] && [[self getSwitchLabelTextForPullUp] isEqualToString:@"Nothing beyond it!!"]))
+    {
+        [self createArrowImageViewWithImageName:BIG_ARROW_DOWN atHeight:self.tableView.contentSize.height + 60];
+        [self createSwitchUpViewAtHeight:self.tableView.contentSize.height + 60];
+    }
+    else {
+        if (self.upArrowImageView) self.upArrowImageView.hidden = YES;
+        else if(self.smileyImageView) self.smileyImageView.hidden = YES;
+        self.switchUpView.hidden = YES;
+    }
+}
+
+//- (void)createPullUpViewToComplete
+//{
+//    [self createPullUpView];
+//    if ([pullDelegate checkedRowsExist]) // checks If already checked rows exists
+//    {
+//        [self createArrowImageView];
+//    }
+//    else
+//    {
+//        self.pullUpView.alpha = 0.2;
+//        return;
+//    }
+//}
+
+- (void)createArrowImageViewWithImageName:(NSString *)imageName atHeight:(float)originY
+{
+    if (self.upArrowImageView != nil) {
+        self.upArrowImageView.hidden = NO;
+        return;
+    }
+    else if (self.smileyImageView != nil) {
+        self.smileyImageView.hidden = NO;
+        return;
+    }
+//    if (self.extraPullDownDetected) {
+//        if ([self.extraPullDownDelegate getParentName] !=nil) {
+//            [self createBigArrowImageViewWithImage:imageName atHeight:originY];
+//        }
+//        else {
+//            [self createSmileyImageViewWithImage:SMILEY atHeight:originY];    
+//        }
+//    }
+//   else if(self.extraPullUpDetected) {
+    if(self.state == JTTableViewGestureRecognizerStatePullingUp){
+
+        if (![[self.extraPullDelegate getParentName] isEqualToString:@"Lists"]) {
+            [self createBigArrowImageViewWithImage:BIG_ARROW_DOWN atHeight:originY];
+        }
+        else {
+            [self createSmileyImageViewWithImage:SMILEY atHeight:originY];    
+        }
+    }
+}
+
+- (void)createBigArrowImageViewWithImage:(NSString *)imageName atHeight:(float)originY
+{
+    self.upArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+    self.upArrowImageView.backgroundColor = [UIColor clearColor];
+    [self.upArrowImageView setFrame:CGRectMake(80, originY, 18, 24)];
+    [self.tableView addSubview:self.upArrowImageView];   
+}
+
+- (void)createSmileyImageViewWithImage:(NSString *)imageName atHeight:(float)originY
+{
+    self.smileyImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+    self.smileyImageView.backgroundColor = [UIColor clearColor];
+    [self.smileyImageView setFrame:CGRectMake(70, originY -5, 33, 37)];
+    [self.tableView addSubview:self.smileyImageView];
+}
+
+- (void)createSwitchUpViewAtHeight:(float)originY
+{
+    if (self.switchUpView != nil) {
+        self.switchUpView.hidden = NO;
+        return;
+    }
+    
+    UILabel *switchUpLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200,30)];
+ //   if(self.extraPullDownDetected) switchUpLabel.text = [self getSwitchLabelTextForPullDown];
+    //else if (self.extraPullUpDetected) 
+    switchUpLabel.text = [self getSwitchLabelTextForPullUp];
+    switchUpLabel.textAlignment = UITextAlignmentLeft;
+    switchUpLabel.textColor = [UIColor whiteColor];
+    switchUpLabel.backgroundColor = [UIColor clearColor];
+    switchUpLabel.font = [UIFont boldSystemFontOfSize:18];
+    
+    self.switchUpView = [[UIView alloc] initWithFrame:CGRectMake(115, originY, 200, 30)];
+    self.switchUpView.backgroundColor = [UIColor clearColor];
+    [self.switchUpView addSubview:switchUpLabel];
+    [self.tableView addSubview:self.switchUpView];
+    if ([[self.extraPullDelegate getParentName] isEqualToString:@"Menu"] && [switchUpLabel.text isEqualToString:@"Nothing beyond it!!"]) {
+    self.switchUpView.hidden = YES;
+        self.upArrowImageView.hidden = YES;
+    }
+}
+
+- (NSString *)getSwitchLabelTextForPullDown
+{
+    NSString *switchLabelText = nil;
+    NSString * parent = [self.extraPullDelegate getParentName];
+    if (parent!= nil) {
+        switchLabelText = [NSString stringWithFormat:@"Switch to %@",parent];
+    }
+    else {
+        switchLabelText = @"Nothing beyond it!!";
+    }
+    return switchLabelText;
+}
+
+- (NSString *)getSwitchLabelTextForPullUp
+{
+    NSString *switchLabelText = nil;
+    NSString * child = [self.extraPullDelegate getChildName];
+    if (child!= nil) {
+        switchLabelText = child;
+    }
+    else {
+        switchLabelText = @"Nothing beyond it!!";
+    }
+    return switchLabelText;
 }
 
 #pragma mark NSProxy
@@ -555,11 +733,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [tableView addGestureRecognizer:pan];
     pan.delegate             = recognizer;
     recognizer.panRecognizer = pan;
-    
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:recognizer action:@selector(longPressGestureRecognizer:)];
-    [tableView addGestureRecognizer:longPress];
-    longPress.delegate              = recognizer;
-    recognizer.longPressRecognizer  = longPress;
+//TODO: long press gesture  
+//    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:recognizer action:@selector(longPressGestureRecognizer:)];
+//    [tableView addGestureRecognizer:longPress];
+//    longPress.delegate              = recognizer;
+//    recognizer.longPressRecognizer  = longPress;
 
     return recognizer;
 }

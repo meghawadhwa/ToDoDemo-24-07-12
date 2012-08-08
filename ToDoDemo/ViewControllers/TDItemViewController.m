@@ -37,7 +37,7 @@
             [self.uncheckedArray addObject:item];
         }
         else {
-            [self.uncheckedArray addObject:item];
+            [self.checkedArray addObject:item];
         }
     }
     // Uncomment the following line to preserve selection between presentations.
