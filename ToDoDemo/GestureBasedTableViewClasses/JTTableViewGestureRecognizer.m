@@ -136,27 +136,32 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
     [self.tableView endUpdates];
     
-    //To make it editable
-    if (addedCell) {
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
-
-    TransformableTableViewCell *newCell = (id)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
-    [newCell labelTapped];
-    newCell.nameTextField.text = @"";
-    }
-    
-    self.addingIndexPath = nil;
-    
     // Restore contentInset while touch ends
     [UIView beginAnimations:@"" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.5];  // Should not be less than the duration of row animation 
+    [UIView setAnimationDuration:0.3];  // Should not be less than the duration of row animation 
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     [UIView commitAnimations];
     
     self.state = JTTableViewGestureRecognizerStateNone;
+
+    //To make it editable
+    if (addedCell) {
+        [self performSelector:@selector(makeNewlyAddedCellEditable) withObject:nil afterDelay:0.3];
+    }else {
+        self.addingIndexPath = nil;
+    }
 }
 
+- (void)makeNewlyAddedCellEditable
+{
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+    
+    TransformableTableViewCell *newCell = (id)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
+    [newCell labelTapped];
+    newCell.nameTextField.text = @"";
+    self.addingIndexPath = nil;
+}
 #pragma mark Action
 
 - (void)pinchGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
@@ -504,7 +509,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             [self.tableView endUpdates];
         }
     }
-    else if(self.tableView.contentOffset.y >= fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)  && self.state == JTTableViewGestureRecognizerStateNone) {
+    // Here we make sure we're not conflicting with the pinch event,
+    // ! scrollView.isDecelerating is to detect if user is actually
+    // touching on our scrollView, if not, we should assume the scrollView
+    // needed not to be adding cell
+    else if(self.tableView.contentOffset.y >= fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)  && self.state == JTTableViewGestureRecognizerStateNone && !scrollView.isDecelerating) {
         NSLog(@"Pull Up Detected");
         
         //if (! self.switchUpView && self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating)

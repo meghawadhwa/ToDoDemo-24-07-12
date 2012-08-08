@@ -13,7 +13,7 @@
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoItem" inverseName="list" inverseEntity="ToDoItem" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ToDoList" positionX="-612" positionY="-54" width="128" height="105"/>
         <element name="ToDoItem" positionX="-299" positionY="-54" width="128" height="105"/>
+        <element name="ToDoList" positionX="-612" positionY="-54" width="128" height="105"/>
     </elements>
 </model>

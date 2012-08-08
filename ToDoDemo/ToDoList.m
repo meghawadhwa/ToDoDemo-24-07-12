@@ -2,7 +2,7 @@
 //  ToDoList.m
 //  ToDoDemo
 //
-//  Created by Megha Wadhwa on 27/07/12.
+//  Created by Megha Wadhwa on 08/08/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -12,8 +12,8 @@
 
 @implementation ToDoList
 
-@dynamic listName;
 @dynamic doneStatus;
+@dynamic listName;
 @dynamic priority;
 @dynamic items;
 

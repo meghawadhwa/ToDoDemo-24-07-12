@@ -58,6 +58,37 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+#pragma mark - calculate priority
+
+- (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
+{
+    float priority = 100.0;
+    
+    if ([self.rows count] == 0) {
+        return priority;
+    }
+    
+    if (indexPath.row == 0) {
+        ToDoList *list = [self.rows objectAtIndex:0];
+        float listPriority = [list.priority floatValue];
+        priority = listPriority - 1.0;
+    }
+    else if(indexPath.row == [self.rows count])
+    {
+        ToDoList *list = [self.rows objectAtIndex:[self.rows count]-1];
+        float listPriority = [list.priority floatValue];
+        priority = listPriority + 1.0 ;
+        
+    }
+    else {
+        ToDoList *firstList = [self.rows objectAtIndex:indexPath.row];
+        float firstListPriority = [firstList.priority floatValue];
+        ToDoList *secondList = [self.rows objectAtIndex:indexPath.row -1];
+        float secondListPriority = [secondList.priority floatValue];
+        priority = (firstListPriority +secondListPriority)/2.0;
+    }
+    return priority;
+}
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
 {
@@ -68,7 +99,7 @@
     
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in adding a new list %@, %@", error, [error userInfo]);
+        NSLog(@"Error in adding a new item %@, %@", error, [error userInfo]);
         abort();
     } 
     
@@ -91,7 +122,7 @@
     
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+        NSLog(@"Error in updating a item's done status%@, %@", error, [error userInfo]);
         abort();
     }
     [self reloadFromUpdatedDB];
@@ -105,7 +136,7 @@
     
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+        NSLog(@"Error in updating a item text%@, %@", error, [error userInfo]);
         abort();
     }
     [self reloadFromUpdatedDB];
@@ -128,7 +159,7 @@
     }];
     [self.tableView endUpdates];
     
-    
+    [self.tableView reloadData];
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
@@ -138,7 +169,7 @@
     [self.rows removeObjectAtIndex:indexpath.row];
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
         abort();
     }    
 }
@@ -318,7 +349,7 @@
     ToDoItem *newItem = (ToDoItem *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem"
                                                                   inManagedObjectContext:self.managedObjectContext];
     newItem.itemName = ADDING_CELL;
-    newItem.priority = [NSNumber numberWithInt:indexPath.row];
+    newItem.priority = [NSNumber numberWithInt:[self getPriorityForIndexPath:indexPath]];
     newItem.doneStatus = [NSNumber numberWithBool:FALSE];
     newItem.list = self.parentList;
     [self.rows insertObject:newItem atIndex:indexPath.row];
@@ -328,7 +359,7 @@
     ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
     item.itemName = @"New To Do"; 
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2  && indexPath.row == 0) {
         [self.managedObjectContext rollback];
         [self.rows removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];

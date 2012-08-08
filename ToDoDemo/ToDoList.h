@@ -2,7 +2,7 @@
 //  ToDoList.h
 //  ToDoDemo
 //
-//  Created by Megha Wadhwa on 27/07/12.
+//  Created by Megha Wadhwa on 08/08/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 
 @interface ToDoList : NSManagedObject
 
-@property (nonatomic, retain) NSString * listName;
 @property (nonatomic, retain) NSNumber * doneStatus;
+@property (nonatomic, retain) NSString * listName;
 @property (nonatomic, retain) NSNumber * priority;
 @property (nonatomic, retain) NSSet *items;
 @end

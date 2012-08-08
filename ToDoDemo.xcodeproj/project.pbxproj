@@ -17,6 +17,8 @@
 		BA28CD9515D1169F0052164F /* empty_box.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8D15D1169F0052164F /* empty_box.png */; };
 		BA28CD9615D1169F0052164F /* full_box.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8E15D1169F0052164F /* full_box.png */; };
 		BA28CD9715D1169F0052164F /* smilie.png in Resources */ = {isa = PBXBuildFile; fileRef = BA28CD8F15D1169F0052164F /* smilie.png */; };
+		BA76C3A715D26364004FE8E0 /* ToDoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BA76C3A615D26364004FE8E0 /* ToDoItem.m */; };
+		BA76C3AA15D2637F004FE8E0 /* ToDoList.m in Sources */ = {isa = PBXBuildFile; fileRef = BA76C3A915D2637F004FE8E0 /* ToDoList.m */; };
 		BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */; };
 		BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */; };
 		BA88CAFC15BE7FFD00DBCEFE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CAFB15BE7FFD00DBCEFE /* CoreGraphics.framework */; };
@@ -31,8 +33,6 @@
 		BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2315BE830500DBCEFE /* TransformableTableViewCell.m */; };
 		BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CB2915BE834700DBCEFE /* QuartzCore.framework */; };
-		BAF44B1B15C27FF700101872 /* ToDoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1815C27FF700101872 /* ToDoItem.m */; };
-		BAF44B1C15C27FF700101872 /* ToDoList.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1A15C27FF700101872 /* ToDoList.m */; };
 		BAF44B2B15C2801500101872 /* TDCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1F15C2801500101872 /* TDCommon.m */; };
 		BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2315C2801500101872 /* TDParentViewController.m */; };
 		BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2615C2801500101872 /* TDListViewController.m */; };
@@ -55,6 +55,10 @@
 		BA28CD8E15D1169F0052164F /* full_box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = full_box.png; sourceTree = "<group>"; };
 		BA28CD8F15D1169F0052164F /* smilie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smilie.png; sourceTree = "<group>"; };
 		BA76C39D15D25B22004FE8E0 /* ToDoDemo 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ToDoDemo 2.xcdatamodel"; sourceTree = "<group>"; };
+		BA76C3A515D26364004FE8E0 /* ToDoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToDoItem.h; path = ../ToDoItem.h; sourceTree = "<group>"; };
+		BA76C3A615D26364004FE8E0 /* ToDoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToDoItem.m; path = ../ToDoItem.m; sourceTree = "<group>"; };
+		BA76C3A815D2637F004FE8E0 /* ToDoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoList.h; sourceTree = "<group>"; };
+		BA76C3A915D2637F004FE8E0 /* ToDoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoList.m; sourceTree = "<group>"; };
 		BA88CAF315BE7FFD00DBCEFE /* ToDoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA88CAF715BE7FFD00DBCEFE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		BA88CAF915BE7FFD00DBCEFE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -77,10 +81,6 @@
 		BA88CB2415BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
 		BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
 		BA88CB2915BE834700DBCEFE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BAF44B1715C27FF700101872 /* ToDoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToDoItem.h; path = Models/ToDoItem.h; sourceTree = "<group>"; };
-		BAF44B1815C27FF700101872 /* ToDoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToDoItem.m; path = Models/ToDoItem.m; sourceTree = "<group>"; };
-		BAF44B1915C27FF700101872 /* ToDoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToDoList.h; path = Models/ToDoList.h; sourceTree = "<group>"; };
-		BAF44B1A15C27FF700101872 /* ToDoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToDoList.m; path = Models/ToDoList.m; sourceTree = "<group>"; };
 		BAF44B1E15C2801500101872 /* TDCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDCommon.h; sourceTree = "<group>"; };
 		BAF44B1F15C2801500101872 /* TDCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDCommon.m; sourceTree = "<group>"; };
 		BAF44B2015C2801500101872 /* TDConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDConstants.h; sourceTree = "<group>"; };
@@ -200,10 +200,10 @@
 		BAF44B0B15C279CD00101872 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BAF44B1715C27FF700101872 /* ToDoItem.h */,
-				BAF44B1815C27FF700101872 /* ToDoItem.m */,
-				BAF44B1915C27FF700101872 /* ToDoList.h */,
-				BAF44B1A15C27FF700101872 /* ToDoList.m */,
+				BA76C3A815D2637F004FE8E0 /* ToDoList.h */,
+				BA76C3A915D2637F004FE8E0 /* ToDoList.m */,
+				BA76C3A515D26364004FE8E0 /* ToDoItem.h */,
+				BA76C3A615D26364004FE8E0 /* ToDoItem.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -318,13 +318,13 @@
 				BA88CB2615BE830500DBCEFE /* JTTableViewGestureRecognizer.m in Sources */,
 				BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */,
 				BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */,
-				BAF44B1B15C27FF700101872 /* ToDoItem.m in Sources */,
-				BAF44B1C15C27FF700101872 /* ToDoList.m in Sources */,
 				BAF44B2B15C2801500101872 /* TDCommon.m in Sources */,
 				BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */,
 				BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */,
 				BAF44B3015C2801500101872 /* TDMenuViewController.m in Sources */,
 				BA0B80D315CFBDEA00FCAA96 /* TDItemViewController.m in Sources */,
+				BA76C3A715D26364004FE8E0 /* ToDoItem.m in Sources */,
+				BA76C3AA15D2637F004FE8E0 /* ToDoList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +447,7 @@
 				BA76C39D15D25B22004FE8E0 /* ToDoDemo 2.xcdatamodel */,
 				BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */,
 			);
-			currentVersion = BA88CB0F15BE7FFD00DBCEFE /* ToDoDemo.xcdatamodel */;
+			currentVersion = BA76C39D15D25B22004FE8E0 /* ToDoDemo 2.xcdatamodel */;
 			path = ToDoDemo.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

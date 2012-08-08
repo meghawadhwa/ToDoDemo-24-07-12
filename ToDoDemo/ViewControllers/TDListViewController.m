@@ -204,7 +204,7 @@
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"ToDoList"
                                               inManagedObjectContext:self.managedObjectContext];
    
-    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"priority" ascending:NO];
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"priority" ascending:YES];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
     [fetchRequest setEntity:entity];
     NSError *error = nil;
@@ -384,7 +384,8 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     ToDoList *newList = (ToDoList *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoList"
                                                                   inManagedObjectContext:self.managedObjectContext];
     newList.listName = ADDING_CELL;
-    newList.priority = [NSNumber numberWithInt:indexPath.row];
+    
+    newList.priority = [NSNumber numberWithInt:[self getPriorityForIndexPath:indexPath]];
     newList.doneStatus = [NSNumber numberWithBool:FALSE];
     [self.rows insertObject:newList atIndex:indexPath.row];
 }
@@ -393,7 +394,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     ToDoList * list = [self.rows objectAtIndex:indexPath.row];
     list.listName = @"Newly Added"; 
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2 && indexPath.row == 0) {
         [self.managedObjectContext rollback];
         [self.rows removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
@@ -412,7 +413,38 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     }
 }
 
-#pragma mark - 
+#pragma mark - calculate priority
+
+- (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
+{
+    float priority = 100.0;
+    
+    if ([self.rows count] == 0) {
+        return priority;
+    }
+    
+    if (indexPath.row == 0) {
+        ToDoList *list = [self.rows objectAtIndex:0];
+        float listPriority = [list.priority floatValue];
+        priority = listPriority - 1.0;
+    }
+    else if(indexPath.row == [self.rows count])
+    {
+        ToDoList *list = [self.rows objectAtIndex:[self.rows count]-1];
+        float listPriority = [list.priority floatValue];
+        priority = listPriority + 1.0 ;
+        
+    }
+    else {
+        ToDoList *firstList = [self.rows objectAtIndex:indexPath.row];
+        float firstListPriority = [firstList.priority floatValue];
+        ToDoList *secondList = [self.rows objectAtIndex:indexPath.row -1];
+        float secondListPriority = [secondList.priority floatValue];
+        priority = (firstListPriority +secondListPriority)/2.0;
+    }
+    return priority;
+}
+
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
 {
  ToDoList *currentList = [self.rows objectAtIndex:indexPath.row];
