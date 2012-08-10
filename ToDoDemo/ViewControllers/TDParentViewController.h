@@ -38,5 +38,6 @@
 - (void)reloadFromUpdatedDB;
 - (void)toggleSubViews:(BOOL)hide;
 - (float)getLastRowHeight;
+- (void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath;;
 
 @end

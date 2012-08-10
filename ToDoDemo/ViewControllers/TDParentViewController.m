@@ -91,7 +91,6 @@
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
 
-
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.managedObjectContext rollback];
     [self.rows removeObjectAtIndex:indexPath.row];
@@ -133,8 +132,13 @@
     
     // Row color needs update after datasource changes, reload it.
     [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
+    [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
 }
 
+-(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
+{
+         
+}
 #pragma mark JTTableViewGestureMoveRowDelegate
 
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath {

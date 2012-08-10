@@ -40,6 +40,7 @@
             [self.checkedArray addObject:item];
         }
     }
+    [self updateMainArray];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -62,7 +63,7 @@
 
 - (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
 {
-    float priority = 100.0;
+    float priority = 20000.0;
     
     if ([self.rows count] == 0) {
         return priority;
@@ -110,10 +111,6 @@
     ToDoItem * item = [self.rows objectAtIndex:indexpath.row];
     if ([item.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
         //TODO :animation
-//        if ([[self.checkedArray objectAtIndex:indexpath.row] isEqual:item]) {
-//            [self.checkedArray removeObjectAtIndex:indexpath.row];
-//        }
-//        // animate To go Down
         item.doneStatus = [NSNumber numberWithBool:TRUE];
     }
     else {
@@ -133,18 +130,20 @@
     ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
     TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
     currentItem.itemName = cell.textLabel.text;
-    
+    NSLog(@"done status %d",[currentItem.doneStatus boolValue]);
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         NSLog(@"Error in updating a item text%@, %@", error, [error userInfo]);
         abort();
     }
+    [self updateNewItem:currentItem atIndexPath:indexpath];
     [self reloadFromUpdatedDB];
 }
 
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+    [self deleteItemFromIndexPath:indexpath];
     [self.managedObjectContext deleteObject:currentItem];
     [self.rows removeObjectAtIndex:indexpath.row];
     NSError *error = nil;
@@ -158,15 +157,15 @@
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
     }];
     [self.tableView endUpdates];
-    
     [self.tableView reloadData];
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
-    ToDoItem *currentList = [self.rows objectAtIndex:indexpath.row];
-    [self.managedObjectContext deleteObject:currentList];
+    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+    [self deleteItemFromIndexPath:indexpath];
     [self.rows removeObjectAtIndex:indexpath.row];
+    [self.managedObjectContext deleteObject:currentItem];
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
@@ -176,10 +175,120 @@
 
 #pragma mark - animation
 
-- (void)moveRowDown
+- (void)moveRowDownFromIndexPath:(NSIndexPath *)indexPath
 {
-    //NSMutableArray * requiredArray = uncheckedArray;
+    ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
+    NSIndexPath * NewIndexPath;
+    if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:TRUE]]) {
+    int newCount = 0;
+    if ([self.uncheckedArray count] > 0) {
+        newCount = [self.uncheckedArray count]-1;
+    }
+        NewIndexPath = [NSIndexPath indexPathForRow:newCount inSection:0];
+        NSLog(@"indexpath %@ indexPath %@",indexPath,NewIndexPath);
 }
+    else {
+        int newCount = 0;
+        if ([self.uncheckedArray count] > 0) {
+            newCount = [self.uncheckedArray count];
+        }
+        NewIndexPath = [NSIndexPath indexPathForRow:newCount inSection:0];
+        NSLog(@"indexpath %@ indexPath %@",indexPath,NewIndexPath);
+    }
+    [self.tableView beginUpdates];
+    [self.tableView moveRowAtIndexPath:indexPath toIndexPath:NewIndexPath];
+    [self.tableView endUpdates];
+}
+
+#pragma mark-
+- (void)updateMainArray
+{
+    self.rows = [NSMutableArray arrayWithArray:self.uncheckedArray];
+    [self.rows addObjectsFromArray:self.checkedArray];
+}
+
+-(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
+{
+    [self moveRowDownFromIndexPath:indexPath];
+    ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
+    // This item is done now ,updated in core data, just need to animate it Down
+    if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+        if (indexPath.row <[self.uncheckedArray count]) {
+            if ([[self.uncheckedArray objectAtIndex:indexPath.row] isEqual:item]) {
+                [self.uncheckedArray removeObjectAtIndex:indexPath.row];
+                [self.checkedArray insertObject:item atIndex:0];
+            }
+        }
+        else {
+            if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
+                [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
+                [self.uncheckedArray addObject:item];
+            }
+        }
+        //TODO :animation
+        NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
+    }
+    else {
+        if ([self.uncheckedArray count] == 0) {
+            if ([[self.checkedArray objectAtIndex:indexPath.row] isEqual:item]) {
+                [self.checkedArray removeObjectAtIndex:indexPath.row];
+                [self.uncheckedArray addObject:item];
+            }
+        }
+        else {
+                if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
+                    [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
+                    [self.uncheckedArray addObject:item];
+                }
+        }
+    }
+    [self updateMainArray];
+}
+
+- (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
+{
+    if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
+        [uncheckedArray insertObject:newItem atIndex:indexPath.row];
+    }
+    else {
+        [checkedArray insertObject:newItem atIndex:indexPath.row];
+    }
+   // NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
+
+}
+
+- (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
+{
+    if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
+        [uncheckedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
+    }
+    else {
+        [checkedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
+    }
+   // NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
+
+}
+
+- (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath
+{
+    ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
+    NSLog(@"item done status %@",item.doneStatus);
+    if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
+        [uncheckedArray removeObjectAtIndex:indexPath.row];
+    }
+    else {
+        //check if index is correct here
+        if (indexPath.row > [uncheckedArray count]-1) {
+            [checkedArray removeObjectAtIndex:indexPath.row - [uncheckedArray count]];
+        }
+        else {
+            [checkedArray removeObjectAtIndex:indexPath.row];
+        }
+    }
+    //NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
+
+}
+
 - (void)animateRowsAfterDeletionAtIndex:(int)index FromArray:(NSMutableArray *) requiredArray withDeletionFlag:(BOOL)flag
     {
 //        
@@ -353,15 +462,26 @@
     newItem.doneStatus = [NSNumber numberWithBool:FALSE];
     newItem.list = self.parentList;
     [self.rows insertObject:newItem atIndex:indexPath.row];
+    //Also Unchecked Array
+    NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
+
+    [self createNewItem:newItem atIndexPath:indexPath];
 }
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
     item.itemName = @"New To Do"; 
+    item.priority = [NSNumber numberWithInt:[self getPriorityForIndexPath:indexPath]];
+    item.doneStatus = [NSNumber numberWithBool:FALSE];
+    item.list = self.parentList;
+    [self updateNewItem:item atIndexPath:indexPath];
+    NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
     if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2  && indexPath.row == 0) {
-        [self.managedObjectContext rollback];
+        [self deleteItemFromIndexPath:indexPath];
         [self.rows removeObjectAtIndex:indexPath.row];
+        [self.managedObjectContext rollback];
+        //
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         // Return to list
         [self removeCurrentView];
@@ -372,10 +492,17 @@
         cell.textLabel.text = @"Just Added!";
         //[cell labelTapped];
         //cell.nameTextField.text = @"";
+        [self updateNewItem:item atIndexPath:indexPath];
         [self addNewRowInDBAtIndexPath:indexPath];
         
         //insert in db here
     }
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self deleteItemFromIndexPath:indexPath];
+    [self.rows removeObjectAtIndex:indexPath.row];
+    [self.managedObjectContext rollback];
 }
 
 - (void)removeCurrentView

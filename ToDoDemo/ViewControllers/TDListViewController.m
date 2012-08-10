@@ -413,11 +413,16 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     }
 }
 
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.managedObjectContext rollback];
+    [self.rows removeObjectAtIndex:indexPath.row];
+}
+
 #pragma mark - calculate priority
 
 - (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
 {
-    float priority = 100.0;
+    float priority = 20000.0;
     
     if ([self.rows count] == 0) {
         return priority;
@@ -470,6 +475,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     destination.parentList = lastVisitedList;
     destination.childName = nil;
     destination.goingDownByPullUp = YES;
+    destination.managedObjectContext = self.managedObjectContext;
     [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect myFrame = self.view.frame;
         myFrame.origin.y = -480;
