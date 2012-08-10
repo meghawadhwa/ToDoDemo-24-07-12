@@ -278,7 +278,7 @@
     }
     else {
         //check if index is correct here
-        if (indexPath.row > [uncheckedArray count]-1) {
+        if ([uncheckedArray count] > 0) {
             [checkedArray removeObjectAtIndex:indexPath.row - [uncheckedArray count]];
         }
         else {

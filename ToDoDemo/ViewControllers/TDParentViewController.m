@@ -132,7 +132,10 @@
     
     // Row color needs update after datasource changes, reload it.
     [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
-    [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
+    if (state == JTTableViewCellEditingStateRight) 
+    {
+        [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
+    }
 }
 
 -(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
