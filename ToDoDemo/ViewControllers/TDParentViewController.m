@@ -24,6 +24,7 @@
 //@synthesize doneOverlayView;
 @synthesize goingDownByPullUp;
 @synthesize parentName,childName;
+@synthesize backgroundLabel;
 
 - (void)awakeFromNib
 {
@@ -48,7 +49,7 @@
 //                 @"Long hold to start reorder cell",
                  nil];
     
-    
+    [self setBackgroundWhenNoRows];
     // Setup your tableView.delegate and tableView.datasource,
     // then enable gesture recognition in one line.
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
@@ -58,6 +59,15 @@
     self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
 }
 
+- (void)setBackgroundWhenNoRows{
+    self.backgroundLabel = [[UILabel alloc] initWithFrame:self.view.frame];
+    self.backgroundLabel.backgroundColor = [UIColor clearColor];
+    self.backgroundLabel.text = @"Pull Down To Get Started !!";
+    self.backgroundLabel.textAlignment = UITextAlignmentCenter;
+    self.backgroundLabel.textColor = [UIColor grayColor];
+    self.backgroundLabel.hidden = YES;
+    [self.view addSubview:self.backgroundLabel];
+}
 - (void)reloadFromUpdatedDB
 {
     [self fetchObjectsFromDb];
@@ -74,6 +84,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if ([self.rows count] == 0) {
+        self.backgroundLabel.hidden = NO;
+    }
+    else {
+        self.backgroundLabel.hidden = YES;
+    }
     return [self.rows count];
 }
 

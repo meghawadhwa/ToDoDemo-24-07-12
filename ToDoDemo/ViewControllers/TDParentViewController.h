@@ -29,6 +29,7 @@
 @property(nonatomic,assign) BOOL goingDownByPullUp;
 @property(nonatomic,retain) NSString *parentName;
 @property(nonatomic,retain) NSString *childName;
+@property(nonatomic,retain) UILabel *backgroundLabel;
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
