@@ -146,7 +146,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     self.state = JTTableViewGestureRecognizerStateNone;
 
     //To make it editable
-    if (addedCell) {
+    if (addedCell && cell.frame.size.height < (2 * commitingCellHeight)) {
         [self performSelector:@selector(makeNewlyAddedCellEditable) withObject:nil afterDelay:0.3];
     }else {
         self.addingIndexPath = nil;

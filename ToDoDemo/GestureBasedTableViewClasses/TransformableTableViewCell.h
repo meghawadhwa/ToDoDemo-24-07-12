@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "TDDelegates.h"
+#import "TDStrikedLabel.h"
 
 @class TDDelegates;
+@class TDStrikedLabel;
 
 typedef enum {
     TransformableTableViewCellStyleUnfolding,
@@ -38,8 +40,9 @@ typedef enum {
 + (TransformableTableViewCell *)transformableTableViewCellWithStyle:(TransformableTableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 - (void)addTapGestureForTextLabel;
 - (void)labelTapped;
+- (void)makeStrikedLabel;
 @property(nonatomic,assign)id<TDUpdateDbDelegate> updateDelegate;
 @property(nonatomic,assign)id<TDDeleteFromDbDelegate> deleteDelegate;
 @property (nonatomic,retain) UILabel *countLabel;
-
+@property(nonatomic,retain) TDStrikedLabel *strikedLabel;
 @end

@@ -196,6 +196,7 @@ float lastContentOffset = 0;
 @synthesize finishedHeight, tintColor,nameTextField,labelTapGestureRecognizer,doneOverlayView,previousLabelText;
 @synthesize updateDelegate,deleteDelegate;
 @synthesize countLabel;
+@synthesize strikedLabel;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -241,6 +242,27 @@ float lastContentOffset = 0;
             break;
     }
 }
+
+
+#pragma mark - UI
+
+- (void)makeStrikedLabel
+{ 
+    //calculate the width of text in textfield
+    CGSize textSize = [self.textLabel.text sizeWithFont:self.textLabel.font];
+    CGFloat strikeWidth = textSize.width;
+    
+    if (self.strikedLabel !=nil) {
+        [self.strikedLabel setFrame: CGRectMake(self.textLabel.frame.origin.x, self.textLabel.frame.origin.y, strikeWidth, self.textLabel.frame.size.height)];
+        return;        
+    }
+    
+    //create the striked label with calculated text width
+    self.strikedLabel = [[TDStrikedLabel alloc] initWithFrame:CGRectMake(self.textLabel.frame.origin.x, self.textLabel.frame.origin.y, strikeWidth, self.textLabel.frame.size.height)];
+    self.strikedLabel.backgroundColor = [UIColor clearColor];
+    
+}
+
 #pragma mark - add text field
 
 - (void)addTapGestureForTextLabel

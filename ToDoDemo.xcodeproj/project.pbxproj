@@ -33,6 +33,7 @@
 		BA88CB2715BE830500DBCEFE /* TransformableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2315BE830500DBCEFE /* TransformableTableViewCell.m */; };
 		BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CB2915BE834700DBCEFE /* QuartzCore.framework */; };
+		BA8C1B9E15D8D07A00C2A62C /* TDStrikedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8C1B9D15D8D07A00C2A62C /* TDStrikedLabel.m */; };
 		BAF44B2B15C2801500101872 /* TDCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1F15C2801500101872 /* TDCommon.m */; };
 		BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2315C2801500101872 /* TDParentViewController.m */; };
 		BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2615C2801500101872 /* TDListViewController.m */; };
@@ -81,6 +82,8 @@
 		BA88CB2415BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+JTGestureBasedTableViewHelper.h"; sourceTree = "<group>"; };
 		BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JTGestureBasedTableViewHelper.m"; sourceTree = "<group>"; };
 		BA88CB2915BE834700DBCEFE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BA8C1B9C15D8D07A00C2A62C /* TDStrikedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDStrikedLabel.h; sourceTree = "<group>"; };
+		BA8C1B9D15D8D07A00C2A62C /* TDStrikedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDStrikedLabel.m; sourceTree = "<group>"; };
 		BAF44B1E15C2801500101872 /* TDCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDCommon.h; sourceTree = "<group>"; };
 		BAF44B1F15C2801500101872 /* TDCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDCommon.m; sourceTree = "<group>"; };
 		BAF44B2015C2801500101872 /* TDConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDConstants.h; sourceTree = "<group>"; };
@@ -160,6 +163,7 @@
 				BAF44B0B15C279CD00101872 /* Models */,
 				BAF44B2115C2801500101872 /* ViewControllers */,
 				BAF44B1D15C2801500101872 /* Common */,
+				BA8C1B9A15D8D03600C2A62C /* Custom Views */,
 				BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */,
 				BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */,
 				BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */,
@@ -195,6 +199,16 @@
 				BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */,
 			);
 			path = GestureBasedTableViewClasses;
+			sourceTree = "<group>";
+		};
+		BA8C1B9A15D8D03600C2A62C /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				BA8C1B9C15D8D07A00C2A62C /* TDStrikedLabel.h */,
+				BA8C1B9D15D8D07A00C2A62C /* TDStrikedLabel.m */,
+			);
+			name = "Custom Views";
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		BAF44B0B15C279CD00101872 /* Models */ = {
@@ -325,6 +339,7 @@
 				BA0B80D315CFBDEA00FCAA96 /* TDItemViewController.m in Sources */,
 				BA76C3A715D26364004FE8E0 /* ToDoItem.m in Sources */,
 				BA76C3AA15D2637F004FE8E0 /* ToDoList.m in Sources */,
+				BA8C1B9E15D8D07A00C2A62C /* TDStrikedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

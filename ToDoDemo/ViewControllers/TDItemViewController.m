@@ -24,10 +24,8 @@
     }
     return self;
 }
-
-- (void)viewDidLoad
+- (void)initialSettings
 {
-    [super viewDidLoad];
     [TDCommon setTheme:THEME_HEAT_MAP];
     self.rows = [NSMutableArray arrayWithArray:[parentList.items allObjects]];
     self.checkedArray = [[NSMutableArray alloc] init];
@@ -41,7 +39,12 @@
         }
     }
     [self updateMainArray];
-    // Uncomment the following line to preserve selection between presentations.
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+        // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -53,6 +56,20 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+
+- (void)setStrikedLabel
+{
+    int checkedRowCount = [self.checkedArray count];
+    int totalCount = [self.rows count];
+    for (int i = totalCount-1; i >=(totalCount - checkedRowCount); i--) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        TransformableTableViewCell *cell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
+        [cell makeStrikedLabel];
+        [cell.contentView addSubview:cell.strikedLabel];
+        cell.strikedLabel.userInteractionEnabled = NO;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -385,7 +402,7 @@
         }
         
     } else {
-        
+        NSLog(@"donestatus:%@",item.doneStatus);
         static NSString *cellIdentifier = @"DefaultTableViewCell";
         TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
@@ -399,16 +416,29 @@
         //tobe commented
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
-        if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+        if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:TRUE]]) {
+            cell.textLabel.userInteractionEnabled = NO;
             cell.textLabel.hidden = NO;
             cell.textLabel.textColor = [UIColor grayColor];
             cell.contentView.backgroundColor = [UIColor darkGrayColor];
+            [cell makeStrikedLabel];       
+            [cell.contentView addSubview:cell.strikedLabel];
+            [cell.contentView bringSubviewToFront:cell.strikedLabel];
+            cell.strikedLabel.hidden = NO;
+            NSLog(@"added strike label");
+            cell.strikedLabel.userInteractionEnabled = NO;
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
             cell.contentView.backgroundColor = [UIColor clearColor];
         } else {
             cell.textLabel.textColor = [UIColor whiteColor];
             cell.contentView.backgroundColor = backgroundColor;
+            cell.textLabel.userInteractionEnabled = YES;
+            if (cell.strikedLabel != nil) {
+                [cell.strikedLabel removeFromSuperview];
+                cell.strikedLabel = nil;
+                NSLog(@"removd strike label");
+            }
         }
         return cell;
     }
@@ -449,6 +479,19 @@
 
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
+}
+
+- (NSString *)returnStrikedOutTextFromString:(NSString *)mString
+{
+    NSString * mNewString = @"";
+    
+    for(int i = 0; i<[mString length]; i++)
+    {
+        mNewString = [NSString stringWithFormat:@"%@%@",mNewString, 
+                      NSLocalizedString([[mString substringToIndex:i+1] substringFromIndex:i],nil)];
+    }
+    
+    return mNewString;
 }
 
 #pragma mark -
@@ -531,6 +574,7 @@
 {
     [TDCommon setTheme:THEME_HEAT_MAP];   
     [self.tableView setHidden:YES];
+    [self initialSettings];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -546,6 +590,7 @@
                 CGRect myFrame = self.view.frame;
                 myFrame.origin.y = 0.0;
                 self.view.frame = myFrame;
+                [self setStrikedLabel];
             } 
                              completion: nil];
         }];
@@ -563,10 +608,12 @@
                 CGRect myFrame = self.view.frame;
                 myFrame.origin.y = 0.0;
                 self.view.frame = myFrame;
+                [self setStrikedLabel];
             } 
                              completion: nil];
         }];
     }
+
 }
 
 @end
