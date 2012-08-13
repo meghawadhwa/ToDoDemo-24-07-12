@@ -104,39 +104,6 @@
 //    return nil;
 //}
 
-#pragma mark JTTableViewGestureEditingRowDelegate
-
-
-// This is needed to be implemented to let our delegate choose whether the panning gesture should work
-
-
-
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableView *tableView = gestureRecognizer.tableView;
-    [tableView beginUpdates];
-    if (state == JTTableViewCellEditingStateLeft) {
-        // An example to discard the cell at JTTableViewCellEditingStateLeft
-        //[self.rows removeObjectAtIndex:indexPath.row];
-        [self deleteCurrentRowAfterSwipeAtIndexpath:indexPath];
-        [self fetchObjectsFromDb];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    } else if (state == JTTableViewCellEditingStateRight) {
-        // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
-        [self updateCurrentRowsDoneStatusAtIndexpath:indexPath]; 
-        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    } else {
-        // JTTableViewCellEditingStateMiddle shouldn't really happen in
-        // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
-    }
-    [tableView endUpdates];
-    
-    // Row color needs update after datasource changes, reload it.
-    [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
-    if (state == JTTableViewCellEditingStateRight) 
-    {
-        [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
-    }
-}
 
 -(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
 {

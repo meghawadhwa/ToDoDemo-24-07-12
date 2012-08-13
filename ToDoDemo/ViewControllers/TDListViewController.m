@@ -14,7 +14,7 @@
 @end
 
 @implementation TDListViewController
-@synthesize rowIndexToBeUpdated;
+@synthesize rowIndexToBeUpdated,rowIndexToBeDeleted;
 @synthesize lastVisitedList;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -259,7 +259,8 @@
         if (![cell.countLabel.text isEqualToString:@"0"])
         {
             self.rowIndexToBeUpdated = indexpath.row;
-            [self createActionSheet];
+            self.rowIndexToBeDeleted = -1;
+            [self createActionSheetWithTitle:@"Are you sure you want to complete all items within this list?" andDestructiveButtonTitle:@"Complete"];
         }
         else {
             list.doneStatus = [NSNumber numberWithBool:TRUE];
@@ -317,29 +318,91 @@
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
-    ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
-    [self.managedObjectContext deleteObject:currentList];
-    [self.rows removeObjectAtIndex:indexpath.row];
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
-        abort();
-    }    
+    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    if (![cell.countLabel.text isEqualToString:@"0"])
+    {
+        self.rowIndexToBeUpdated = -1;
+        self.rowIndexToBeDeleted = indexpath.row;
+        [self createActionSheetWithTitle:@"Are you sure you want to delete all items within this list?" andDestructiveButtonTitle:@"Delete"];
+    }
+    else {
+        ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+        [self.managedObjectContext deleteObject:currentList];
+        [self.rows removeObjectAtIndex:indexpath.row];
+        NSError *error = nil;
+        if (![self.managedObjectContext save:&error]) {
+            NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+            abort();
+        }   
+        [self fetchObjectsFromDb];
+    }
 }
 
 #pragma mark - action sheet delegates
 - (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
+        // To be updated
+        if (self.rowIndexToBeUpdated >= 0) {
         ToDoList *list = [self.rows objectAtIndex:self.rowIndexToBeUpdated];
         list.doneStatus = [NSNumber numberWithBool:TRUE];
         [self checkAllItemsForSelectedList];
-    }
-    else {
+        }
+        else if(self.rowIndexToBeDeleted >= 0){ // To be Deleted
+            ToDoList *currentList = [self.rows objectAtIndex:self.rowIndexToBeDeleted];
+            [self.managedObjectContext deleteObject:currentList];
+            [self.rows removeObjectAtIndex:self.rowIndexToBeDeleted];
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+                abort();
+            }
+            [self fetchObjectsFromDb];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.rowIndexToBeDeleted inSection:0]; 
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            [self.tableView endUpdates];
+        }
     }
 }
 
 #pragma mark- Delegates
+#pragma mark JTTableViewGestureEditingRowDelegate
+
+// This is needed to be implemented to let our delegate choose whether the panning gesture should work
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableView *tableView = gestureRecognizer.tableView;
+    if (state == JTTableViewCellEditingStateLeft) {
+    }
+    [tableView beginUpdates];
+    if (state == JTTableViewCellEditingStateLeft) {
+        // An example to discard the cell at JTTableViewCellEditingStateLeft
+        [self deleteCurrentRowAfterSwipeAtIndexpath:indexPath];
+        TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        
+        if (self.rowIndexToBeDeleted >=0  && ![cell.countLabel.text isEqualToString:@"0"]) {
+            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+        }else {
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+    } else if (state == JTTableViewCellEditingStateRight) {
+        // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
+        [self updateCurrentRowsDoneStatusAtIndexpath:indexPath]; 
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    } else {
+        // JTTableViewCellEditingStateMiddle shouldn't really happen in
+        // - [JTTableViewGestureDelegate gestureRecognizer:commitEditingState:forRowAtIndexPath:]
+    }
+    [tableView endUpdates];
+    
+    // Row color needs update after datasource changes, reload it.
+    [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
+    if (state == JTTableViewCellEditingStateRight) 
+    {
+        [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
+    }
+}
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
 UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -521,10 +584,9 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 #pragma mark- view related
 
-- (void)createActionSheet
+- (void)createActionSheetWithTitle:(NSString *)title andDestructiveButtonTitle:(NSString *)destructiveButtonTitle
 {
-    UIActionSheet *completeListActionSheet = [[UIActionSheet alloc] initWithTitle:@"List Completion" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Complete" otherButtonTitles:nil];
-    [completeListActionSheet setTitle:@"Are you sure you want to complete all items within this list?"];
+    UIActionSheet *completeListActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
     [completeListActionSheet setActionSheetStyle:UIActionSheetStyleBlackTranslucent];
     [completeListActionSheet showInView:self.view];
 }
@@ -534,6 +596,8 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     [TDCommon setTheme:THEME_BLUE];   
     self.tableView.hidden = YES;
     [self fetchObjectsFromDb];
+    self.rowIndexToBeUpdated = -1;
+    self.rowIndexToBeDeleted = -1;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -573,4 +637,5 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         }];
     }
 }
+
 @end
