@@ -197,6 +197,7 @@ float lastContentOffset = 0;
 @synthesize updateDelegate,deleteDelegate;
 @synthesize countLabel;
 @synthesize strikedLabel;
+@synthesize editingDelegate;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -352,13 +353,13 @@ float lastContentOffset = 0;
     }];
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
     [self.nameTextField resignFirstResponder];
-
+    [editingDelegate disableGesturesOnTable:FALSE];
+    superView.scrollEnabled = YES;
 return YES;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-   
     self.nameTextField.enablesReturnKeyAutomatically = YES;
     
     UITableView * superView = (UITableView *)[self superview];
@@ -368,7 +369,8 @@ return YES;
 }];
     [self createDoneOverlayAtHeight:CGRectGetMaxY(self.frame)];
     [superView addSubview:self.doneOverlayView];
-                                 
+    [editingDelegate disableGesturesOnTable:TRUE];
+    superView.scrollEnabled = NO;
 }
 
 #pragma mark - done overlay methods
@@ -396,7 +398,8 @@ return YES;
 
     }];
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
-
+    [editingDelegate disableGesturesOnTable:FALSE];
+    superView.scrollEnabled = YES;
 }
 
 

@@ -160,6 +160,7 @@
             cell.countLabel.textColor = [ UIColor whiteColor];
             cell.contentView.backgroundColor = backgroundColor;
         }
+        cell.editingDelegate = self;
         return cell;
     }
     
@@ -435,6 +436,9 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 //    BOOL checked = [self getCheckedStatusForRowAtIndex:indexPath];
 //    return (!checked);
+    if (self.editingFlag == TRUE) {
+        return NO;
+    }
     return YES;
 }
 
@@ -468,7 +472,6 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         cell.textLabel.text = @"Just Added!";
         //[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
        // [self.tableView reloadData];
-
         [self addNewRowInDBAtIndexPath:indexPath];
         //insert in db here
     }
@@ -564,6 +567,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.editingFlag == FALSE) {
     TDListViewController *src = (TDListViewController *) self;
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
     ToDoList *list = [self.rows objectAtIndex:indexPath.row];
@@ -576,6 +580,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
     [src.navigationController pushViewController:destination animated:YES];
+    }
 }
 
 

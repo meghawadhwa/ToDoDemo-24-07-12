@@ -12,6 +12,9 @@
 
 @end
 
+@protocol TDEditingCellDelegate<NSObject>
+- (void)disableGesturesOnTable:(BOOL)disableFlag;
+@end
 @protocol TDUpdateDbDelegate<NSObject>
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath;
 

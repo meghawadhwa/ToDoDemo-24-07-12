@@ -17,7 +17,7 @@
 #import "TDConstants.h"
 #import "TDCommon.h"
 
-@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate>
+@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate>
 //,JTTableViewGestureMoveRowDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
@@ -27,6 +27,7 @@
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property(nonatomic,assign) BOOL goingDownByPullUp;
+@property(nonatomic,assign) BOOL editingFlag;
 @property(nonatomic,retain) NSString *parentName;
 @property(nonatomic,retain) NSString *childName;
 @property(nonatomic,retain) UILabel *backgroundLabel;

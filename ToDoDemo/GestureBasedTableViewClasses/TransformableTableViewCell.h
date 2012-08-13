@@ -43,6 +43,8 @@ typedef enum {
 - (void)makeStrikedLabel;
 @property(nonatomic,assign)id<TDUpdateDbDelegate> updateDelegate;
 @property(nonatomic,assign)id<TDDeleteFromDbDelegate> deleteDelegate;
+@property(nonatomic,assign)id<TDEditingCellDelegate> editingDelegate;
+
 @property (nonatomic,retain) UILabel *countLabel;
 @property(nonatomic,retain) TDStrikedLabel *strikedLabel;
 @end

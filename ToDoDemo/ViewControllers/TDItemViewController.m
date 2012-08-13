@@ -438,6 +438,7 @@
                 [cell.strikedLabel removeFromSuperview];
                 cell.strikedLabel = nil;
                 NSLog(@"removd strike label");
+                cell.editingDelegate = self;
             }
         }
         return cell;
@@ -509,6 +510,9 @@
 }
 
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.editingFlag == TRUE) {
+        return NO;
+    }
     return YES;
 }
 

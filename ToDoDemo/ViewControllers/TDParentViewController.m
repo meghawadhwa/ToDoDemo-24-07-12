@@ -25,6 +25,7 @@
 @synthesize goingDownByPullUp;
 @synthesize parentName,childName;
 @synthesize backgroundLabel;
+@synthesize editingFlag;
 
 - (void)awakeFromNib
 {
@@ -40,6 +41,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    editingFlag = NO;
     // In this example, we setup self.rows as datasource
     self.rows = [NSMutableArray arrayWithObjects:
 //                 @"Swipe to the right to complete",
@@ -101,6 +103,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.editingFlag == FALSE) 
     NSLog(@"tableView:didSelectRowAtIndexPath: %@", indexPath);
 }
 
@@ -128,6 +131,9 @@
 #pragma mark JTTableViewGestureMoveRowDelegate
 
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.editingFlag == TRUE) {
+        return NO;
+    }
     return YES;
 }
 
@@ -174,6 +180,12 @@
 {
     return self.childName;
 }
+#pragma mark - 
+- (void)disableGesturesOnTable:(BOOL)disableFlag
+{
+    self.editingFlag = disableFlag;
+}
+
 #pragma mark-
 - (void)fetchObjectsFromDb{
     
