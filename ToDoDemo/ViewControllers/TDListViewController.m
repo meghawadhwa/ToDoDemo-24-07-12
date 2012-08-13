@@ -79,7 +79,6 @@
                 cell.textLabel.textAlignment = UITextAlignmentCenter;
             }
             
-            
             cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
             if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
                 cell.imageView.image = [UIImage imageNamed:@"arrow-up.png"];
@@ -145,8 +144,7 @@
             cell.updateDelegate = self;
             cell.deleteDelegate = self;
         }
-        //tobe commented
-        cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getItemCountForIndexpath:indexPath]];
+        cell.countLabel.text = [NSString stringWithFormat:@"%d",[list.items count]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
         if ([cell.countLabel.text isEqualToString:@"0"]) {
@@ -213,7 +211,7 @@
     self.rows = [NSMutableArray arrayWithArray:fetchedObjects];
     for (ToDoList *lists in fetchedObjects) {
         NSLog(@"Name: %@", lists.listName);
-    }   
+    }  
 }
 
 - (void)checkAllItemsForSelectedList
@@ -600,6 +598,23 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     self.rowIndexToBeDeleted = -1;
 }
 
+- (void)refreshCount
+{
+    int count = [self.rows count];
+    for (int i = 0; i <count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        TransformableTableViewCell *cell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
+        cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getItemCountForIndexpath:indexPath]];
+        if ([cell.countLabel.text isEqualToString:@"0"]) {
+        cell.textLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
+        cell.countLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
+        }
+        else {
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.countLabel.textColor = [ UIColor whiteColor];
+        }
+    }
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     if (self.goingDownByPullUp) {
@@ -636,6 +651,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
                              completion: nil];
         }];
     }
+    [self refreshCount];
 }
 
 @end

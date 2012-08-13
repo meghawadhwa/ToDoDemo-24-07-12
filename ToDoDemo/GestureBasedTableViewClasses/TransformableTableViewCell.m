@@ -164,7 +164,7 @@
         self.countLabel = [[UILabel alloc] initWithFrame:backgroundLabel.frame];
         self.countLabel.center = backgroundLabel.center;
         self.countLabel.backgroundColor = [UIColor clearColor];
-        self.countLabel.text = @" 0 ";
+        self.countLabel.text = @"0";
         self.countLabel.textAlignment = UITextAlignmentCenter;
         self.countLabel.textColor = [UIColor whiteColor];
         [self.contentView addSubview:self.countLabel];
