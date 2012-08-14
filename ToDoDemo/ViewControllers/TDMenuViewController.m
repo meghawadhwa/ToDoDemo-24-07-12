@@ -189,6 +189,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [TDCommon playSound:[TDCommon createSoundID:kNavigateSound]];
     TDMenuViewController *src = (TDMenuViewController *) self;
     TDListViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
     destination.parentName = @"Menu";

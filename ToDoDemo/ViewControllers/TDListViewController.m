@@ -144,7 +144,7 @@
             cell.updateDelegate = self;
             cell.deleteDelegate = self;
         }
-        cell.countLabel.text = [NSString stringWithFormat:@"%d",[list.items count]];
+        cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
         if ([cell.countLabel.text isEqualToString:@"0"]) {
@@ -164,6 +164,17 @@
         return cell;
     }
     
+}
+
+-(int)getUncheckedItemsFromList:(ToDoList *)list
+{
+    int count = 0;
+    for (ToDoItem *item in list.items) {
+        if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
+            count ++;
+        }
+    }
+    return count;
 }
 
 - (int)getItemCountForIndexpath:(NSIndexPath *)indexPath
@@ -259,9 +270,11 @@
         {
             self.rowIndexToBeUpdated = indexpath.row;
             self.rowIndexToBeDeleted = -1;
+            [TDCommon playSound:self.checkAlertSound];
             [self createActionSheetWithTitle:@"Are you sure you want to complete all items within this list?" andDestructiveButtonTitle:@"Complete"];
         }
         else {
+//            [TDCommon playSound:self.checkSound];
             list.doneStatus = [NSNumber numberWithBool:TRUE];
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
@@ -271,7 +284,6 @@
         }
     }
     else {
-   
         list.doneStatus = [NSNumber numberWithBool:FALSE];
         if (![self.managedObjectContext save:&error]) {
             NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
@@ -297,21 +309,29 @@
 
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
-    ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
-    [self.managedObjectContext deleteObject:currentList];
-    [self.rows removeObjectAtIndex:indexpath.row];
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
-        abort();
+    [self deleteCurrentRowAfterSwipeAtIndexpath:indexpath];
+//    ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+//    [self.managedObjectContext deleteObject:currentList];
+//    [self.rows removeObjectAtIndex:indexpath.row];
+//    NSError *error = nil;
+//    if (![self.managedObjectContext save:&error]) {
+//        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
+//        abort();
+//    }
+//    [self fetchObjectsFromDb];
+//    [self.tableView beginUpdates];
+//    [UIView animateWithDuration:2 animations:^{
+//    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+//    }];
+//    [self.tableView endUpdates];
+//    
+    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    if (self.rowIndexToBeDeleted >=0  && ![cell.countLabel.text isEqualToString:@"0"]) {
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationRight];
+    }else {
+        [TDCommon playSound:self.deleteSound];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
     }
-    [self fetchObjectsFromDb];
-    [self.tableView beginUpdates];
-    [UIView animateWithDuration:2 animations:^{
-    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
-    }];
-    [self.tableView endUpdates];
-    
 
 }
 
@@ -322,6 +342,7 @@
     {
         self.rowIndexToBeUpdated = -1;
         self.rowIndexToBeDeleted = indexpath.row;
+        [TDCommon playSound:self.deleteAlertSound];
         [self createActionSheetWithTitle:@"Are you sure you want to delete all items within this list?" andDestructiveButtonTitle:@"Delete"];
     }
     else {
@@ -343,9 +364,11 @@
     if (buttonIndex == 0) {
         // To be updated
         if (self.rowIndexToBeUpdated >= 0) {
+            [TDCommon playSound:self.checkSound];
         ToDoList *list = [self.rows objectAtIndex:self.rowIndexToBeUpdated];
         list.doneStatus = [NSNumber numberWithBool:TRUE];
         [self checkAllItemsForSelectedList];
+            [self refreshCount];
         }
         else if(self.rowIndexToBeDeleted >= 0){ // To be Deleted
             ToDoList *currentList = [self.rows objectAtIndex:self.rowIndexToBeDeleted];
@@ -357,6 +380,7 @@
                 abort();
             }
             [self fetchObjectsFromDb];
+            [TDCommon playSound:self.deleteSound];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.rowIndexToBeDeleted inSection:0]; 
             [self.tableView beginUpdates];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
@@ -383,6 +407,7 @@
         if (self.rowIndexToBeDeleted >=0  && ![cell.countLabel.text isEqualToString:@"0"]) {
             [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
         }else {
+            [TDCommon playSound:self.deleteSound];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
         }
     } else if (state == JTTableViewCellEditingStateRight) {
@@ -470,6 +495,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
         cell.imageView.image = nil;
         cell.textLabel.text = @"Just Added!";
+        [TDCommon playSound:self.pullDownToCreateSound];
         //[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
        // [self.tableView reloadData];
         [self addNewRowInDBAtIndexPath:indexPath];
@@ -532,7 +558,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     if (!lastVisitedList) {
         return;
     }
-    
+    [TDCommon playSound:self.pullUpToMoveDownSound];
     TDListViewController *src = (TDListViewController *) self;
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
     destination.parentName = @"Lists";
@@ -554,6 +580,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 - (void)removeCurrentView
 {
+    [TDCommon playSound:self.pullDownToMoveUpSound];
         [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect myFrame = self.view.frame;
         myFrame.origin.y = 480;
@@ -562,12 +589,13 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         [self.tableView setHidden:YES];
         [self.navigationController popViewControllerAnimated:NO]; 
     }];
-    
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.editingFlag == FALSE) {
+        [TDCommon playSound:self.navigateSound];
     TDListViewController *src = (TDListViewController *) self;
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
     ToDoList *list = [self.rows objectAtIndex:indexPath.row];
@@ -582,8 +610,6 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     [src.navigationController pushViewController:destination animated:YES];
     }
 }
-
-
 
 #pragma mark- view related
 

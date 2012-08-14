@@ -38,3 +38,21 @@
 #define DUMMY_CELL @"Dummy"
 #define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
+
+//SOUNDS
+
+#define kCheckSound @"button-20.mp3"
+#define kUncheckSound @"button-17.mp3"
+#define kDeleteSound @"button-27.mp3"
+#define kPullDownToCreateSound @"button-11.mp3"
+#define kNavigateSound @"button-22.mp3"
+#define kDeleteAlertSound @"button-10.mp3"
+#define kCheckAlertSound @"button-18.mp3"
+
+#define kPullUpToMoveDownSound @"button-27.mp3"
+#define kPullDownToMoveUpSound @"button-27.mp3"
+
+#define kPullUpToClearSound @"button-11.mp3"
+#define kPinchOutSound @"button-11.mp3"
+#define kPinchInSound @"button-11.mp3"
+#define kLongPressSound @"button-11.mp3"

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TDConstants.h"
+#import <AudioToolbox/AudioServices.h>
 
 @interface TDCommon : NSObject
 +(UIColor *)getColorByPriority:(int)prioirity;
@@ -16,8 +17,8 @@
 + (NSString *)getTheme;
 + (void)setTheme: (NSString *)myTheme;
 + (int)calculateLastIndexForArray:(NSMutableArray *)anyArray;
-//+ (void)setDoneStatus:(TDListCustomRow *)RowSwiped;
 + (float)calculateDistanceBetweenTwoPoints:(CGPoint)firstPoint :(CGPoint)secondPoint;
-//+ (float)getLastRowMaxYFromArray:(NSMutableArray *)AllViewsArray;
++ (SystemSoundID) createSoundID: (NSString*)name;
++ (void)playSound:(SystemSoundID)soundId;
 
 @end

@@ -102,19 +102,25 @@ NSString *currentViewTheme = nil;
 	return sqrt((deltaX*deltaX) + (deltaY*deltaY));
 };
 
-//+ (void)setDoneStatus:(TDListCustomRow *)RowSwiped
-//{
-//    if (RowSwiped.doneStatus == TRUE) {
-//        RowSwiped.doneStatus = FALSE;
-//    }
-//    else RowSwiped.doneStatus = TRUE;
-//}
++ (SystemSoundID) createSoundID: (NSString*)name
+{    
+    //Get a URL for the sound file
+    NSString *path = [NSString stringWithFormat: @"%@/%@",
+                      [[NSBundle mainBundle] resourcePath], name];
+    
+    //Get the filename of the sound file:
+    NSURL* filePath = [NSURL fileURLWithPath: path isDirectory: NO];
+    //declare a system sound
+    SystemSoundID soundID;
+    //Use audio sevices to create the sound
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)filePath, &soundID);
+    return soundID;
+} 
 
-//+ (float)getLastRowMaxYFromArray:(NSMutableArray *)AllViewsArray
-//{
-//    TDListCustomRow *lastRow = [AllViewsArray lastObject];
-//    return CGRectGetMaxY(lastRow.frame);
-//}
++ (void)playSound:(SystemSoundID)soundId
+{
+    AudioServicesPlaySystemSound(soundId);
+}
 
 + (NSString *)getTheme
 {

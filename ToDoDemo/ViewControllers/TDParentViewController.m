@@ -26,6 +26,7 @@
 @synthesize parentName,childName;
 @synthesize backgroundLabel;
 @synthesize editingFlag;
+@synthesize checkSound,deleteSound,deleteAlertSound,checkAlertSound,pullDownToCreateSound,pullDownToMoveUpSound,pullUpToMoveDownSound,pinchInSound,pinchOutSound,longPressSound,uncheckSound,navigateSound,pullUpToClearSound;
 
 - (void)awakeFromNib
 {
@@ -59,6 +60,7 @@
     self.tableView.backgroundColor = [UIColor blackColor];
     self.tableView.separatorStyle  = UITableViewCellSeparatorStyleNone;
     self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
+    [self createSoundIdsForAllSounds];
 }
 
 - (void)setBackgroundWhenNoRows{
@@ -70,6 +72,23 @@
     self.backgroundLabel.hidden = YES;
     [self.view addSubview:self.backgroundLabel];
 }
+
+- (void)createSoundIdsForAllSounds{
+    self.checkSound = [TDCommon createSoundID:kCheckSound];
+    self.uncheckSound = [TDCommon createSoundID:kUncheckSound];
+    self.deleteSound = [TDCommon createSoundID:kDeleteSound];
+    self.pullDownToMoveUpSound = [TDCommon createSoundID:kPullDownToMoveUpSound];
+    self.pullUpToMoveDownSound = [TDCommon createSoundID:kPullUpToMoveDownSound];
+    self.pullDownToCreateSound = [TDCommon createSoundID:kPullDownToCreateSound];
+    self.pinchInSound = [TDCommon createSoundID:kPinchInSound];
+    self.pinchOutSound = [TDCommon createSoundID:kPinchOutSound];
+    self.navigateSound = [TDCommon createSoundID:kNavigateSound];
+    self.checkAlertSound = [TDCommon createSoundID:kCheckAlertSound];
+    self.deleteAlertSound = [TDCommon createSoundID:kDeleteAlertSound];
+    self.longPressSound = [TDCommon createSoundID:kLongPressSound];
+    self.pullUpToClearSound = [TDCommon createSoundID:kPullUpToClearSound];
+}
+
 - (void)reloadFromUpdatedDB
 {
     [self fetchObjectsFromDb];

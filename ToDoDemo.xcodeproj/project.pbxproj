@@ -34,6 +34,16 @@
 		BA88CB2815BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BA88CB2515BE830500DBCEFE /* UIColor+JTGestureBasedTableViewHelper.m */; };
 		BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA88CB2915BE834700DBCEFE /* QuartzCore.framework */; };
 		BA8C1B9E15D8D07A00C2A62C /* TDStrikedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8C1B9D15D8D07A00C2A62C /* TDStrikedLabel.m */; };
+		BAC0AEAC15DA29EC0017A2D8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC0AEAB15DA29EC0017A2D8 /* AudioToolbox.framework */; };
+		BAC0AEBE15DA6BB30017A2D8 /* button-11.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEBA15DA6BB30017A2D8 /* button-11.mp3 */; };
+		BAC0AEBF15DA6BB30017A2D8 /* button-17.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEBB15DA6BB30017A2D8 /* button-17.mp3 */; };
+		BAC0AEC015DA6BB30017A2D8 /* button-20.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEBC15DA6BB30017A2D8 /* button-20.mp3 */; };
+		BAC0AEC115DA6BB30017A2D8 /* button-27.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEBD15DA6BB30017A2D8 /* button-27.mp3 */; };
+		BAC0AEC415DA6D280017A2D8 /* button-6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEC215DA6D280017A2D8 /* button-6.mp3 */; };
+		BAC0AEC515DA6D280017A2D8 /* button-25.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEC315DA6D280017A2D8 /* button-25.mp3 */; };
+		BAC0AEC915DA72E70017A2D8 /* button-10.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEC615DA72E70017A2D8 /* button-10.mp3 */; };
+		BAC0AECA15DA72E70017A2D8 /* button-18.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEC715DA72E70017A2D8 /* button-18.mp3 */; };
+		BAC0AECB15DA72E70017A2D8 /* button-22.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BAC0AEC815DA72E70017A2D8 /* button-22.mp3 */; };
 		BAF44B2B15C2801500101872 /* TDCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B1F15C2801500101872 /* TDCommon.m */; };
 		BAF44B2C15C2801500101872 /* TDParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2315C2801500101872 /* TDParentViewController.m */; };
 		BAF44B2E15C2801500101872 /* TDListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAF44B2615C2801500101872 /* TDListViewController.m */; };
@@ -84,6 +94,16 @@
 		BA88CB2915BE834700DBCEFE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		BA8C1B9C15D8D07A00C2A62C /* TDStrikedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDStrikedLabel.h; sourceTree = "<group>"; };
 		BA8C1B9D15D8D07A00C2A62C /* TDStrikedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDStrikedLabel.m; sourceTree = "<group>"; };
+		BAC0AEAB15DA29EC0017A2D8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		BAC0AEBA15DA6BB30017A2D8 /* button-11.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-11.mp3"; path = "ToDoDemo/Sounds/button-11.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEBB15DA6BB30017A2D8 /* button-17.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-17.mp3"; path = "ToDoDemo/Sounds/button-17.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEBC15DA6BB30017A2D8 /* button-20.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-20.mp3"; path = "ToDoDemo/Sounds/button-20.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEBD15DA6BB30017A2D8 /* button-27.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-27.mp3"; path = "ToDoDemo/Sounds/button-27.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEC215DA6D280017A2D8 /* button-6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-6.mp3"; path = "ToDoDemo/Sounds/button-6.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEC315DA6D280017A2D8 /* button-25.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-25.mp3"; path = "ToDoDemo/Sounds/button-25.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEC615DA72E70017A2D8 /* button-10.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-10.mp3"; path = "ToDoDemo/Sounds/button-10.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEC715DA72E70017A2D8 /* button-18.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-18.mp3"; path = "ToDoDemo/Sounds/button-18.mp3"; sourceTree = SOURCE_ROOT; };
+		BAC0AEC815DA72E70017A2D8 /* button-22.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "button-22.mp3"; path = "ToDoDemo/Sounds/button-22.mp3"; sourceTree = SOURCE_ROOT; };
 		BAF44B1E15C2801500101872 /* TDCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDCommon.h; sourceTree = "<group>"; };
 		BAF44B1F15C2801500101872 /* TDCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDCommon.m; sourceTree = "<group>"; };
 		BAF44B2015C2801500101872 /* TDConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDConstants.h; sourceTree = "<group>"; };
@@ -102,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAC0AEAC15DA29EC0017A2D8 /* AudioToolbox.framework in Frameworks */,
 				BA88CB2A15BE834700DBCEFE /* QuartzCore.framework in Frameworks */,
 				BA88CAF815BE7FFD00DBCEFE /* UIKit.framework in Frameworks */,
 				BA88CAFA15BE7FFD00DBCEFE /* Foundation.framework in Frameworks */,
@@ -131,6 +152,7 @@
 		BA88CAE815BE7FFD00DBCEFE = {
 			isa = PBXGroup;
 			children = (
+				BAC0AEAB15DA29EC0017A2D8 /* AudioToolbox.framework */,
 				BA88CB2915BE834700DBCEFE /* QuartzCore.framework */,
 				BA88CAFF15BE7FFD00DBCEFE /* ToDoDemo */,
 				BA88CAF615BE7FFD00DBCEFE /* Frameworks */,
@@ -167,6 +189,7 @@
 				BA88CB0815BE7FFD00DBCEFE /* TDAppDelegate.h */,
 				BA88CB0915BE7FFD00DBCEFE /* TDAppDelegate.m */,
 				BA88CB0B15BE7FFD00DBCEFE /* MainStoryboard.storyboard */,
+				BAC0AEB115DA46D70017A2D8 /* Sounds */,
 				BA28CD8715D1169F0052164F /* Images */,
 				BA88CB1415BE7FFD00DBCEFE /* TDDetailViewController.h */,
 				BA88CB1515BE7FFE00DBCEFE /* TDDetailViewController.m */,
@@ -209,6 +232,23 @@
 			);
 			name = "Custom Views";
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		BAC0AEB115DA46D70017A2D8 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				BAC0AEC615DA72E70017A2D8 /* button-10.mp3 */,
+				BAC0AEC715DA72E70017A2D8 /* button-18.mp3 */,
+				BAC0AEC815DA72E70017A2D8 /* button-22.mp3 */,
+				BAC0AEC215DA6D280017A2D8 /* button-6.mp3 */,
+				BAC0AEC315DA6D280017A2D8 /* button-25.mp3 */,
+				BAC0AEBA15DA6BB30017A2D8 /* button-11.mp3 */,
+				BAC0AEBB15DA6BB30017A2D8 /* button-17.mp3 */,
+				BAC0AEBC15DA6BB30017A2D8 /* button-20.mp3 */,
+				BAC0AEBD15DA6BB30017A2D8 /* button-27.mp3 */,
+			);
+			name = Sounds;
+			path = Images/Sounds;
 			sourceTree = "<group>";
 		};
 		BAF44B0B15C279CD00101872 /* Models */ = {
@@ -315,6 +355,15 @@
 				BA28CD9515D1169F0052164F /* empty_box.png in Resources */,
 				BA28CD9615D1169F0052164F /* full_box.png in Resources */,
 				BA28CD9715D1169F0052164F /* smilie.png in Resources */,
+				BAC0AEBE15DA6BB30017A2D8 /* button-11.mp3 in Resources */,
+				BAC0AEBF15DA6BB30017A2D8 /* button-17.mp3 in Resources */,
+				BAC0AEC015DA6BB30017A2D8 /* button-20.mp3 in Resources */,
+				BAC0AEC115DA6BB30017A2D8 /* button-27.mp3 in Resources */,
+				BAC0AEC415DA6D280017A2D8 /* button-6.mp3 in Resources */,
+				BAC0AEC515DA6D280017A2D8 /* button-25.mp3 in Resources */,
+				BAC0AEC915DA72E70017A2D8 /* button-10.mp3 in Resources */,
+				BAC0AECA15DA72E70017A2D8 /* button-18.mp3 in Resources */,
+				BAC0AECB15DA72E70017A2D8 /* button-22.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

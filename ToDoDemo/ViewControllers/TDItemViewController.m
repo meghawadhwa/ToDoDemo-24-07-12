@@ -128,9 +128,11 @@
     ToDoItem * item = [self.rows objectAtIndex:indexpath.row];
     if ([item.doneStatus isEqual:[NSNumber numberWithBool:FALSE]]) {
         //TODO :animation
+        [TDCommon playSound:self.checkSound];
         item.doneStatus = [NSNumber numberWithBool:TRUE];
     }
     else {
+        [TDCommon playSound:self.uncheckSound];
         item.doneStatus = [NSNumber numberWithBool:FALSE];
     }
     
@@ -169,6 +171,7 @@
         abort();
     }
     [self fetchObjectsFromDb];
+    [TDCommon playSound:self.deleteSound];
     [self.tableView beginUpdates];
     [UIView animateWithDuration:2 animations:^{
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
@@ -179,6 +182,7 @@
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
+    [TDCommon playSound:self.deleteSound];
     ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
     [self deleteItemFromIndexPath:indexpath];
     [self.rows removeObjectAtIndex:indexpath.row];
@@ -568,6 +572,7 @@
         cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
         cell.imageView.image = nil;
         cell.textLabel.text = @"Just Added!";
+        [TDCommon playSound:self.pullDownToCreateSound];
         //[cell labelTapped];
         //cell.nameTextField.text = @"";
         [self updateNewItem:item atIndexPath:indexPath];
@@ -585,6 +590,7 @@
 
 - (void)removeCurrentView
 {
+    [TDCommon playSound:self.pullDownToMoveUpSound];
     [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect myFrame = self.view.frame;
         myFrame.origin.y = 480;

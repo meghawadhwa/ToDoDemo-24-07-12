@@ -31,6 +31,20 @@
 @property(nonatomic,retain) NSString *parentName;
 @property(nonatomic,retain) NSString *childName;
 @property(nonatomic,retain) UILabel *backgroundLabel;
+@property(nonatomic,assign) SystemSoundID checkSound;
+@property(nonatomic,assign) SystemSoundID uncheckSound;
+@property(nonatomic,assign) SystemSoundID deleteSound;
+@property(nonatomic,assign) SystemSoundID pullUpToClearSound;
+@property(nonatomic,assign) SystemSoundID pullUpToMoveDownSound;
+@property(nonatomic,assign) SystemSoundID pullDownToMoveUpSound;
+@property(nonatomic,assign) SystemSoundID navigateSound;
+@property(nonatomic,assign) SystemSoundID deleteAlertSound;
+@property(nonatomic,assign) SystemSoundID checkAlertSound;
+@property(nonatomic,assign) SystemSoundID pullDownToCreateSound;
+@property(nonatomic,assign) SystemSoundID pinchOutSound;
+@property(nonatomic,assign) SystemSoundID pinchInSound;
+@property(nonatomic,assign) SystemSoundID longPressSound;
+
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
@@ -38,7 +52,6 @@
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath;
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
 - (void)reloadFromUpdatedDB;
-- (void)toggleSubViews:(BOOL)hide;
 - (float)getLastRowHeight;
 - (void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath;;
 
