@@ -144,6 +144,7 @@
             cell.updateDelegate = self;
             cell.deleteDelegate = self;
         }
+        cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
         cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
@@ -151,7 +152,7 @@
             cell.textLabel.hidden = NO;
             cell.textLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
             cell.countLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
-            cell.contentView.backgroundColor = [TDCommon getColorByPriority:indexPath.row];
+            cell.contentView.backgroundColor = backgroundColor;
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
             cell.contentView.backgroundColor = [UIColor clearColor];

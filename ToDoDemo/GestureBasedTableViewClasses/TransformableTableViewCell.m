@@ -158,12 +158,8 @@
         [self addTapGestureForTextLabel];
         self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.tintColor = [UIColor whiteColor];
-        UILabel *backgroundLabel = [[UILabel alloc] initWithFrame:CGRectMake(260, 0, 60, 60)];
-        backgroundLabel.backgroundColor = [TDCommon getColorByPriority:-6];
-        [self.contentView addSubview:backgroundLabel];
-        self.countLabel = [[UILabel alloc] initWithFrame:backgroundLabel.frame];
-        self.countLabel.center = backgroundLabel.center;
-        self.countLabel.backgroundColor = [UIColor clearColor];
+        self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(260, 0, 60, 60)];
+        self.countLabel.backgroundColor = [TDCommon getColorByPriority:-6];
         self.countLabel.text = @"0";
         self.countLabel.textAlignment = UITextAlignmentCenter;
         self.countLabel.textColor = [UIColor whiteColor];
