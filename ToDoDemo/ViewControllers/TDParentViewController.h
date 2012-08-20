@@ -17,7 +17,7 @@
 #import "TDConstants.h"
 #import "TDCommon.h"
 
-@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate>
+@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate,TDCreatingCellDelegate>
 //,JTTableViewGestureMoveRowDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
@@ -53,6 +53,7 @@
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
 - (void)reloadFromUpdatedDB;
 - (float)getLastRowHeight;
-- (void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath;;
+- (void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath;
+- (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath;
 
 @end

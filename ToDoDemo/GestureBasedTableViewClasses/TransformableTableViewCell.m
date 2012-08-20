@@ -194,6 +194,8 @@ float lastContentOffset = 0;
 @synthesize countLabel;
 @synthesize strikedLabel;
 @synthesize editingDelegate;
+@synthesize addingCellFlag;
+@synthesize createDelegate;
 
 + (TransformableTableViewCell *)unfoldingTableViewCellWithReuseIdentifier:(NSString *)reuseIdentifier {
     JTUnfoldingTableViewCell *cell = (id)[[JTUnfoldingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
@@ -301,10 +303,15 @@ float lastContentOffset = 0;
     NSIndexPath *indexpath = [tableView indexPathForCell:self]; 
     if (![self.nameTextField.text isEqualToString:@""]) {
         self.textLabel.text = self.nameTextField.text;
-        
-        if (![self.previousLabelText isEqualToString:self.nameTextField.text]) {
-            NSLog(@"Updating to %@",self.nameTextField.text);
-            [self.updateDelegate updateCurrentRowAtIndexpath:indexpath];
+        if (addingCellFlag) {
+             NSLog(@"INSERTED & Updating to %@",self.nameTextField.text);
+            [self.createDelegate addNewRowInDBAtIndexPath:indexpath];
+        }
+        else {
+            if (![self.previousLabelText isEqualToString:self.nameTextField.text]) {
+                NSLog(@"Updating to %@",self.nameTextField.text);
+                [self.updateDelegate updateCurrentRowAtIndexpath:indexpath];
+            }
         }
         [self removeOverlayAndTextField];
     }
@@ -312,16 +319,14 @@ float lastContentOffset = 0;
         //delete
         [self removeOverlayAndTextField];
         NSLog(@"Deleting");
-//        [UIView animateWithDuration:0.25 animations:^{
-//            CGRect cellFrame = self.frame;
-//            cellFrame.origin.x = -320;
-//            self.frame = cellFrame;
-//        } completion:^(BOOL finished){
-//            if (finished) {
-                [self.deleteDelegate deleteCurrentRowAtIndexpath:indexpath];
-//            }
-//        }];
-        
+
+        if (addingCellFlag) {
+            //rollback
+            [self.createDelegate rollBackInDBAndDeleteAtIndexPath:indexpath];
+        }
+        else {
+            [self.deleteDelegate deleteCurrentRowAtIndexpath:indexpath];      
+        }
     }
 }
 

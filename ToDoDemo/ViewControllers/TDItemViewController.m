@@ -113,14 +113,37 @@
     
     // u can change the list if u want
     //ToDoList *newList = [self.rows objectAtIndex:indexpath.row];
+    NSDate *methodStart = [NSDate date];
+    /* ... Do whatever you need to do ... */
     
-    
+    // u can change the list if u want
+    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    currentItem.itemName = cell.textLabel.text;
+    // update unchecked array
+    [self updateNewItem:currentItem atIndexPath:indexpath];
+    [self updateRowsAfterCreationFromIndexPath:indexpath];
+
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         NSLog(@"Error in adding a new item %@, %@", error, [error userInfo]);
         abort();
-    } 
+    }
+    NSLog(@" ***SAVED AFTER UPDATING OTHER ROWS****");
+    NSDate *methodFinish = [NSDate date];
+    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+    NSLog(@"execution time : %f",executionTime);
     
+}
+
+- (void)updateRowsAfterCreationFromIndexPath:(NSIndexPath *)indexPath
+{
+    int count = [self.rows count];
+    for (int i = indexPath.row + 1; i< count ; i++) {
+        ToDoItem *item = [self.rows objectAtIndex:i];
+        int newPriority = [item.priority intValue] + 1;
+        item.priority = [NSNumber numberWithInt:newPriority];
+    }
 }
 
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
@@ -159,6 +182,16 @@
     [self reloadFromUpdatedDB];
 }
 
+- (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
+{
+    int count = [self.rows count];
+    for (int i = indexPath.row; i< count ; i++) {
+        ToDoItem *item = [self.rows objectAtIndex:i];
+        int newPriority = [item.priority intValue] - 1;
+        item.priority = [NSNumber numberWithInt:newPriority];
+    }
+}
+
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
@@ -187,6 +220,7 @@
     [self deleteItemFromIndexPath:indexpath];
     [self.rows removeObjectAtIndex:indexpath.row];
     [self.managedObjectContext deleteObject:currentItem];
+    [self updateRowsAfterDeletionFromIndexPath:indexpath];
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
@@ -416,6 +450,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.updateDelegate = self;
             cell.deleteDelegate = self;
+            cell.createDelegate = self;
         }
         //tobe commented
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
@@ -540,7 +575,7 @@
     ToDoItem *newItem = (ToDoItem *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem"
                                                                   inManagedObjectContext:self.managedObjectContext];
     newItem.itemName = ADDING_CELL;
-    newItem.priority = [NSNumber numberWithInt:[self getPriorityForIndexPath:indexPath]];
+    newItem.priority = [NSNumber numberWithInt:indexPath.row];
     newItem.doneStatus = [NSNumber numberWithBool:FALSE];
     newItem.list = self.parentList;
     [self.rows insertObject:newItem atIndex:indexPath.row];
@@ -575,8 +610,8 @@
         [TDCommon playSound:self.pullDownToCreateSound];
         //[cell labelTapped];
         //cell.nameTextField.text = @"";
-        [self updateNewItem:item atIndexPath:indexPath];
-        [self addNewRowInDBAtIndexPath:indexPath];
+
+        //[self addNewRowInDBAtIndexPath:indexPath];
         
         //insert in db here
     }

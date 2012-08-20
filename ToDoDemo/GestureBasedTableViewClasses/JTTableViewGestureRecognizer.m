@@ -158,6 +158,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationNone];
     
     TransformableTableViewCell *newCell = (id)[self.tableView cellForRowAtIndexPath:self.addingIndexPath];
+    newCell.addingCellFlag = TRUE;
     [newCell labelTapped];
     newCell.nameTextField.text = @"";
     self.addingIndexPath = nil;

@@ -143,6 +143,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.updateDelegate = self;
             cell.deleteDelegate = self;
+            cell.createDelegate = self;
         }
         cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
         cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
@@ -223,7 +224,7 @@
     NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     self.rows = [NSMutableArray arrayWithArray:fetchedObjects];
     for (ToDoList *lists in fetchedObjects) {
-        NSLog(@"Name: %@", lists.listName);
+        NSLog(@"Name: %@ Priority %d", lists.listName,[lists.priority intValue]);
     }  
 }
 
@@ -248,16 +249,35 @@
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
  {
-    
+     NSDate *methodStart = [NSDate date];
+     /* ... Do whatever you need to do ... */
+
      // u can change the list if u want
-     //ToDoList *newList = [self.rows objectAtIndex:indexpath.row];
+     ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+     TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+     currentList.listName = cell.textLabel.text;
      
+     [self updateRowsAfterCreationFromIndexPath:indexpath]; 
        
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         NSLog(@"Error in saving list %@, %@", error, [error userInfo]);
         abort();
     } 
+     NSLog(@" ***SAVED AFTER UPDATING OTHER ROWS****");
+     NSDate *methodFinish = [NSDate date];
+     NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+     NSLog(@"execution time : %f",executionTime);
+}
+
+- (void)updateRowsAfterCreationFromIndexPath:(NSIndexPath *)indexPath
+{
+       int count = [self.rows count];
+    for (int i = indexPath.row + 1; i< count ; i++) {
+    ToDoList *list = [self.rows objectAtIndex:i];
+        int newPriority = [list.priority intValue] + 1;
+        list.priority = [NSNumber numberWithInt:newPriority];
+    }
     
 }
 
@@ -308,24 +328,20 @@
     [self reloadFromUpdatedDB];
 }
 
+- (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
+{
+    int count = [self.rows count];
+    for (int i = indexPath.row; i< count ; i++) {
+        ToDoList *list = [self.rows objectAtIndex:i];
+        int newPriority = [list.priority intValue] - 1;
+        list.priority = [NSNumber numberWithInt:newPriority];
+    }
+}
+
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     [self deleteCurrentRowAfterSwipeAtIndexpath:indexpath];
-//    ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
-//    [self.managedObjectContext deleteObject:currentList];
-//    [self.rows removeObjectAtIndex:indexpath.row];
-//    NSError *error = nil;
-//    if (![self.managedObjectContext save:&error]) {
-//        NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
-//        abort();
-//    }
-//    [self fetchObjectsFromDb];
-//    [self.tableView beginUpdates];
-//    [UIView animateWithDuration:2 animations:^{
-//    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
-//    }];
-//    [self.tableView endUpdates];
-//    
+   
     TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
     if (self.rowIndexToBeDeleted >=0  && ![cell.countLabel.text isEqualToString:@"0"]) {
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationRight];
@@ -333,7 +349,6 @@
         [TDCommon playSound:self.deleteSound];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
     }
-
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
@@ -350,6 +365,8 @@
         ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
         [self.managedObjectContext deleteObject:currentList];
         [self.rows removeObjectAtIndex:indexpath.row];
+        
+        [self updateRowsAfterDeletionFromIndexPath:indexpath];
         NSError *error = nil;
         if (![self.managedObjectContext save:&error]) {
             NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
@@ -362,6 +379,7 @@
 #pragma mark - action sheet delegates
 - (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
+    NSIndexPath *indexPath;
     if (buttonIndex == 0) {
         // To be updated
         if (self.rowIndexToBeUpdated >= 0) {
@@ -375,6 +393,9 @@
             ToDoList *currentList = [self.rows objectAtIndex:self.rowIndexToBeDeleted];
             [self.managedObjectContext deleteObject:currentList];
             [self.rows removeObjectAtIndex:self.rowIndexToBeDeleted];
+            indexPath = [NSIndexPath indexPathForRow:self.rowIndexToBeDeleted inSection:0]; 
+            [self updateRowsAfterDeletionFromIndexPath:indexPath];
+
             NSError *error = nil;
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
@@ -382,7 +403,6 @@
             }
             [self fetchObjectsFromDb];
             [TDCommon playSound:self.deleteSound];
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.rowIndexToBeDeleted inSection:0]; 
             [self.tableView beginUpdates];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
             [self.tableView endUpdates];
@@ -476,7 +496,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
                                                                   inManagedObjectContext:self.managedObjectContext];
     newList.listName = ADDING_CELL;
     
-    newList.priority = [NSNumber numberWithInt:[self getPriorityForIndexPath:indexPath]];
+    newList.priority = [NSNumber numberWithInt:indexPath.row];
     newList.doneStatus = [NSNumber numberWithBool:FALSE];
     [self.rows insertObject:newList atIndex:indexPath.row];
 }
@@ -499,7 +519,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         [TDCommon playSound:self.pullDownToCreateSound];
         //[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
        // [self.tableView reloadData];
-        [self addNewRowInDBAtIndexPath:indexPath];
+       // [self addNewRowInDBAtIndexPath:indexPath];
         //insert in db here
     }
 }

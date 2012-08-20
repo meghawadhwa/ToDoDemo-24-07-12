@@ -217,6 +217,18 @@
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath{
     return NO;
 }
+
+-(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath{
+    [self.managedObjectContext rollback];
+    [self deleteCurrentRowAtIndexpath:indexPath];
+}
+
+- (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath{
+    [self.rows removeObjectAtIndex:indexpath.row];
+    [TDCommon playSound:self.deleteSound];
+    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+}
+
 /*
  - (void)insertNewObject:(id)sender
  {

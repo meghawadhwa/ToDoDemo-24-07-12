@@ -12,6 +12,11 @@
 
 @end
 
+@protocol TDCreatingCellDelegate<NSObject>
+-(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
+-(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath;
+@end
+
 @protocol TDEditingCellDelegate<NSObject>
 - (void)disableGesturesOnTable:(BOOL)disableFlag;
 @end
