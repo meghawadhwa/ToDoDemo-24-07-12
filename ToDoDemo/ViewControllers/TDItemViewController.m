@@ -27,7 +27,11 @@
 - (void)initialSettings
 {
     [TDCommon setTheme:THEME_HEAT_MAP];
-    self.rows = [NSMutableArray arrayWithArray:[parentList.items allObjects]];
+    NSSortDescriptor *prioritySort = [[NSSortDescriptor alloc] initWithKey:@"priority" ascending:YES];
+    NSArray *descriptors = [NSArray arrayWithObject:prioritySort];
+    NSArray *sortedItems = [parentList.items sortedArrayUsingDescriptors:descriptors];
+    NSLog(@"sorted array %@",sortedItems);
+    self.rows = [NSMutableArray arrayWithArray:sortedItems];
     self.checkedArray = [[NSMutableArray alloc] init];
     self.uncheckedArray = [[NSMutableArray alloc] init];
     for (ToDoItem *item in self.rows) {
@@ -159,11 +163,6 @@
         item.doneStatus = [NSNumber numberWithBool:FALSE];
     }
     
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in updating a item's done status%@, %@", error, [error userInfo]);
-        abort();
-    }
     [self reloadFromUpdatedDB];
 }
 
@@ -230,7 +229,7 @@
 
 #pragma mark - animation
 
-- (void)moveRowDownFromIndexPath:(NSIndexPath *)indexPath
+- (NSIndexPath *)moveRowDownFromIndexPath:(NSIndexPath *)indexPath
 {
     ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
     NSIndexPath * NewIndexPath;
@@ -253,6 +252,7 @@
     [self.tableView beginUpdates];
     [self.tableView moveRowAtIndexPath:indexPath toIndexPath:NewIndexPath];
     [self.tableView endUpdates];
+    return NewIndexPath;
 }
 
 #pragma mark-
@@ -261,10 +261,33 @@
     self.rows = [NSMutableArray arrayWithArray:self.uncheckedArray];
     [self.rows addObjectsFromArray:self.checkedArray];
 }
+- (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath
+{
+    int fromIndex,toIndex;
+    if (indexPath.row > toIndexPath.row) {
+        fromIndex = toIndexPath.row;
+        toIndex = indexPath.row;
+    }
+    else {
+        fromIndex = indexPath.row;
+        toIndex = toIndexPath.row;
+    }
+    for (int index = fromIndex; index<= toIndex; index++) {
+        if (fromIndex == toIndex) break;
+    ToDoItem *item = [self.rows objectAtIndex:index];
+        item.priority = [NSNumber numberWithInt:index];
+        NSLog(@"updating priority %@ %i",item.itemName,[item.priority intValue]);
+    }
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in updating a item's done status%@, %@", error, [error userInfo]);
+        abort();
+    }
+}
 
 -(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
 {
-    [self moveRowDownFromIndexPath:indexPath];
+    NSIndexPath *toIndexPath =[self moveRowDownFromIndexPath:indexPath];
     ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
     // This item is done now ,updated in core data, just need to animate it Down
     if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
@@ -298,6 +321,7 @@
         }
     }
     [self updateMainArray];
+    [self updateRowsAfterMovingFromIndexpath:indexPath ToIndexpath:toIndexPath];
 }
 
 - (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
@@ -344,25 +368,6 @@
 
 }
 
-- (void)animateRowsAfterDeletionAtIndex:(int)index FromArray:(NSMutableArray *) requiredArray withDeletionFlag:(BOOL)flag
-    {
-//        
-//        if (requiredArray != self.checkedArray) {
-//            if (flag) {
-//                int lastCheckedObjectIndex = [self.checkedViewsArray count]-1;  //First Move ALL Checked Rows Up-Frm ChckdViewarray
-//                TDListCustomRow * lastCheckedRow = [self.checkedViewsArray lastObject];
-//                TDListCustomRow *lastCustomRow = [self.customViewsArray lastObject];
-//                [self moveCheckedRowsUptoIndex:lastCheckedObjectIndex WithDeletionFlag:flag];
-//                [UIView animateWithDuration:ROWS_SHIFTING_DURATION delay:DELETION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
-//                    lastCheckedRow.frame = CGRectMake(0, lastCustomRow.frame.origin.y, lastCustomRow.frame.size.width, lastCustomRow.frame.size.height);} completion:nil]; 
-//            }
-//            //Then Move Custom Unchecked Rows Up till the required Index
-//            [self shiftRowsBackFromIndex:index withDeletionFlag:flag];
-//            
-//        }    
-//        else [self moveCheckedRowsUptoIndex:index WithDeletionFlag:flag];
-//    }
-}
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -588,9 +593,10 @@
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
     item.itemName = @"New To Do"; 
-    item.priority = [NSNumber numberWithInt:[self getPriorityForIndexPath:indexPath]];
+    item.priority = [NSNumber numberWithInt:indexPath.row];
     item.doneStatus = [NSNumber numberWithBool:FALSE];
     item.list = self.parentList;
+
     [self updateNewItem:item atIndexPath:indexPath];
     NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
@@ -612,7 +618,6 @@
         //cell.nameTextField.text = @"";
 
         //[self addNewRowInDBAtIndexPath:indexPath];
-        
         //insert in db here
     }
 }
