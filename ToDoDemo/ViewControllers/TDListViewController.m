@@ -58,8 +58,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    ToDoList *list = [self.rows objectAtIndex:indexPath.row];
-    NSObject *object = list.listName;
+    NSObject *object;
+    ToDoList *list;
+    if ([[self.rows objectAtIndex:indexPath.row]isEqual:DUMMY_CELL]) {
+        object = [self.rows objectAtIndex:indexPath.row];
+    }
+    else {
+        list = [self.rows objectAtIndex:indexPath.row];
+        object = list.listName;
+    }
     UIColor *backgroundColor = [TDCommon getColorByPriority:indexPath.row];
     //[[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
@@ -145,8 +152,10 @@
             cell.deleteDelegate = self;
             cell.createDelegate = self;
         }
-        cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
-        cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
+        if (![object isEqual:DUMMY_CELL]) {
+            cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
+            cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
+        }
         cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
         cell.detailTextLabel.text = @" ";
         if ([cell.countLabel.text isEqualToString:@"0"]) {
@@ -157,6 +166,8 @@
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
             cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.countLabel.backgroundColor = [UIColor clearColor];
+            cell.countLabel.text = @"";
         } else {
             cell.textLabel.textColor = [UIColor whiteColor];
             cell.countLabel.textColor = [ UIColor whiteColor];
@@ -277,6 +288,7 @@
     ToDoList *list = [self.rows objectAtIndex:i];
         int newPriority = [list.priority intValue] + 1;
         list.priority = [NSNumber numberWithInt:newPriority];
+        NSLog(@"list name :%@, priority %i",list.listName,newPriority);
     }
     
 }
@@ -565,6 +577,38 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 {
  ToDoList *currentList = [self.rows objectAtIndex:indexPath.row];
     return [currentList.doneStatus boolValue];
+}
+
+#pragma mark- move Rows, changing priority
+- (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
+    ToDoList *list = self.grabbedObject;
+    int priorityIndex = [list.priority intValue];
+    NSIndexPath *fromIndexpath = [NSIndexPath indexPathForRow:priorityIndex inSection:0];
+    [self updateRowsAfterMovingFromIndexpath:fromIndexpath ToIndexpath:toIndexPath];
+}
+
+- (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath
+{
+    int fromIndex,toIndex;
+    if (indexPath.row > toIndexPath.row) {
+        fromIndex = toIndexPath.row;
+        toIndex = indexPath.row;
+    }
+    else {
+        fromIndex = indexPath.row;
+        toIndex = toIndexPath.row;
+    }
+    for (int index = fromIndex; index<= toIndex; index++) {
+        if (fromIndex == toIndex) break;
+        ToDoList *list = [self.rows objectAtIndex:index];
+        list.priority = [NSNumber numberWithInt:index];
+        NSLog(@"updating priority %@ %i",list.listName,[list.priority intValue]);
+    }
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in updating a item's done status%@, %@", error, [error userInfo]);
+        abort();
+    }
 }
 
 #pragma mark - Table view delegate

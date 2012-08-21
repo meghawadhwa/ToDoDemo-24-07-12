@@ -203,7 +203,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         
         CGFloat diffRowHeight = CGRectGetHeight(rect) - CGRectGetHeight(rect)/[recognizer scale];
         
-        NSLog(@"%f %f %f %f",self.addingRowHeight, CGRectGetHeight(rect), CGRectGetHeight(rect)/[recognizer scale], [recognizer scale]);
+        //NSLog(@"%f %f %f %f",self.addingRowHeight, CGRectGetHeight(rect), CGRectGetHeight(rect)/[recognizer scale], [recognizer scale]);
         if (self.addingRowHeight - diffRowHeight >= 1 || self.addingRowHeight - diffRowHeight <= -1) {
             self.addingRowHeight = diffRowHeight;
             [self.tableView reloadData];
@@ -361,7 +361,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
                              [weakSelf.delegate gestureRecognizer:weakSelf needsReplacePlaceholderForRowAtIndexPath:indexPath];
                              [weakSelf.tableView endUpdates];
                              
-                             [weakSelf.tableView reloadVisibleRowsExceptIndexPath:indexPath];
+                             //[weakSelf.tableView reloadVisibleRowsExceptIndexPath:indexPath];
+                             [weakSelf.tableView reloadData];
                              // Update state and clear instance variables
                              weakSelf.cellSnapshot = nil;
                              weakSelf.addingIndexPath = nil;
@@ -487,7 +488,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         }
         return;
     }
-        NSLog(@" Content Offset %f  bounds %f",scrollView.contentOffset.y,fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height));
+        //NSLog(@" Content Offset %f  bounds %f",scrollView.contentOffset.y,fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height));
 
     // We try to create a new cell when the user tries to drag the content to and offset of negative value
     if (scrollView.contentOffset.y < 0) {
@@ -756,11 +757,10 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [tableView addGestureRecognizer:pan];
     pan.delegate             = recognizer;
     recognizer.panRecognizer = pan;
-//TODO: long press gesture  
-//    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:recognizer action:@selector(longPressGestureRecognizer:)];
-//    [tableView addGestureRecognizer:longPress];
-//    longPress.delegate              = recognizer;
-//    recognizer.longPressRecognizer  = longPress;
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:recognizer action:@selector(longPressGestureRecognizer:)];
+    [tableView addGestureRecognizer:longPress];
+    longPress.delegate              = recognizer;
+    recognizer.longPressRecognizer  = longPress;
 
     return recognizer;
 }

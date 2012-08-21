@@ -9,7 +9,8 @@
 #import "TDItemViewController.h"
 
 @interface TDItemViewController ()
-
+- (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath;
+- (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath;
 @end
 
 @implementation TDItemViewController
@@ -261,6 +262,34 @@
     self.rows = [NSMutableArray arrayWithArray:self.uncheckedArray];
     [self.rows addObjectsFromArray:self.checkedArray];
 }
+- (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
+    
+    [self updateDoneStatusOfRowAtIndexPath:toIndexPath];
+    ToDoItem *item = self.grabbedObject;
+    int priorityIndex = [item.priority intValue];
+    NSIndexPath *fromIndexpath = [NSIndexPath indexPathForRow:priorityIndex inSection:0];
+    [self updateRowsAfterMovingFromIndexpath:fromIndexpath ToIndexpath:toIndexPath];
+    [self updateArraysAfterDoneFromIndexpath:fromIndexpath ToIndexPath:toIndexPath];
+}
+
+- (void)updateDoneStatusOfRowAtIndexPath:(NSIndexPath * )toIndexPath
+{
+    int toIndex = toIndexPath.row;
+    ToDoItem *currentItem = [self.rows objectAtIndex:toIndex];
+    
+    if ([self.rows count] == 1) {
+        return;
+    }
+    else if (toIndex == 0) {
+        ToDoItem *nextItem = [self.rows objectAtIndex:1];
+        currentItem.doneStatus = nextItem.doneStatus;
+        return;
+    }
+    ToDoItem *previousItem = [self.rows objectAtIndex:toIndex-1];
+    currentItem.doneStatus = previousItem.doneStatus;
+    
+}
+
 - (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath
 {
     int fromIndex,toIndex;
@@ -285,11 +314,50 @@
     }
 }
 
--(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
-{
-    NSIndexPath *toIndexPath =[self moveRowDownFromIndexPath:indexPath];
+- (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath ToIndexPath:(NSIndexPath *)toIndexPath{
+    ToDoItem * item = [self.rows objectAtIndex:toIndexPath.row];
+    int toIndex;
+    // This item is done now ,updated in core data, moved to new index,just need to change in arrays
+    if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:TRUE]]) { // item is checked now
+        if (indexPath.row <[self.uncheckedArray count]) {
+            toIndex = toIndexPath.row - [self.uncheckedArray count] +1;
+            if ([[self.uncheckedArray objectAtIndex:indexPath.row] isEqual:item]) {
+                [self.uncheckedArray removeObjectAtIndex:indexPath.row];
+                [self.checkedArray insertObject:item atIndex:toIndex];
+            }
+        }
+        else {
+            toIndex = toIndexPath.row - [self.uncheckedArray count];
+            if (toIndex<0) {
+                toIndex = 0;
+            }
+            if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
+                [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
+                [self.checkedArray insertObject:item atIndex:toIndex];
+            }
+            NSLog(@"Unchecked array count  : %d toIndex  %d",[self.uncheckedArray count],toIndexPath.row);
+        }
+    }
+    else {// item is unchecked now
+        toIndex = toIndexPath.row;
+                                 // unchecked row moved from unchecked region
+            if (indexPath.row < [uncheckedArray count]) { // row to be moved from unchecked section
+                [self.uncheckedArray removeObjectAtIndex:indexPath.row];
+                [self.uncheckedArray insertObject:item atIndex:toIndex];
+            }
+            else {
+                if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
+                    [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
+                    [self.uncheckedArray insertObject:item atIndex:toIndex];
+                }
+            }
+    }
+    NSLog(@"From  : %d to %d",indexPath.row,toIndex);
+}
+
+- (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath{
     ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
-    // This item is done now ,updated in core data, just need to animate it Down
+    // This item is done now ,updated in core data, just need to change in arrays
     if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
         if (indexPath.row <[self.uncheckedArray count]) {
             if ([[self.uncheckedArray objectAtIndex:indexPath.row] isEqual:item]) {
@@ -297,11 +365,7 @@
                 [self.checkedArray insertObject:item atIndex:0];
             }
         }
-        else {
-            if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
-                [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
-                [self.uncheckedArray addObject:item];
-            }
+        else {// do nothing
         }
         //TODO :animation
         NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
@@ -314,12 +378,22 @@
             }
         }
         else {
-                if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
-                    [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
-                    [self.uncheckedArray addObject:item];
-                }
+             if (indexPath.row <[self.uncheckedArray count]) { // do no change
+             }
+             else {
+            if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
+                [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
+                [self.uncheckedArray addObject:item];
+            }
+             }
         }
     }
+}
+
+-(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
+{
+    NSIndexPath *toIndexPath =[self moveRowDownFromIndexPath:indexPath];
+    [self updateArraysAfterDoneFromIndexpath:indexPath];
     [self updateMainArray];
     [self updateRowsAfterMovingFromIndexpath:indexPath ToIndexpath:toIndexPath];
 }
@@ -372,8 +446,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
-    NSObject *object = item.itemName;
+    
+    NSObject *object;
+    ToDoItem *item;
+    if ([[self.rows objectAtIndex:indexPath.row]isEqual:DUMMY_CELL]) {
+        object = [self.rows objectAtIndex:indexPath.row];
+    }
+    else {
+        item = [self.rows objectAtIndex:indexPath.row];
+        object = item.itemName;
+    }
     UIColor *backgroundColor = [TDCommon getColorByPriority:indexPath.row];
     //[[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
@@ -474,6 +556,7 @@
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
             cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.strikedLabel.hidden = YES;
         } else {
             cell.textLabel.textColor = [UIColor whiteColor];
             cell.contentView.backgroundColor = backgroundColor;

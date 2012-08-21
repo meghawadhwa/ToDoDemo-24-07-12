@@ -17,8 +17,7 @@
 #import "TDConstants.h"
 #import "TDCommon.h"
 
-@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate,TDCreatingCellDelegate>
-//,JTTableViewGestureMoveRowDelegate>
+@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate,TDCreatingCellDelegate,JTTableViewGestureMoveRowDelegate>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @property (nonatomic, strong) id grabbedObject;
@@ -55,5 +54,7 @@
 - (float)getLastRowHeight;
 - (void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath;
 - (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath;
+- (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath;
+- (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath;
 
 @end

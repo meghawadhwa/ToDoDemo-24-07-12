@@ -169,10 +169,18 @@
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows replaceObjectAtIndex:indexPath.row withObject:self.grabbedObject];
+    [self updateAfterMovingToIndexpath:indexPath];
     self.grabbedObject = nil;
 }
 
 #pragma mark - Utility methods
+- (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
+    
+}
+
+- (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath{
+    
+}
 
 - (float)getLastRowHeight
 {
@@ -219,8 +227,8 @@
 }
 
 -(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath{
-    [self.managedObjectContext rollback];
     [self deleteCurrentRowAtIndexpath:indexPath];
+    [self.managedObjectContext rollback];
 }
 
 - (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath{
