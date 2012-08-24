@@ -17,6 +17,7 @@ typedef enum {
     JTTableViewGestureRecognizerStatePanning,
     JTTableViewGestureRecognizerStateMoving,
     JTTableViewGestureRecognizerStatePullingUp,
+    JTTableViewGestureRecognizerStatePinchingIn,
 } JTTableViewGestureRecognizerState;
 
 CGFloat const JTTableViewCommitEditingRowDefaultLength = 80;
@@ -38,6 +39,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @property (nonatomic, assign) CGFloat                        scrollingRate;
 @property (nonatomic, strong) NSTimer                       *movingTimer;
 
+//pinch to close
+@property(nonatomic,assign) BOOL pinchToCloseCompleted;
 // pull up image views
 @property(nonatomic,retain)  UIImageView *upArrowImageView;
 @property(nonatomic,retain)  UIImageView *smileyImageView;
@@ -47,10 +50,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
 - (void)updateAddingIndexPathForCurrentLocation;
 - (void)commitOrDiscardCell;
-
+- (void)createPinchOutView;
+- (void)resetAfterPinchComplete:(int)imageCount;
+- (void)resetAfterPinchInComplete:(int)imageCount;
+- (void)resetAfterPinch:(int)imageCount;
 @end
 
-#define CELL_SNAPSHOT_TAG 100000
 
 @implementation JTTableViewGestureRecognizer
 @synthesize delegate, tableView, tableViewDelegate;
@@ -60,6 +65,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @synthesize cellSnapshot, scrollingRate, movingTimer;
 
 @synthesize upArrowImageView,smileyImageView,switchUpView,extraPullDelegate,pullUpToMoveDownDelegate;
+@synthesize pinchDelegate;
+@synthesize pinchToCloseCompleted;
 
 - (void)scrollTable {
     // Scroll tableview while touch point is on top or bottom part
@@ -166,10 +173,18 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 #pragma mark Action
 
 - (void)pinchGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
-//    NSLog(@"%d %f %f", [recognizer numberOfTouches], [recognizer velocity], [recognizer scale]);
+    static int imageCount;
+        NSLog(@"%d %f %f", [recognizer numberOfTouches], [recognizer velocity], [recognizer scale]);
     if (recognizer.state == UIGestureRecognizerStateEnded || [recognizer numberOfTouches] < 2) {
-        if (self.addingIndexPath) {
+        if (self.addingIndexPath && self.state == JTTableViewGestureRecognizerStatePinching) {
             [self commitOrDiscardCell];
+        }
+        else if (self.state == JTTableViewGestureRecognizerStatePinchingIn){
+            if (self.pinchToCloseCompleted) {
+                [self resetAfterPinchComplete:imageCount];
+            }
+            else {  [self resetAfterPinchInComplete:imageCount];
+            }
         }
         return;
     }
@@ -177,14 +192,16 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     CGPoint location1 = [recognizer locationOfTouch:0 inView:self.tableView];
     CGPoint location2 = [recognizer locationOfTouch:1 inView:self.tableView];
     CGPoint upperPoint = location1.y < location2.y ? location1 : location2;
-    
+    CGPoint lowerPoint = location1.y > location2.y ? location1 : location2;
+    float difference = lowerPoint.y - upperPoint.y;
+    NSLog(@"DIFFERENCE: %f",difference);
     CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
-    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        if (recognizer.scale >1) {
         NSAssert(self.addingIndexPath != nil, @"self.addingIndexPath must not be nil, we should have set it in recognizerShouldBegin");
 
         self.state = JTTableViewGestureRecognizerStatePinching;
-
+            self.pinchToCloseCompleted = NO;
         // Setting up properties for referencing later when touches changes
         self.startPinchingUpperPoint = upperPoint;
 
@@ -198,9 +215,17 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:self.addingIndexPath] withRowAnimation:UITableViewRowAnimationMiddle];
         [self.tableView endUpdates];
+        }
+        else {
+            self.state = JTTableViewGestureRecognizerStatePinchingIn;
+            NSLog(@"Pinch OUt Began");
+            imageCount = 0;
+            imageCount =[self createPinchOutViewAndReturnImageCount];
+        }
+    } 
+    else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        if (self.state == JTTableViewGestureRecognizerStatePinching) {
 
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        
         CGFloat diffRowHeight = CGRectGetHeight(rect) - CGRectGetHeight(rect)/[recognizer scale];
         
         //NSLog(@"%f %f %f %f",self.addingRowHeight, CGRectGetHeight(rect), CGRectGetHeight(rect)/[recognizer scale], [recognizer scale]);
@@ -215,7 +240,119 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         CGFloat diffOffsetY = self.startPinchingUpperPoint.y - newUpperPoint.y;
         CGPoint newOffset   = (CGPoint){self.tableView.contentOffset.x, self.tableView.contentOffset.y+diffOffsetY};
         [self.tableView setContentOffset:newOffset animated:NO];
+        }
+        else if (self.state = JTTableViewGestureRecognizerStatePinchingIn) {
+            float scrollingAmount = 2; //PINCH INWARDS
+            if ([recognizer velocity] >= 0.0) { // PINCH OUTWARDS
+                scrollingAmount = -2;
+            }
+            if (imageCount>0) {
+        for (int i = imageCount - 1; i >=0; i--){
+                UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG +i +1];
+                [[snapShotView superview] bringSubviewToFront:snapShotView];
+            }
+        }
+    if ([self.pinchDelegate animateImageViewsbydistance:scrollingAmount])
+    {
+        if (imageCount >0) {
+        [self animateSnapShotViews:imageCount withVelocity:[recognizer velocity] byDistance:scrollingAmount];
+        }
+        self.pinchToCloseCompleted = NO;
     }
+    else {
+        self.pinchToCloseCompleted = YES;
+    }
+    }
+    }
+}
+
+#pragma mark - PINCH OUT methods 
+//  Created by Megha Wadhwa on 23/08/12.
+- (void)resetAfterPinch:(int)imageCount
+{
+    for (int i = 0; i<imageCount;i++) {
+     UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG+ i+1];
+        [snapShotView removeFromSuperview];
+        snapShotView = nil;
+    }
+}
+
+- (void)resetAfterPinchComplete:(int)imageCount
+{
+    [self resetAfterPinch:imageCount];
+    [self.pinchDelegate animateOuterImageViewsAfterCompleteInTime:0.4];
+}
+
+- (void)resetAfterPinchInComplete:(int)imageCount
+{
+    float scrollDistance =-1;
+    while ([self.pinchDelegate animateImageViewsbydistance:scrollDistance]) {
+    [self animateSnapShotViews:imageCount withVelocity:0.1 byDistance:scrollDistance];
+    }
+    [self resetAfterPinch:imageCount];  
+    [self.pinchDelegate changeBackgroundViewColor:[UIColor clearColor]];
+    [self.pinchDelegate hideBackgroundView:YES];
+}
+
+- (void)animateSnapShotViews:(int)imageCount withVelocity:(float)velocity byDistance:(float)scrollAmount
+{
+    for (int i = 0; i < imageCount; i++){
+        UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG + i + 1];
+        CGRect frame =snapShotView.frame;
+        float scrollAmountForImage;
+        if (velocity >= 0.0) { // PINCH OUTWARDS
+            scrollAmountForImage =  scrollAmount + (0.58 *i);
+        }
+        else { //PINCH INWARRDS
+            scrollAmountForImage = scrollAmount - (0.58 *i);
+        }
+        frame.origin.y += scrollAmountForImage;
+        snapShotView.frame =frame;
+        // NSLog(@"Pinch out : y :%f",frame.origin.y);
+    }
+    
+}
+
+- (int)createPinchOutViewAndReturnImageCount
+{
+    NSMutableArray *imageArray;
+    NSArray *indexPathArray;
+    int imageCount = 0;
+    if (!imageArray && !indexPathArray) {
+    imageArray= [[NSMutableArray alloc] init];
+    indexPathArray=[self.tableView indexPathsForRowsInRect:self.tableView.bounds];
+    for (NSIndexPath *indexpath in indexPathArray) {
+        UIImage *cellImage = [self createSnapShotOfCellAtIndexPath:indexpath];
+        [imageArray addObject:cellImage];
+    }
+        imageCount = [imageArray count];
+    }
+    // We create an imageView for caching the cell snapshot here
+    for (int i = 0; i <imageCount; i++){
+    UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG +i +1];
+        if ( ! snapShotView) {
+            UIImage *cellImage = [imageArray objectAtIndex:i];
+            NSIndexPath *indexPath = [indexPathArray objectAtIndex:i];
+            snapShotView = [[UIImageView alloc] initWithImage:cellImage];
+            snapShotView.tag = CELL_SNAPSHOT_TAG + i+1;
+            CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+            snapShotView.frame = CGRectOffset(snapShotView.bounds, rect.origin.x, rect.origin.y);
+           // [[self.tableView superview] addSubview:snapShotView];
+            [self.pinchDelegate addSnapshotImageView:snapShotView];
+            NSLog(@"%%%%%% CHECK %@",[self.tableView superview]);
+        }
+    }
+    [self.pinchDelegate changeBackgroundViewColor:[UIColor blackColor]];
+    return imageCount;
+}
+
+-(UIImage *)createSnapShotOfCellAtIndexPath:(NSIndexPath *)indexPath{    
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
+    [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return cellImage;
 }
 
 - (void)panGestureRecognizer:(UIPanGestureRecognizer *)recognizer {
@@ -299,12 +436,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.state = JTTableViewGestureRecognizerStateMoving;
         
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
-        [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-
+        UIImage *cellImage = [self createSnapShotOfCellAtIndexPath:indexPath];
+        
         // We create an imageView for caching the cell snapshot here
         UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG];
         if ( ! snapShotView) {
@@ -576,7 +709,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     }
 }
 
-# pragma mark - PULL UP METHODS by Megha Wadhwa
+# pragma mark - PULL UP METHODS
+//  Created by Megha Wadhwa on 23/07/12.
 
 #define EMPTY_BOX [UIImage imageNamed:@"empty_box.png"]
 #define FULL_BOX [UIImage imageNamed:@"full_box.png"]

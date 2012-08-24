@@ -27,7 +27,10 @@
 @synthesize backgroundLabel;
 @synthesize editingFlag;
 @synthesize checkSound,deleteSound,deleteAlertSound,checkAlertSound,pullDownToCreateSound,pullDownToMoveUpSound,pullUpToMoveDownSound,pinchInSound,pinchOutSound,longPressSound,uncheckSound,navigateSound,pullUpToClearSound;
-
+@synthesize topImage,bottomImage,parentTopImageView,parentBottomImageView;
+@synthesize navigateFlag;
+@synthesize backgroundView;
+@synthesize playedPinchInSoundOnce;
 - (void)awakeFromNib
 {
     [super awakeFromNib];
@@ -53,16 +56,24 @@
                  nil];
     
     [self setBackgroundWhenNoRows];
+    [self setBackgroundForPinch];
+
     // Setup your tableView.delegate and tableView.datasource,
     // then enable gesture recognition in one line.
     self.tableViewRecognizer = [self.tableView enableGestureTableViewWithDelegate:self];
     self.tableViewRecognizer.extraPullDelegate = self;
+    self.tableViewRecognizer.pinchDelegate = self;
     self.tableView.backgroundColor = [UIColor blackColor];
     self.tableView.separatorStyle  = UITableViewCellSeparatorStyleNone;
     self.tableView.rowHeight       = NORMAL_CELL_FINISHING_HEIGHT;
     [self createSoundIdsForAllSounds];
 }
 
+- (void)setBackgroundForPinch{
+    self.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    self.backgroundView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.backgroundView];
+}
 - (void)setBackgroundWhenNoRows{
     self.backgroundLabel = [[UILabel alloc] initWithFrame:self.view.frame];
     self.backgroundLabel.backgroundColor = [UIColor clearColor];
@@ -93,6 +104,16 @@
 {
     [self fetchObjectsFromDb];
     [self.tableView reloadData];
+}
+
+- (void)hideBackgroundView:(BOOL)hide{
+
+    if (hide) {
+        self.backgroundView.hidden = YES;
+    }
+    else {
+        self.backgroundView.hidden = NO;
+    }
 }
 
 #pragma mark UITableViewDatasource
@@ -173,7 +194,26 @@
     self.grabbedObject = nil;
 }
 
-#pragma mark - Utility methods
+#pragma mark - Delegate methods
+- (BOOL)animateImageViewsbydistance:(float)y
+{
+    return NO;
+}
+
+- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
+{
+    
+}
+- (void)addSnapshotImageView:(UIImageView *)imageView
+{
+    [self.backgroundView addSubview:imageView];
+}
+
+- (void)changeBackgroundViewColor:(UIColor*)color
+{
+    self.backgroundView.backgroundColor = color;
+}
+
 - (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
     
 }

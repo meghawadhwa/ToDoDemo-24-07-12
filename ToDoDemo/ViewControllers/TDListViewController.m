@@ -40,6 +40,49 @@
     [super viewDidLoad];
     [TDCommon setTheme:THEME_BLUE];
     self.tableViewRecognizer.pullUpToMoveDownDelegate = self;
+    [self placeParentImageViews];
+}
+
+- (void)placeParentImageViews
+{
+    self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
+    self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
+    //[[self.tableView superview] addSubview:self.parentTopImageView];
+    [self.backgroundView addSubview:self.parentTopImageView];
+    self.parentBottomImageView =[[UIImageView alloc] initWithImage:self.bottomImage];
+    self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
+    //[[self.view superview] addSubview:self.parentBottomImageView];
+    [self.backgroundView addSubview:self.parentBottomImageView];
+
+    self.tableView.userInteractionEnabled = NO;
+    [[self.tableView superview] bringSubviewToFront:self.parentTopImageView];
+    [[self.tableView superview] bringSubviewToFront:self.parentBottomImageView];
+}
+
+- (void)animateParentViews{
+    
+    self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
+     self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
+    NSLog(@"########top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+
+    [UIView animateWithDuration:0.3 animations:^{
+
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = 480;
+        self.parentBottomImageView.frame = bottomFrame;
+        self.parentTopImageView.alpha = 0.0;
+    }completion:^ (BOOL finished) {
+        if (finished) {
+            self.backgroundView.hidden = YES;
+            self.parentBottomImageView.hidden = YES;
+            self.parentTopImageView.hidden = YES;
+            self.parentTopImageView.alpha = 1.0;
+        CGRect topFrame = self.parentTopImageView.frame;
+        topFrame.origin.y = -60;
+            self.parentTopImageView.frame = topFrame;}}];
+    self.tableView.userInteractionEnabled = YES;
+    NSLog(@"$$$$$$top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+
 }
 
 - (void)viewDidUnload
@@ -53,7 +96,67 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+#pragma mark-
+#pragma mark pinch delegate
 
+- (BOOL)animateImageViewsbydistance:(float)y
+{
+    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
+    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
+    if (self.backgroundView.hidden == YES) {
+        self.backgroundView.hidden = NO;
+        self.parentTopImageView.hidden = NO;
+        self.parentBottomImageView.hidden = NO;
+        self.parentTopImageView.alpha = 0.0;
+        CGRect topFrame = self.parentTopImageView.frame;
+        topFrame.origin.y = 0 ;
+        self.parentTopImageView.frame = topFrame;
+        NSLog(@"@@@@@@@");
+    }
+    float topEnd = CGRectGetMaxY(self.parentTopImageView.frame);
+    float bottomStart = self.parentBottomImageView.frame.origin.y;
+    float topStart = self.parentTopImageView.frame.origin.y;
+
+    if (self.parentTopImageView.alpha < 1.0 && y >0) {
+        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.01;
+    }
+    else if (self.parentTopImageView.alpha >0 && y<0) {
+        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.01;
+    }
+
+    if ((topEnd >= bottomStart) && (y>0) && (self.playedPinchInSoundOnce == NO)) {
+        [TDCommon playSound:self.pinchInSound];
+        self.playedPinchInSoundOnce = YES;
+    }
+    
+    if (((topEnd >= bottomStart) && y >0) || (topStart <= 0 && y < 0)) {
+        return NO;
+    }
+    self.playedPinchInSoundOnce = NO;
+    CGRect topFrame = self.parentTopImageView.frame;
+    topFrame.origin.y += y ;
+    self.parentTopImageView.frame = topFrame;
+    CGRect bottomFrame = self.parentBottomImageView.frame;
+    bottomFrame.origin.y -= y;
+    self.parentBottomImageView.frame = bottomFrame;
+    //NSLog(@"top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+    return YES;
+}
+
+- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
+{
+    [UIView animateWithDuration:timeInterval animations:^{
+        CGRect topFrame = self.parentTopImageView.frame;
+        topFrame.origin.y = 0;
+        self.parentTopImageView.frame = topFrame;
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = 60;
+        self.parentBottomImageView.frame = bottomFrame;
+    }completion:^ (BOOL finished) {
+        if (finished) {
+            [self.navigationController popViewControllerAnimated:NO];   
+        }}];
+}
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -669,14 +772,60 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     src.lastVisitedList = list;
     destination.parentList = list;
     destination.parentName = @"Lists";
+    destination.topImage = [self createSnapShotOfCellAtIndexPath:indexPath];
+    destination.bottomImage = [self createSnapShotOfViewAfterCellAtIndexPath:indexPath];
+    if (indexPath.row !=0) {
+        destination.overTopImage = [self createSnapShotOfViewBeforeCellAtIndexPath:indexPath];
+    }
+    else {
+        destination.overTopImage = nil;
+    }
+        destination.navigateFlag = YES;
     destination.goingDownByPullUp = NO;
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
-    [src.navigationController pushViewController:destination animated:YES];
+    [src.navigationController pushViewController:destination animated:NO];
     }
 }
 
 #pragma mark- view related
+-(UIImage *)createSnapShotOfCellAtIndexPath:(NSIndexPath *)indexPath{    
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
+    [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return cellImage;
+}
+
+-(UIImage *)createSnapShotOfViewAfterCellAtIndexPath:(NSIndexPath *)indexPath{ 
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    CGRect rect = CGRectMake(0, CGRectGetMaxY(cell.frame), 320, 400);
+    return [self createSnapshotOfRect:rect];
+}
+
+-(UIImage *)createSnapShotOfViewBeforeCellAtIndexPath:(NSIndexPath *)indexPath{ 
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    CGRect rect = CGRectMake(0, 0, 320, CGRectGetMinY(cell.frame));
+    return [self createSnapshotOfRect:rect];
+}
+
+- (UIImage *)createSnapshotOfRect:(CGRect)rect{
+    UIGraphicsBeginImageContext(rect.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CGImageRef subImageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+    CGRect smallBounds = CGRectMake(rect.origin.x, rect.origin.y, CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
+    
+    UIGraphicsBeginImageContext(smallBounds.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextDrawImage(context, smallBounds, subImageRef);
+    UIImage* smallImg = [UIImage imageWithCGImage:subImageRef];
+    CGImageRelease(subImageRef);
+    UIGraphicsEndImageContext();
+    return smallImg;
+}
 
 - (void)createActionSheetWithTitle:(NSString *)title andDestructiveButtonTitle:(NSString *)destructiveButtonTitle
 {
@@ -729,23 +878,28 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         }];
         self.goingDownByPullUp = NO;
     }
+    else if (self.navigateFlag == YES) {
+        self.tableView.hidden = NO;
+        [self animateParentViews];
+        self.navigateFlag = NO;
+    }
     else {
-        [self.tableView reloadData];
-        float originY = [self getLastRowHeight];
-        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
-            CGRect myFrame = self.view.frame;
-            myFrame.origin.y = -originY;
-            self.view.frame = myFrame;
-        } completion:^(BOOL fin){
-            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                //[self toggleSubViews:NO];
+//        [self.tableView reloadData];
+//        float originY = [self getLastRowHeight];
+//        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+//            CGRect myFrame = self.view.frame;
+//            myFrame.origin.y = -originY;
+//            self.view.frame = myFrame;
+//        } completion:^(BOOL fin){
+//            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//                //[self toggleSubViews:NO];
                 [self.tableView setHidden:NO];
-                CGRect myFrame = self.view.frame;
-                myFrame.origin.y = 0.0;
-                self.view.frame = myFrame;
-            } 
-                             completion: nil];
-        }];
+//                CGRect myFrame = self.view.frame;
+//                myFrame.origin.y = 0.0;
+//                self.view.frame = myFrame;
+//            } 
+//                             completion: nil];
+//        }];
     }
     [self refreshCount];
 }

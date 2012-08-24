@@ -38,3 +38,11 @@
 - (void)addChildView;
 - (BOOL)lastVisitedListIsNotNil;
 @end
+
+@protocol TDPinchInToClose <NSObject>
+- (BOOL)animateImageViewsbydistance:(float)y; 
+- (void)addSnapshotImageView:(UIImageView *)imageView;
+- (void)changeBackgroundViewColor:(UIColor*)color;
+- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval;
+- (void)hideBackgroundView:(BOOL)hide;
+@end

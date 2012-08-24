@@ -16,8 +16,9 @@
 #import "TDDelegates.h"
 #import "TDConstants.h"
 #import "TDCommon.h"
+#import <QuartzCore/QuartzCore.h>
 
-@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate,TDCreatingCellDelegate,JTTableViewGestureMoveRowDelegate>
+@interface TDParentViewController : UITableViewController <JTTableViewGestureEditingRowDelegate, JTTableViewGestureAddingRowDelegate,TDUpdateDbDelegate,TDDeleteFromDbDelegate,TDExtraPullDelegate,TDEditingCellDelegate,TDCreatingCellDelegate,JTTableViewGestureMoveRowDelegate,TDPinchInToClose>
 @property (nonatomic, strong) NSMutableArray *rows;
 @property (nonatomic, strong) JTTableViewGestureRecognizer *tableViewRecognizer;
 @property (nonatomic, strong) id grabbedObject;
@@ -44,7 +45,13 @@
 @property(nonatomic,assign) SystemSoundID pinchInSound;
 @property(nonatomic,assign) SystemSoundID longPressSound;
 
-
+@property(nonatomic,retain) UIImage *topImage;
+@property(nonatomic,retain) UIImage *bottomImage;
+@property(nonatomic,retain) UIImageView *parentTopImageView;
+@property(nonatomic,retain) UIImageView *parentBottomImageView;
+@property(nonatomic,assign) BOOL navigateFlag;
+@property(nonatomic,retain) UIView *backgroundView;
+@property(nonatomic,assign) BOOL playedPinchInSoundOnce;
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)fetchObjectsFromDb;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;

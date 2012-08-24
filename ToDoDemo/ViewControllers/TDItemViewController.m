@@ -16,6 +16,7 @@
 @implementation TDItemViewController
 @synthesize parentList;
 @synthesize checkedArray,uncheckedArray;
+@synthesize overTopImage,parentOverTopImageView;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -49,11 +50,76 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self placeParentImageViews];
         // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)placeParentImageViews
+{
+    self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
+    self.parentBottomImageView =[[UIImageView alloc] initWithImage:self.bottomImage];
+    if (self.overTopImage !=nil) {
+        self.parentOverTopImageView = [[UIImageView alloc] initWithImage:self.overTopImage];
+    }
+    [self setInitialFramesForParentImages];
+    [self.backgroundView addSubview:self.parentTopImageView];
+    [self.backgroundView addSubview:self.parentBottomImageView];
+    
+    self.tableView.userInteractionEnabled = NO;
+    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
+    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
+    
+    if (self.parentOverTopImageView !=nil) {
+        [self.backgroundView addSubview:self.parentOverTopImageView];
+        [self.backgroundView bringSubviewToFront:self.parentOverTopImageView];
+    }
+}
+
+- (void)setInitialFramesForParentImages
+{
+    if (self.parentOverTopImageView == nil) {
+        self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
+        self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
+        self.parentOverTopImageView = nil;
+    }
+    else {
+        self.parentOverTopImageView.frame = CGRectMake(0, 0, self.parentOverTopImageView.frame.size.width, self.parentOverTopImageView.frame.size.height);
+        self.parentTopImageView.frame = CGRectMake(0, CGRectGetMaxY(self.parentOverTopImageView.frame), self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
+        self.parentBottomImageView.frame = CGRectMake(0, CGRectGetMaxY(self.parentTopImageView.frame), self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
+    }
+}
+- (void)animateParentViews{
+    
+    [self setInitialFramesForParentImages];
+    NSLog(@"########top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+    
+    [UIView animateWithDuration:0.4 animations:^{
+        if (parentOverTopImageView !=nil) {
+            CGRect overFrame = self.parentOverTopImageView.frame;
+            overFrame.origin.y = -overFrame.size.height - self.parentTopImageView.frame.size.height;
+            self.parentOverTopImageView.frame = overFrame;
+        }
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = 480;
+        self.parentBottomImageView.frame = bottomFrame;
+        self.parentTopImageView.alpha = 0.0;
+    }completion:^ (BOOL finished) {
+        if (finished) {
+            self.backgroundView.hidden = YES;
+            self.parentBottomImageView.hidden = YES;
+            self.parentTopImageView.hidden = YES;
+            if(self.parentOverTopImageView !=nil)self.parentOverTopImageView.hidden = YES;
+            self.parentTopImageView.alpha = 1.0;
+            CGRect topFrame = self.parentTopImageView.frame;
+            topFrame.origin.y = -60;
+            self.parentTopImageView.frame = topFrame;}}];
+    self.tableView.userInteractionEnabled = YES;
+    NSLog(@"$$$$$$top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+    
 }
 
 - (void)viewDidUnload
@@ -81,6 +147,71 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+#pragma mark- Pinch Delegates
+- (BOOL)animateImageViewsbydistance:(float)y
+{
+    [self.backgroundView bringSubviewToFront:self.parentOverTopImageView];
+    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
+    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
+    if (self.backgroundView.hidden == YES) {
+        self.backgroundView.hidden = NO;
+        self.parentOverTopImageView.hidden = NO;
+        self.parentTopImageView.hidden = NO;
+        self.parentBottomImageView.hidden = NO;
+        self.parentTopImageView.alpha = 0.0;
+        CGRect topFrame = self.parentTopImageView.frame;
+        topFrame.origin.y = 0 ;
+        self.parentTopImageView.frame = topFrame;
+        NSLog(@"@@@@@@@");
+    }
+    float topEnd = CGRectGetMaxY(self.parentTopImageView.frame);
+    float bottomStart = self.parentBottomImageView.frame.origin.y;
+    float topStart = self.parentTopImageView.frame.origin.y;
+    
+    if (self.parentTopImageView.alpha < 1.0 && y >0) {
+        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.01;
+    }
+    else if (self.parentTopImageView.alpha >0 && y<0) {
+        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.01;
+    }
+    
+    if ((topEnd >= bottomStart) && (y>0) && (self.playedPinchInSoundOnce == NO)) {
+        [TDCommon playSound:self.pinchInSound];
+        self.playedPinchInSoundOnce = YES;
+    }
+
+    if (((topEnd >= bottomStart) && y >0) || (topStart <= 0 && y < 0)) {
+        return NO;
+    }
+
+    CGRect topFrame = self.parentTopImageView.frame;
+    topFrame.origin.y += y ;
+    self.parentTopImageView.frame = topFrame;
+    
+    if (self.parentOverTopImageView !=nil) {
+        CGRect overFrame = self.parentOverTopImageView.frame;
+        overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
+        self.parentOverTopImageView.frame = overFrame;
+    }
+    self.playedPinchInSoundOnce = NO;
+    CGRect bottomFrame = self.parentBottomImageView.frame;
+    bottomFrame.origin.y -= y;
+    self.parentBottomImageView.frame = bottomFrame;
+    //NSLog(@"top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+    return YES;
+}
+
+- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
+{
+    [UIView animateWithDuration:timeInterval animations:^{
+        [self setInitialFramesForParentImages];
+    }completion:^ (BOOL finished) {
+        if (finished) {
+            [self.navigationController popViewControllerAnimated:NO];   
+        }}];
+}
+
 #pragma mark - calculate priority
 
 - (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
@@ -760,22 +891,27 @@
         }];
         self.goingDownByPullUp = NO;
     }
+    else if (self.navigateFlag == TRUE) {
+        self.tableView.hidden = NO;
+        [self animateParentViews];
+        self.navigateFlag = NO;
+    }
     else {
-        float originY = [self getLastRowHeight];
-        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
-            CGRect myFrame = self.view.frame;
-            myFrame.origin.y = -originY;
-            self.view.frame = myFrame;
-        } completion:^(BOOL fin){
-            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//        float originY = [self getLastRowHeight];
+//        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+//            CGRect myFrame = self.view.frame;
+//            myFrame.origin.y = -originY;
+//            self.view.frame = myFrame;
+//        } completion:^(BOOL fin){
+//            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 [self.tableView setHidden:NO];
-                CGRect myFrame = self.view.frame;
-                myFrame.origin.y = 0.0;
-                self.view.frame = myFrame;
-                [self setStrikedLabel];
-            } 
-                             completion: nil];
-        }];
+//                CGRect myFrame = self.view.frame;
+//                myFrame.origin.y = 0.0;
+//                self.view.frame = myFrame;
+//                [self setStrikedLabel];
+//            } 
+//                             completion: nil];
+//        }];
     }
 
 }

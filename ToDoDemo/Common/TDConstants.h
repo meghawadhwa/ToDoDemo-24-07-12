@@ -39,6 +39,8 @@
 #define COMMITING_CREATE_CELL_HEIGHT 60
 #define NORMAL_CELL_FINISHING_HEIGHT 60
 
+#define CELL_SNAPSHOT_TAG 100000
+
 //SOUNDS
 
 #define kCheckSound @"button-20.mp3"
@@ -52,7 +54,8 @@
 #define kPullUpToMoveDownSound @"button-27.mp3"
 #define kPullDownToMoveUpSound @"button-27.mp3"
 
+#define kPinchInSound @"button-20.mp3"
+
 #define kPullUpToClearSound @"button-11.mp3"
 #define kPinchOutSound @"button-11.mp3"
-#define kPinchInSound @"button-11.mp3"
 #define kLongPressSound @"button-11.mp3"

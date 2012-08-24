@@ -9,7 +9,7 @@
 #import "TDMenuViewController.h"
 #import "TDAppDelegate.h"
 #import "TDListViewController.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface TDMenuViewController ()
 
 @end
@@ -17,6 +17,7 @@
 @implementation TDMenuViewController
 @synthesize menuContentsArray,managedObjectContext;
 @synthesize goingDownByPullUp;
+@synthesize goingUpByPinchToClose;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -80,20 +81,20 @@
         self.goingDownByPullUp = NO;
     }
     else {
-        float originY = [self getLastRowHeight];
-        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
-            CGRect myFrame = self.view.frame;
-            myFrame.origin.y = -originY;
-            self.view.frame = myFrame;
-        } completion:^(BOOL fin){
-            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//        float originY = [self getLastRowHeight];
+//        [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{  
+//            CGRect myFrame = self.view.frame;
+//            myFrame.origin.y = -originY;
+//            self.view.frame = myFrame;
+//        } completion:^(BOOL fin){
+//            [UIView animateWithDuration:0.6 delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 [self.tableView setHidden:NO];
-                CGRect myFrame = self.view.frame;
-                myFrame.origin.y = 0.0;
-                self.view.frame = myFrame;
-            } 
-                             completion: nil];
-        }];
+//                CGRect myFrame = self.view.frame;
+//                myFrame.origin.y = 0.0;
+//                self.view.frame = myFrame;
+//            } 
+//                             completion: nil];
+//        }];
     }
 }
 
@@ -183,22 +184,53 @@
 }
 
 #pragma mark - view methods
+-(UIImage *)createSnapShotOfCellAtIndexPath:(NSIndexPath *)indexPath{    
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
+    [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return cellImage;
+}
 
+-(UIImage *)createSnapShotOfViewAfterCellAtIndexPath:(NSIndexPath *)indexPath{ 
+   // UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    CGRect rect = CGRectMake(0, 60, 320, 400);
+    UIGraphicsBeginImageContext(rect.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CGImageRef subImageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+    CGRect smallBounds = CGRectMake(rect.origin.x, rect.origin.y, CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
 
+    UIGraphicsBeginImageContext(smallBounds.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextDrawImage(context, smallBounds, subImageRef);
+    UIImage* smallImg = [UIImage imageWithCGImage:subImageRef];
+    CGImageRelease(subImageRef);
+    UIGraphicsEndImageContext();
+    return smallImg;
+}
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [TDCommon playSound:[TDCommon createSoundID:kNavigateSound]];
+    if (indexPath.row == 0) {
+        
     TDMenuViewController *src = (TDMenuViewController *) self;
     TDListViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
     destination.parentName = @"Menu";
     destination.goingDownByPullUp = NO;
+    destination.topImage = [self createSnapShotOfCellAtIndexPath:indexPath];
+    destination.bottomImage = [self createSnapShotOfViewAfterCellAtIndexPath:indexPath];
+        destination.navigateFlag = YES;
 //    src.childName = @"Lists";
 //    src.parentName = @"";
     src.goingDownByPullUp = NO;
     destination.managedObjectContext = self.managedObjectContext;
-    [src.navigationController pushViewController:destination animated:YES];
+    [src.navigationController pushViewController:destination animated:NO];
+    }
 }
 
 @end
