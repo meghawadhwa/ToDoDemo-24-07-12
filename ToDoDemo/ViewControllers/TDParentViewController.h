@@ -57,7 +57,7 @@
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath;
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
-- (void)reloadFromUpdatedDB;
+- (void)reloadTableData;
 - (float)getLastRowHeight;
 - (void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath;
 - (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath;

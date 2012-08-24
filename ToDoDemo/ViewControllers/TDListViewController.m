@@ -38,6 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self fetchObjectsFromDb];
     [TDCommon setTheme:THEME_BLUE];
     self.tableViewRecognizer.pullUpToMoveDownDelegate = self;
     [self placeParentImageViews];
@@ -358,7 +359,7 @@
         NSLog(@"Error in saving done status of items within the list %@, %@", error, [error userInfo]);
         abort();
     } 
-    [self reloadFromUpdatedDB];
+    
 }
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
@@ -416,7 +417,6 @@
                 NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
                 abort();
             }
-            [self reloadFromUpdatedDB];
         }
     }
     else {
@@ -425,7 +425,6 @@
             NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
             abort();
         }
-        [self reloadFromUpdatedDB];
     }
 }
 
@@ -440,7 +439,7 @@
         NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
         abort();
     }
-    [self reloadFromUpdatedDB];
+    [self reloadTableData];
 }
 
 - (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
@@ -487,7 +486,7 @@
             NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
             abort();
         }   
-        [self fetchObjectsFromDb];
+        [self reloadTableData];
     }
 }
 
@@ -516,11 +515,11 @@
                 NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
                 abort();
             }
-            [self fetchObjectsFromDb];
             [TDCommon playSound:self.deleteSound];
             [self.tableView beginUpdates];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
             [self.tableView endUpdates];
+            [self reloadTableData];
         }
     }
 }
@@ -838,7 +837,6 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 {
     [TDCommon setTheme:THEME_BLUE];   
     self.tableView.hidden = YES;
-    [self fetchObjectsFromDb];
     self.rowIndexToBeUpdated = -1;
     self.rowIndexToBeDeleted = -1;
 }
@@ -860,6 +858,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         }
     }
 }
+
 - (void)viewDidAppear:(BOOL)animated
 {
     if (self.goingDownByPullUp) {

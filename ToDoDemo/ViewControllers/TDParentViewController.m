@@ -100,9 +100,8 @@
     self.pullUpToClearSound = [TDCommon createSoundID:kPullUpToClearSound];
 }
 
-- (void)reloadFromUpdatedDB
+- (void)reloadTableData
 {
-    [self fetchObjectsFromDb];
     [self.tableView reloadData];
 }
 

@@ -295,7 +295,7 @@
         item.doneStatus = [NSNumber numberWithBool:FALSE];
     }
     
-    [self reloadFromUpdatedDB];
+  //  [self reloadFromUpdatedDB];
 }
 
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
@@ -310,7 +310,7 @@
         abort();
     }
     [self updateNewItem:currentItem atIndexPath:indexpath];
-    [self reloadFromUpdatedDB];
+   // [self reloadFromUpdatedDB];
 }
 
 - (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
