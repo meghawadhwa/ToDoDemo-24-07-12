@@ -259,10 +259,11 @@
         if (![object isEqual:DUMMY_CELL]) {
             cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
             cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
+            cell.detailTextLabel.text = @" ";
         }
-        cell.textLabel.text = [NSString stringWithFormat:@"%@", (NSString *)object];
-        cell.detailTextLabel.text = @" ";
-        if ([cell.countLabel.text isEqualToString:@"0"]) {
+        
+        if ([cell.countLabel.text isEqualToString:@"0"] && ![object isEqual:DUMMY_CELL]) {
             cell.textLabel.hidden = NO;
             cell.textLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
             cell.countLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.4];
