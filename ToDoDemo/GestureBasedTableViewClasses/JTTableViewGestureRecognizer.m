@@ -328,6 +328,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         imageCount = [imageArray count];
     }
     // We create an imageView for caching the cell snapshot here
+    if (imageCount >0) {
     for (int i = 0; i <imageCount; i++){
     UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG +i +1];
         if ( ! snapShotView) {
@@ -341,6 +342,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             [self.pinchDelegate addSnapshotImageView:snapShotView];
             NSLog(@"%%%%%% CHECK %@",[self.tableView superview]);
         }
+    }
     }
     [self.pinchDelegate changeBackgroundViewColor:[UIColor blackColor]];
     return imageCount;
@@ -558,13 +560,18 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             NSLog(@"Should not begin pinch");
             return NO;
         }
-
         CGPoint location1 = [gestureRecognizer locationOfTouch:0 inView:self.tableView];
         CGPoint location2 = [gestureRecognizer locationOfTouch:1 inView:self.tableView];
 
         CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
         NSArray *indexPaths = [self.tableView indexPathsForRowsInRect:rect];
-
+        if ([indexPaths count] == 0 && [self.pinchRecognizer scale] >1) {
+            self.addingIndexPath = nil;
+            return NO;
+        }
+        else if ([indexPaths count] == 0 && [self.pinchRecognizer scale] <= 1){
+            return YES;
+        }
         NSIndexPath *firstIndexPath = [indexPaths objectAtIndex:0];
         NSIndexPath *lastIndexPath  = [indexPaths lastObject];
         NSInteger    midIndex = ((float)(firstIndexPath.row + lastIndexPath.row) / 2) + 0.5;
