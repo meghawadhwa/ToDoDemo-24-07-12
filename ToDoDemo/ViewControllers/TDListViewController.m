@@ -48,11 +48,9 @@
 {
     self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
     self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
-    //[[self.tableView superview] addSubview:self.parentTopImageView];
     [self.backgroundView addSubview:self.parentTopImageView];
     self.parentBottomImageView =[[UIImageView alloc] initWithImage:self.bottomImage];
     self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
-    //[[self.view superview] addSubview:self.parentBottomImageView];
     [self.backgroundView addSubview:self.parentBottomImageView];
 
     self.tableView.userInteractionEnabled = NO;
@@ -119,10 +117,10 @@
     float topStart = self.parentTopImageView.frame.origin.y;
 
     if (self.parentTopImageView.alpha < 1.0 && y >0) {
-        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.01;
+        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.02;
     }
     else if (self.parentTopImageView.alpha >0 && y<0) {
-        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.01;
+        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.02;
     }
 
     if ((topEnd >= bottomStart) && (y>0) && (self.playedPinchInSoundOnce == NO)) {

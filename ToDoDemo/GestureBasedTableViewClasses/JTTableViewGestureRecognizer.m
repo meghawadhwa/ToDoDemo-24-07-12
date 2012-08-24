@@ -41,6 +41,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
 //pinch to close
 @property(nonatomic,assign) BOOL pinchToCloseCompleted;
+@property(nonatomic,assign) CGPoint previousLowerPoint;
 // pull up image views
 @property(nonatomic,retain)  UIImageView *upArrowImageView;
 @property(nonatomic,retain)  UIImageView *smileyImageView;
@@ -67,6 +68,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 @synthesize upArrowImageView,smileyImageView,switchUpView,extraPullDelegate,pullUpToMoveDownDelegate;
 @synthesize pinchDelegate;
 @synthesize pinchToCloseCompleted;
+@synthesize previousLowerPoint;
 
 - (void)scrollTable {
     // Scroll tableview while touch point is on top or bottom part
@@ -193,8 +195,6 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     CGPoint location2 = [recognizer locationOfTouch:1 inView:self.tableView];
     CGPoint upperPoint = location1.y < location2.y ? location1 : location2;
     CGPoint lowerPoint = location1.y > location2.y ? location1 : location2;
-    float difference = lowerPoint.y - upperPoint.y;
-    NSLog(@"DIFFERENCE: %f",difference);
     CGRect  rect = (CGRect){location1, location2.x - location1.x, location2.y - location1.y};
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if (recognizer.scale >1) {
@@ -218,7 +218,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         }
         else {
             self.state = JTTableViewGestureRecognizerStatePinchingIn;
-            NSLog(@"Pinch OUt Began");
+            self.previousLowerPoint = lowerPoint;
+            NSLog(@"$$$$$Pinch OUt Began from :%f",self.previousLowerPoint.y);
             imageCount = 0;
             imageCount =[self createPinchOutViewAndReturnImageCount];
         }
@@ -242,7 +243,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         [self.tableView setContentOffset:newOffset animated:NO];
         }
         else if (self.state = JTTableViewGestureRecognizerStatePinchingIn) {
-            float scrollingAmount = 2; //PINCH INWARDS
+            float difference = self.previousLowerPoint.y - lowerPoint.y;
+            self.previousLowerPoint = lowerPoint;
+            NSLog(@"DIFFERENCE: %f",difference);
+
+            float scrollingAmount = difference * 5; //PINCH INWARDS
             if ([recognizer velocity] >= 0.0) { // PINCH OUTWARDS
                 scrollingAmount = -2;
             }
@@ -263,8 +268,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         self.pinchToCloseCompleted = YES;
     }
     }
-    }
-}
+    } }
 
 #pragma mark - PINCH OUT methods 
 //  Created by Megha Wadhwa on 23/08/12.
@@ -301,10 +305,10 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         CGRect frame =snapShotView.frame;
         float scrollAmountForImage;
         if (velocity >= 0.0) { // PINCH OUTWARDS
-            scrollAmountForImage =  scrollAmount + (0.58 *i);
+            scrollAmountForImage =  scrollAmount - (scrollAmount/4.5 *i);
         }
         else { //PINCH INWARRDS
-            scrollAmountForImage = scrollAmount - (0.58 *i);
+            scrollAmountForImage = scrollAmount -(scrollAmount/4.5 *i);
         }
         frame.origin.y += scrollAmountForImage;
         snapShotView.frame =frame;
