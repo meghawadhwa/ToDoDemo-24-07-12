@@ -11,6 +11,7 @@
 @implementation TDCommon
 
 NSString *currentViewTheme = nil;
+NSIndexPath *lastIndexPath = nil;
 
 - (id)init
 {
@@ -132,5 +133,13 @@ NSString *currentViewTheme = nil;
     currentViewTheme = myTheme;
 }
 
++ (void)setLastIndexPath:(NSIndexPath *)indexPath
+{
+    lastIndexPath = indexPath;
+}
+
++(NSIndexPath *)getLastIndexPath{
+    return lastIndexPath;
+}
 
 @end

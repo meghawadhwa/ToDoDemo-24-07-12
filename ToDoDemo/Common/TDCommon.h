@@ -20,5 +20,6 @@
 + (float)calculateDistanceBetweenTwoPoints:(CGPoint)firstPoint :(CGPoint)secondPoint;
 + (SystemSoundID) createSoundID: (NSString*)name;
 + (void)playSound:(SystemSoundID)soundId;
-
++ (void)setLastIndexPath:(NSIndexPath *)indexPath;
++(NSIndexPath *)getLastIndexPath;
 @end
