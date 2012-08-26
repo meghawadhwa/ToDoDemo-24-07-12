@@ -1,10 +1,3 @@
-/*
- * This file is part of the JTGestureBasedTableView package.
- * (c) James Tang <mystcolor@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 #import "JTTableViewGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
@@ -267,7 +260,6 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 }
 
 #pragma mark - PINCH OUT methods 
-//  Created by Megha Wadhwa on 23/08/12.
 - (void)resetAfterPinch:(int)imageCount
 {
     for (int i = 0; i<imageCount;i++) {
@@ -717,7 +709,6 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 }
 
 # pragma mark - PULL UP METHODS
-//  Created by Megha Wadhwa on 23/07/12.
 
 #define EMPTY_BOX [UIImage imageNamed:@"empty_box.png"]
 #define FULL_BOX [UIImage imageNamed:@"full_box.png"]
