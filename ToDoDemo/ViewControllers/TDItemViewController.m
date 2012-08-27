@@ -133,6 +133,9 @@
 - (void)setStrikedLabel
 {
     int checkedRowCount = [self.checkedArray count];
+    if (checkedRowCount == 0) {
+        return;
+    }
     int totalCount = [self.rows count];
     for (int i = totalCount-1; i >=(totalCount - checkedRowCount); i--) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
@@ -921,9 +924,12 @@
                              completion: nil];
         }];
         self.goingDownByPullUp = NO;
+        self.tableView.hidden = NO;
+        self.tableView.userInteractionEnabled = YES;
     }
     else if (self.navigateFlag == TRUE) {
         self.tableView.hidden = NO;
+        self.tableView.userInteractionEnabled = YES;
         [self animateParentViews];
         self.navigateFlag = NO;
     }
