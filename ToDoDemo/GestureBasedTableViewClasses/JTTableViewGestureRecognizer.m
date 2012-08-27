@@ -240,10 +240,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             self.previousLowerPoint = lowerPoint;
             NSLog(@"DIFFERENCE: %f",difference);
 
-            float scrollingAmount = difference * 5; //PINCH INWARDS
-           // if (difference < 0.0) { // PINCH OUTWARDS
-            //    scrollingAmount = -scrollingAmount;
-            //}
+            float scrollingAmount = difference * 5; //PINCH INWARDS IF DIFFERENCE is positive
+         
             if (imageCount>0) {
         for (int i = imageCount - 1; i >=0; i--){
                 UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG +i +1];
@@ -266,7 +264,9 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     else{
         self.pinchToCloseCompleted = YES;
     }
-        }} }
+
+}}
+}
 
 #pragma mark - PINCH OUT methods 
 - (void)resetAfterPinch:(int)imageCount

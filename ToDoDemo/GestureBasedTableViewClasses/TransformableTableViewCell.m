@@ -166,17 +166,6 @@
     return self;
 }
 
-//- (void)layoutSubviews {
-//    [super layoutSubviews];  //The default implementation of the layoutSubviews
-//    
-//    CGRect textLabelFrame = self.textLabel.frame;
-//    CGSize textSize = [self.textLabel.text sizeWithFont:[self.textLabel font]];
-//
-//    textLabelFrame.size.width = textSize.width +5;
-//     textLabelFrame.size.height = textSize.height +5;
-//    self.textLabel.frame = textLabelFrame;
-//}
-
 @end 
 
 #pragma mark -

@@ -368,7 +368,7 @@
         NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
         abort();
     }
-    [self fetchObjectsFromDb];
+    [self reloadTableData];
     [TDCommon playSound:self.deleteSound];
     [self.tableView beginUpdates];
     [UIView animateWithDuration:2 animations:^{
@@ -750,7 +750,7 @@
         // An example to discard the cell at JTTableViewCellEditingStateLeft
         //[self.rows removeObjectAtIndex:indexPath.row];
         [self deleteCurrentRowAfterSwipeAtIndexpath:indexPath];
-        [self fetchObjectsFromDb];
+        [self reloadTableData];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else if (state == JTTableViewCellEditingStateRight) {
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight

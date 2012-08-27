@@ -24,7 +24,6 @@
 @property (nonatomic, strong) id grabbedObject;
 
 
-//@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property(nonatomic,assign) BOOL goingDownByPullUp;
 @property(nonatomic,assign) BOOL editingFlag;
@@ -53,8 +52,8 @@
 @property(nonatomic,assign) BOOL navigateFlag;
 @property(nonatomic,retain) UIView *backgroundView;
 @property(nonatomic,assign) BOOL playedPinchInSoundOnce;
+
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
-- (void)fetchObjectsFromDb;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath;
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
