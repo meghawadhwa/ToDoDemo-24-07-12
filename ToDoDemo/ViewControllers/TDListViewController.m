@@ -521,7 +521,8 @@
         ToDoList *list = [self.rows objectAtIndex:self.rowIndexToBeUpdated];
         list.doneStatus = [NSNumber numberWithBool:TRUE];
         [self checkAllItemsForSelectedList];
-            [self refreshCount];
+            indexPath = [NSIndexPath indexPathForRow:self.rowIndexToBeUpdated inSection:0]; 
+            [self refreshCountForRowWithIndexPath:indexPath];
         }
         else if(self.rowIndexToBeDeleted >= 0){ // To be Deleted
             ToDoList *currentList = [self.rows objectAtIndex:self.rowIndexToBeDeleted];
@@ -789,6 +790,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     src.childName = list.listName;
     destination.childName = nil;
     src.lastVisitedList = list;
+    [TDCommon setLastIndexPath:indexPath];
     destination.parentList = list;
     destination.parentName = @"Lists";
     destination.topImage = [self createSnapShotOfCellAtIndexPath:indexPath];
@@ -861,11 +863,9 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     self.rowIndexToBeDeleted = -1;
 }
 
-- (void)refreshCount
+- (void)refreshCountForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-    int count = [self.rows count];
-    for (int i = 0; i <count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+    if (indexPath != nil) {
         TransformableTableViewCell *cell = (id)[self.tableView cellForRowAtIndexPath:indexPath];
         cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getItemCountForIndexpath:indexPath]];
         if ([cell.countLabel.text isEqualToString:@"0"]) {
@@ -919,8 +919,8 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 //            } 
 //                             completion: nil];
 //        }];
+        [self refreshCountForRowWithIndexPath:[TDCommon getLastIndexPath]];
     }
-    [self refreshCount];
 }
 
 @end
