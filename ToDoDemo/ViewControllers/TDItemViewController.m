@@ -368,14 +368,13 @@
         NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
         abort();
     }
-    [self reloadTableData];
     [TDCommon playSound:self.deleteSound];
     [self.tableView beginUpdates];
     [UIView animateWithDuration:2 animations:^{
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
     }];
     [self.tableView endUpdates];
-    [self.tableView reloadData];
+    [self reloadTableData];
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath

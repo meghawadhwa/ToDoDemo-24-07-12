@@ -481,7 +481,10 @@
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationRight];
     }else {
         [TDCommon playSound:self.deleteSound];
+        [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView endUpdates];
+        [self reloadTableData];
     }
 }
 
@@ -506,7 +509,6 @@
             NSLog(@"Error in deleting list %@, %@", error, [error userInfo]);
             abort();
         }   
-        [self reloadTableData];
     }
 }
 
@@ -581,6 +583,10 @@
     if (state == JTTableViewCellEditingStateRight) 
     {
         [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
+    }
+    else if (state == JTTableViewCellEditingStateRight) {
+        [self performSelector:@selector(reloadTableData) withObject:nil afterDelay:0.1];
+
     }
 }
 
