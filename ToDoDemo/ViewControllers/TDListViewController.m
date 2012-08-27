@@ -99,7 +99,7 @@
 #pragma mark pinch delegate
 
 - (BOOL)animateImageViewsbydistance:(float)y
-{
+{ 
     [self.backgroundView bringSubviewToFront:self.parentTopImageView];
     [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
     if (self.backgroundView.hidden == YES) {
@@ -122,14 +122,35 @@
     else if (self.parentTopImageView.alpha >0 && y<0) {
         self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.02;
     }
-
-    if ((topEnd >= bottomStart) && (y>0) && (self.playedPinchInSoundOnce == NO)) {
+    
+    if ((topEnd >= bottomStart) && (y>=0) && (self.playedPinchInSoundOnce == NO)) {
         [TDCommon playSound:self.pinchInSound];
         self.playedPinchInSoundOnce = YES;
     }
-    
-    if (((topEnd >= bottomStart) && y >0) || (topStart <= 0 && y < 0)) {
+
+    if (topStart <= 0 && y < 0)
+    {
         return NO;
+    }
+    
+    if (((topEnd >= bottomStart) && y >=0)) {
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = topEnd;
+        self.parentBottomImageView.frame = bottomFrame;
+        self.parentTopImageView.alpha = 1;
+        NSLog(@"RETURN top End : %f bottom start : %f",topEnd,bottomStart);
+        return NO;
+    }
+    
+    if ((bottomStart - topEnd < 20.0 || topEnd >267.0) && !self.playedPinchInSoundOnce && y>=0) {
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = topEnd;
+        self.parentBottomImageView.frame = bottomFrame;
+        NSLog(@" IN here top End : %f bottom start : %f",topEnd,bottomStart);
+        return YES;
+    }
+    if (y>0) {
+        NSLog(@" IN BW top End : %f bottom start : %f",topEnd,bottomStart);
     }
     self.playedPinchInSoundOnce = NO;
     CGRect topFrame = self.parentTopImageView.frame;
@@ -138,7 +159,6 @@
     CGRect bottomFrame = self.parentBottomImageView.frame;
     bottomFrame.origin.y -= y;
     self.parentBottomImageView.frame = bottomFrame;
-    //NSLog(@"top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
     return YES;
 }
 
@@ -156,6 +176,7 @@
             [self.navigationController popViewControllerAnimated:NO];   
         }}];
 }
+
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

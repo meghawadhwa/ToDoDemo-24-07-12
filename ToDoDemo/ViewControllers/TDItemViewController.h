@@ -14,5 +14,4 @@
 @property(nonatomic,retain) NSMutableArray *checkedArray;
 @property(nonatomic,retain) NSMutableArray *uncheckedArray;
 @property(nonatomic,retain) UIImage *overTopImage;
-@property(nonatomic,retain) UIImageView *parentOverTopImageView;
 @end

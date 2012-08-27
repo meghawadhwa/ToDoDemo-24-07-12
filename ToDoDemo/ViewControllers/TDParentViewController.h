@@ -44,6 +44,7 @@
 @property(nonatomic,assign) SystemSoundID pinchOutSound;
 @property(nonatomic,assign) SystemSoundID pinchInSound;
 @property(nonatomic,assign) SystemSoundID longPressSound;
+@property(nonatomic,retain) UIImageView *parentOverTopImageView;
 
 @property(nonatomic,retain) UIImage *topImage;
 @property(nonatomic,retain) UIImage *bottomImage;

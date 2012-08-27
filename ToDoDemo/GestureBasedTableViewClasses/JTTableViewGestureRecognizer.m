@@ -248,27 +248,32 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             NSLog(@"DIFFERENCE: %f",difference);
 
             float scrollingAmount = difference * 5; //PINCH INWARDS
-            if ([recognizer velocity] >= 0.0) { // PINCH OUTWARDS
-                scrollingAmount = -2;
-            }
+           // if (difference < 0.0) { // PINCH OUTWARDS
+            //    scrollingAmount = -scrollingAmount;
+            //}
             if (imageCount>0) {
         for (int i = imageCount - 1; i >=0; i--){
                 UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG +i +1];
                 [[snapShotView superview] bringSubviewToFront:snapShotView];
             }
         }
-    if ([self.pinchDelegate animateImageViewsbydistance:scrollingAmount])
+    BOOL continuePinching = [self.pinchDelegate animateImageViewsbydistance:scrollingAmount];
+    if (continuePinching)
     {
         if (imageCount >0) {
         [self animateSnapShotViews:imageCount withVelocity:[recognizer velocity] byDistance:scrollingAmount];
         }
         self.pinchToCloseCompleted = NO;
     }
-    else {
+    else if((continuePinching == NO) && (scrollingAmount < 0.0))
+    {
+        self.pinchToCloseCompleted = NO;
+    }
+    
+    else{
         self.pinchToCloseCompleted = YES;
     }
-    }
-    } }
+        }} }
 
 #pragma mark - PINCH OUT methods 
 //  Created by Megha Wadhwa on 23/08/12.
@@ -296,25 +301,42 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [self resetAfterPinch:imageCount];  
     [self.pinchDelegate changeBackgroundViewColor:[UIColor clearColor]];
     [self.pinchDelegate hideBackgroundView:YES];
+    [self.pinchDelegate resetParentViews];
 }
 
 - (void)animateSnapShotViews:(int)imageCount withVelocity:(float)velocity byDistance:(float)scrollAmount
 {
+   // if([self WhenParentImageViewsCrossStopAnimatingSnapShots:imageCount]) //return;
+    
     for (int i = 0; i < imageCount; i++){
         UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG + i + 1];
         CGRect frame =snapShotView.frame;
         float scrollAmountForImage;
-        if (velocity >= 0.0) { // PINCH OUTWARDS
-            scrollAmountForImage =  scrollAmount - (scrollAmount/4.5 *i);
-        }
-        else { //PINCH INWARRDS
-            scrollAmountForImage = scrollAmount -(scrollAmount/4.5 *i);
-        }
+        scrollAmountForImage =  scrollAmount - (scrollAmount/3.4 *i);
         frame.origin.y += scrollAmountForImage;
         snapShotView.frame =frame;
         // NSLog(@"Pinch out : y :%f",frame.origin.y);
     }
     
+}
+
+- (BOOL)WhenParentImageViewsCrossStopAnimatingSnapShots:(int) imageCount
+{
+    UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG  + 1];
+    
+    float topOrigin = [self.pinchDelegate getTopViewOrigin];
+    NSLog(@"$$$ TOP : %f",topOrigin -1 - snapShotView.frame.origin.y);
+    if ( topOrigin - 2 > snapShotView.frame.origin.y) {
+        for (int i = 0; i < imageCount; i++){
+           // UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG +i + 1];
+            CGRect frame =snapShotView.frame;
+            frame.origin.y = topOrigin;
+            snapShotView.frame =frame;
+        }
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (int)createPinchOutViewAndReturnImageCount

@@ -16,7 +16,7 @@
 @implementation TDItemViewController
 @synthesize parentList;
 @synthesize checkedArray,uncheckedArray;
-@synthesize overTopImage,parentOverTopImageView;
+@synthesize overTopImage;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -98,7 +98,7 @@
     NSLog(@"########top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
     
     [UIView animateWithDuration:0.4 animations:^{
-        if (parentOverTopImageView !=nil) {
+        if (self.parentOverTopImageView !=nil) {
             CGRect overFrame = self.parentOverTopImageView.frame;
             overFrame.origin.y = -overFrame.size.height - self.parentTopImageView.frame.size.height;
             self.parentOverTopImageView.frame = overFrame;
@@ -181,10 +181,41 @@
         self.playedPinchInSoundOnce = YES;
     }
 
-    if (((topEnd >= bottomStart) && y >0) || (topStart <= 0 && y < 0)) {
+    if (topStart <= 0 && y < 0)
+    {
         return NO;
     }
-
+    
+    if (((topEnd >= bottomStart) && y >=0)) {
+        if (self.parentOverTopImageView !=nil) {
+            CGRect overFrame = self.parentOverTopImageView.frame;
+            overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
+            self.parentOverTopImageView.frame = overFrame;
+        }
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = topEnd;
+        self.parentBottomImageView.frame = bottomFrame;
+        self.parentTopImageView.alpha = 1;
+        NSLog(@"RETURN top End : %f bottom start : %f",topEnd,bottomStart);
+        return NO;
+    }
+    
+    if ((bottomStart - topEnd < 20.0 || topEnd >267.0) && !self.playedPinchInSoundOnce && y>=0) {
+        if (self.parentOverTopImageView !=nil) {
+            CGRect overFrame = self.parentOverTopImageView.frame;
+            overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
+            self.parentOverTopImageView.frame = overFrame;
+        }
+        CGRect bottomFrame = self.parentBottomImageView.frame;
+        bottomFrame.origin.y = topEnd;
+        self.parentBottomImageView.frame = bottomFrame;
+        NSLog(@" IN here top End : %f bottom start : %f",topEnd,bottomStart);
+        return YES;
+    }
+    if (y>0) {
+        NSLog(@" IN BW top End : %f bottom start : %f",topEnd,bottomStart);
+    }
+    
     CGRect topFrame = self.parentTopImageView.frame;
     topFrame.origin.y += y ;
     self.parentTopImageView.frame = topFrame;

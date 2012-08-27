@@ -45,4 +45,6 @@
 - (void)changeBackgroundViewColor:(UIColor*)color;
 - (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval;
 - (void)hideBackgroundView:(BOOL)hide;
+- (void)resetParentViews;
+- (float)getTopViewOrigin;
 @end

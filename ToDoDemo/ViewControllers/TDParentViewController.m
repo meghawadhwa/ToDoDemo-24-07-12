@@ -31,6 +31,8 @@
 @synthesize navigateFlag;
 @synthesize backgroundView;
 @synthesize playedPinchInSoundOnce;
+@synthesize parentOverTopImageView;
+
 - (void)awakeFromNib
 {
     [super awakeFromNib];
@@ -203,6 +205,38 @@
 {
     
 }
+
+- (void)resetParentViews
+{
+    if (self.parentTopImageView !=nil) {
+        CGRect frame = self.parentTopImageView.frame;
+        frame.origin.y = 0;
+        self.parentTopImageView.frame = frame;
+        self.parentTopImageView.hidden = YES;
+    }   
+    
+    if (self.parentOverTopImageView !=nil) {
+        CGRect frame = self.parentOverTopImageView.frame;
+        frame.origin.y = 0 - self.parentOverTopImageView.frame.size.height;
+        self.parentOverTopImageView.frame = frame;
+        self.parentOverTopImageView.hidden = YES;
+    }
+    
+    if (self.parentBottomImageView !=nil) {
+        CGRect frame = self.parentBottomImageView.frame;
+        frame.origin.y = 480;
+        self.parentBottomImageView.frame = frame;
+        self.parentBottomImageView.hidden = YES;
+    }
+}
+
+- (float)getTopViewOrigin{
+    if (!self.parentTopImageView) {
+        return self.parentBottomImageView.frame.origin.y;
+    }
+    return self.parentTopImageView.frame.origin.y;
+}
+
 - (void)addSnapshotImageView:(UIImageView *)imageView
 {
     [self.backgroundView addSubview:imageView];
