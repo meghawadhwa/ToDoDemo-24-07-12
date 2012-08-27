@@ -52,6 +52,7 @@
 @property(nonatomic,assign) BOOL navigateFlag;
 @property(nonatomic,retain) UIView *backgroundView;
 @property(nonatomic,assign) BOOL playedPinchInSoundOnce;
+@property(nonatomic,retain) UIImage *overTopImage;
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
@@ -63,5 +64,10 @@
 - (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath;
 - (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath;
 - (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath;
+
+// parent views
+- (void)placeParentImageViews;
+- (void)animateParentViews;
+- (void)setInitialFramesForParentImages;
 
 @end

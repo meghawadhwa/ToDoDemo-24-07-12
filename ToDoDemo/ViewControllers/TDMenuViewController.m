@@ -224,6 +224,7 @@
     destination.goingDownByPullUp = NO;
     destination.topImage = [self createSnapShotOfCellAtIndexPath:indexPath];
     destination.bottomImage = [self createSnapShotOfViewAfterCellAtIndexPath:indexPath];
+        destination.overTopImage = nil;
         destination.navigateFlag = YES;
 //    src.childName = @"Lists";
 //    src.parentName = @"";

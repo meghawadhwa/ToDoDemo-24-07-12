@@ -44,45 +44,45 @@
     [self placeParentImageViews];
 }
 
-- (void)placeParentImageViews
-{
-    self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
-    self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
-    [self.backgroundView addSubview:self.parentTopImageView];
-    self.parentBottomImageView =[[UIImageView alloc] initWithImage:self.bottomImage];
-    self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
-    [self.backgroundView addSubview:self.parentBottomImageView];
-
-    self.tableView.userInteractionEnabled = NO;
-    [[self.tableView superview] bringSubviewToFront:self.parentTopImageView];
-    [[self.tableView superview] bringSubviewToFront:self.parentBottomImageView];
-}
-
-- (void)animateParentViews{
-    
-    self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
-     self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
-    NSLog(@"########top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
-
-    [UIView animateWithDuration:0.3 animations:^{
-
-        CGRect bottomFrame = self.parentBottomImageView.frame;
-        bottomFrame.origin.y = 480;
-        self.parentBottomImageView.frame = bottomFrame;
-        self.parentTopImageView.alpha = 0.0;
-    }completion:^ (BOOL finished) {
-        if (finished) {
-            self.backgroundView.hidden = YES;
-            self.parentBottomImageView.hidden = YES;
-            self.parentTopImageView.hidden = YES;
-            self.parentTopImageView.alpha = 1.0;
-        CGRect topFrame = self.parentTopImageView.frame;
-        topFrame.origin.y = -60;
-            self.parentTopImageView.frame = topFrame;}}];
-    self.tableView.userInteractionEnabled = YES;
-    NSLog(@"$$$$$$top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
-
-}
+//- (void)placeParentImageViews
+//{
+//    self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
+//    self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
+//    [self.backgroundView addSubview:self.parentTopImageView];
+//    self.parentBottomImageView =[[UIImageView alloc] initWithImage:self.bottomImage];
+//    self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
+//    [self.backgroundView addSubview:self.parentBottomImageView];
+//
+//    self.tableView.userInteractionEnabled = NO;
+//    [[self.tableView superview] bringSubviewToFront:self.parentTopImageView];
+//    [[self.tableView superview] bringSubviewToFront:self.parentBottomImageView];
+//}
+//
+//- (void)animateParentViews{
+//    
+//    self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
+//     self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
+//    NSLog(@"########top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+//
+//    [UIView animateWithDuration:0.3 animations:^{
+//
+//        CGRect bottomFrame = self.parentBottomImageView.frame;
+//        bottomFrame.origin.y = 480;
+//        self.parentBottomImageView.frame = bottomFrame;
+//        self.parentTopImageView.alpha = 0.0;
+//    }completion:^ (BOOL finished) {
+//        if (finished) {
+//            self.backgroundView.hidden = YES;
+//            self.parentBottomImageView.hidden = YES;
+//            self.parentTopImageView.hidden = YES;
+//            self.parentTopImageView.alpha = 1.0;
+//        CGRect topFrame = self.parentTopImageView.frame;
+//        topFrame.origin.y = -60;
+//            self.parentTopImageView.frame = topFrame;}}];
+//    self.tableView.userInteractionEnabled = YES;
+//    NSLog(@"$$$$$$top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
+//
+//}
 
 - (void)viewDidUnload
 {
@@ -97,85 +97,85 @@
 }
 #pragma mark-
 #pragma mark pinch delegate
-
-- (BOOL)animateImageViewsbydistance:(float)y
-{ 
-    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
-    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
-    if (self.backgroundView.hidden == YES) {
-        self.backgroundView.hidden = NO;
-        self.parentTopImageView.hidden = NO;
-        self.parentBottomImageView.hidden = NO;
-        self.parentTopImageView.alpha = 0.0;
-        CGRect topFrame = self.parentTopImageView.frame;
-        topFrame.origin.y = 0 ;
-        self.parentTopImageView.frame = topFrame;
-        NSLog(@"@@@@@@@");
-    }
-    float topEnd = CGRectGetMaxY(self.parentTopImageView.frame);
-    float bottomStart = self.parentBottomImageView.frame.origin.y;
-    float topStart = self.parentTopImageView.frame.origin.y;
-
-    if (self.parentTopImageView.alpha < 1.0 && y >0) {
-        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.02;
-    }
-    else if (self.parentTopImageView.alpha >0 && y<0) {
-        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.02;
-    }
-    
-    if ((topEnd >= bottomStart) && (y>=0) && (self.playedPinchInSoundOnce == NO)) {
-        [TDCommon playSound:self.pinchInSound];
-        self.playedPinchInSoundOnce = YES;
-    }
-
-    if (topStart <= 0 && y < 0)
-    {
-        return NO;
-    }
-    
-    if (((topEnd >= bottomStart) && y >=0)) {
-        CGRect bottomFrame = self.parentBottomImageView.frame;
-        bottomFrame.origin.y = topEnd;
-        self.parentBottomImageView.frame = bottomFrame;
-        self.parentTopImageView.alpha = 1;
-        NSLog(@"RETURN top End : %f bottom start : %f",topEnd,bottomStart);
-        return NO;
-    }
-    
-    if ((bottomStart - topEnd < 20.0 || topEnd >267.0) && !self.playedPinchInSoundOnce && y>=0) {
-        CGRect bottomFrame = self.parentBottomImageView.frame;
-        bottomFrame.origin.y = topEnd;
-        self.parentBottomImageView.frame = bottomFrame;
-        NSLog(@" IN here top End : %f bottom start : %f",topEnd,bottomStart);
-        return YES;
-    }
-    if (y>0) {
-        NSLog(@" IN BW top End : %f bottom start : %f",topEnd,bottomStart);
-    }
-    self.playedPinchInSoundOnce = NO;
-    CGRect topFrame = self.parentTopImageView.frame;
-    topFrame.origin.y += y ;
-    self.parentTopImageView.frame = topFrame;
-    CGRect bottomFrame = self.parentBottomImageView.frame;
-    bottomFrame.origin.y -= y;
-    self.parentBottomImageView.frame = bottomFrame;
-    return YES;
-}
-
-- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
-{
-    [UIView animateWithDuration:timeInterval animations:^{
-        CGRect topFrame = self.parentTopImageView.frame;
-        topFrame.origin.y = 0;
-        self.parentTopImageView.frame = topFrame;
-        CGRect bottomFrame = self.parentBottomImageView.frame;
-        bottomFrame.origin.y = 60;
-        self.parentBottomImageView.frame = bottomFrame;
-    }completion:^ (BOOL finished) {
-        if (finished) {
-            [self.navigationController popViewControllerAnimated:NO];   
-        }}];
-}
+//
+//- (BOOL)animateImageViewsbydistance:(float)y
+//{ 
+//    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
+//    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
+//    if (self.backgroundView.hidden == YES) {
+//        self.backgroundView.hidden = NO;
+//        self.parentTopImageView.hidden = NO;
+//        self.parentBottomImageView.hidden = NO;
+//        self.parentTopImageView.alpha = 0.0;
+//        CGRect topFrame = self.parentTopImageView.frame;
+//        topFrame.origin.y = 0 ;
+//        self.parentTopImageView.frame = topFrame;
+//        NSLog(@"@@@@@@@");
+//    }
+//    float topEnd = CGRectGetMaxY(self.parentTopImageView.frame);
+//    float bottomStart = self.parentBottomImageView.frame.origin.y;
+//    float topStart = self.parentTopImageView.frame.origin.y;
+//
+//    if (self.parentTopImageView.alpha < 1.0 && y >0) {
+//        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.02;
+//    }
+//    else if (self.parentTopImageView.alpha >0 && y<0) {
+//        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.02;
+//    }
+//    
+//    if ((topEnd >= bottomStart) && (y>=0) && (self.playedPinchInSoundOnce == NO)) {
+//        [TDCommon playSound:self.pinchInSound];
+//        self.playedPinchInSoundOnce = YES;
+//    }
+//
+//    if (topStart <= 0 && y < 0)
+//    {
+//        return NO;
+//    }
+//    
+//    if (((topEnd >= bottomStart) && y >=0)) {
+//        CGRect bottomFrame = self.parentBottomImageView.frame;
+//        bottomFrame.origin.y = topEnd;
+//        self.parentBottomImageView.frame = bottomFrame;
+//        self.parentTopImageView.alpha = 1;
+//        NSLog(@"RETURN top End : %f bottom start : %f",topEnd,bottomStart);
+//        return NO;
+//    }
+//    
+//    if ((bottomStart - topEnd < 20.0 || topEnd >267.0) && !self.playedPinchInSoundOnce && y>=0) {
+//        CGRect bottomFrame = self.parentBottomImageView.frame;
+//        bottomFrame.origin.y = topEnd;
+//        self.parentBottomImageView.frame = bottomFrame;
+//        NSLog(@" IN here top End : %f bottom start : %f",topEnd,bottomStart);
+//        return YES;
+//    }
+//    if (y>0) {
+//        NSLog(@" IN BW top End : %f bottom start : %f",topEnd,bottomStart);
+//    }
+//    self.playedPinchInSoundOnce = NO;
+//    CGRect topFrame = self.parentTopImageView.frame;
+//    topFrame.origin.y += y ;
+//    self.parentTopImageView.frame = topFrame;
+//    CGRect bottomFrame = self.parentBottomImageView.frame;
+//    bottomFrame.origin.y -= y;
+//    self.parentBottomImageView.frame = bottomFrame;
+//    return YES;
+//}
+//
+//- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
+//{
+//    [UIView animateWithDuration:timeInterval animations:^{
+//        CGRect topFrame = self.parentTopImageView.frame;
+//        topFrame.origin.y = 0;
+//        self.parentTopImageView.frame = topFrame;
+//        CGRect bottomFrame = self.parentBottomImageView.frame;
+//        bottomFrame.origin.y = 60;
+//        self.parentBottomImageView.frame = bottomFrame;
+//    }completion:^ (BOOL finished) {
+//        if (finished) {
+//            [self.navigationController popViewControllerAnimated:NO];   
+//        }}];
+//}
 
 #pragma mark - Table view data source
 
