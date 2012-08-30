@@ -84,7 +84,7 @@
 
 @interface TDParentViewController (TDItem)
 - (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath;
-- (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath;
+- (void)updateNewItem:(ToDoItem *)newItem atIndex:(int)index;
 - (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath;
 - (void)updateArraysAfterDeletionOrInsertionFromIndexpath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath*) toIndexPath;
 @end

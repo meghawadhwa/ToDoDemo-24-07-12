@@ -362,6 +362,7 @@
 }
 
 - (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath{
+    [self deleteItemFromIndexPath:indexpath];
     [self.rows removeObjectAtIndex:indexpath.row];
     [TDCommon playSound:self.deleteSound];
     [self.tableView beginUpdates];
@@ -387,7 +388,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
         default:
         {       ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
             currentItem.itemName = cell.textLabel.text;
-            [self updateNewItem:currentItem atIndexPath:indexpath];
+            [self updateNewItem:currentItem atIndex:indexpath.row];
             break;
         }
             
@@ -559,7 +560,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
         default:
         {       ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
             item.itemName = @"New To Do"; 
-            [self updateNewItem:item atIndexPath:indexPath];
+            [self updateNewItem:item atIndex:indexPath.row];
             //NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
 
             break;
@@ -727,7 +728,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 - (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath{
     
 }
-- (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath{
+- (void)updateNewItem:(ToDoItem *)newItem atIndex:(int)index{
     
 }
 - (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath{
@@ -752,11 +753,11 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
             toIndex = toIndexPath.row;
         }
     }
-
-    for (int i = fromIndex; i<= toIndex; i ++)
+    int index = 0;
+    for (index = fromIndex; index<= toIndex; index++)
     {
-        ToDoItem *item = [self.rows objectAtIndex:i];
-        [self updateNewItem:item atIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        ToDoItem *item = [self.rows objectAtIndex:index];
+        [self updateNewItem:item atIndex:index];
     }
 }
 

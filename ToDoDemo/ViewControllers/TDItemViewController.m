@@ -222,10 +222,11 @@
         NewIndexPath = [NSIndexPath indexPathForRow:newCount inSection:0];
         NSLog(@"indexpath %@ indexPath %@",indexPath,NewIndexPath);
     }
-    [self.tableView beginUpdates];
-    [self.tableView moveRowAtIndexPath:indexPath toIndexPath:NewIndexPath];
-    [self.tableView endUpdates];
-    return NewIndexPath;
+        [self.tableView beginUpdates];
+        [self.tableView moveRowAtIndexPath:indexPath toIndexPath:NewIndexPath];
+        [self.tableView endUpdates];
+
+        return NewIndexPath;
 }
 
 #pragma mark -  UPDATE AFTER DONE
@@ -389,18 +390,18 @@
 
 }
 
-- (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
+- (void)updateNewItem:(ToDoItem *)newItem atIndex:(int)index
 {
     if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
-        [self.uncheckedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
-        NSLog(@"UPDATE PRIORITYunchecked  item priority: %d index %i",[newItem.priority intValue], indexPath.row);
+        [self.uncheckedArray replaceObjectAtIndex:index withObject:newItem];
+        NSLog(@"UPDATE PRIORITYunchecked  item priority: %d index %i",[newItem.priority intValue], index);
 
     }
     else {
          int unchecked = [self.uncheckedArray count];
-        int checkedIndex = indexPath.row - unchecked;
+        int checkedIndex = index - unchecked;
         [checkedArray replaceObjectAtIndex:checkedIndex  withObject:newItem];
-        NSLog(@"UPDATE PRIORITY checked  item priority: %d index %i",[newItem.priority intValue], indexPath.row);
+        NSLog(@"UPDATE PRIORITY checked  item priority: %d index %i",[newItem.priority intValue], index);
     }
 
 }
@@ -511,7 +512,7 @@
         }
         
     } else {
-        //NSLog(@"donestatus:%@",item.doneStatus);
+        NSLog(@"donestatus:%@",item.doneStatus);
         static NSString *cellIdentifier = @"DefaultTableViewCell";
         TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
@@ -531,11 +532,11 @@
             cell.textLabel.hidden = NO;
             cell.textLabel.textColor = [UIColor grayColor];
             cell.contentView.backgroundColor = [UIColor darkGrayColor];
+            cell.strikedLabel.hidden = NO;
             [cell makeStrikedLabel];       
             [cell.contentView addSubview:cell.strikedLabel];
             [cell.contentView bringSubviewToFront:cell.strikedLabel];
-            cell.strikedLabel.hidden = NO;
-          //  NSLog(@"added strike label");
+            NSLog(@"added strike label %@",cell.strikedLabel );
             cell.strikedLabel.userInteractionEnabled = NO;
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
@@ -546,9 +547,10 @@
             cell.contentView.backgroundColor = backgroundColor;
             cell.textLabel.userInteractionEnabled = YES;
             if (cell.strikedLabel != nil) {
-                [cell.strikedLabel removeFromSuperview];
-                cell.strikedLabel = nil;
-          //      NSLog(@"removd strike label");
+                //[cell.strikedLabel removeFromSuperview];
+                //cell.strikedLabel = nil;
+                cell.strikedLabel.hidden = YES;
+                NSLog(@"removd strike label");
             }
         }
         cell.editingDelegate = self;
@@ -580,10 +582,10 @@
     [tableView endUpdates];
     
     // Row color needs update after datasource changes, reload it.
-    [tableView performSelector:@selector(reloadVisibleRowsExceptIndexPath:) withObject:indexPath afterDelay:JTTableViewRowAnimationDuration];
+    [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:JTTableViewRowAnimationDuration];
     if (state == JTTableViewCellEditingStateRight) 
     {
-        [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.5];
+        [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.3];
     }
 }
 
@@ -692,6 +694,7 @@
         self.tableView.userInteractionEnabled = YES;
         [self animateParentViews];
         self.navigateFlag = NO;
+        [self performSelector:@selector(setStrikedLabel) withObject:nil afterDelay:0.1];
     }
     else {
 //        float originY = [self getLastRowHeight];
@@ -709,8 +712,8 @@
 //            } 
 //                             completion: nil];
 //        }];
+        [self performSelector:@selector(setStrikedLabel) withObject:nil afterDelay:0.1];
     }
-
 }
 
 @end
