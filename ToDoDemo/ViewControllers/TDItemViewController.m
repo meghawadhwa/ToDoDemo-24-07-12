@@ -549,9 +549,9 @@
                 [cell.strikedLabel removeFromSuperview];
                 cell.strikedLabel = nil;
           //      NSLog(@"removd strike label");
-                cell.editingDelegate = self;
             }
         }
+        cell.editingDelegate = self;
         return cell;
     }
     
@@ -616,13 +616,6 @@
     if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
         ((TransformableTableViewCell *)cell).tintColor = backgroundColor;
     }
-}
-
-- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.editingFlag == TRUE) {
-        return NO;
-    }
-    return YES;
 }
 
 - (NSString *)returnStrikedOutTextFromString:(NSString *)mString

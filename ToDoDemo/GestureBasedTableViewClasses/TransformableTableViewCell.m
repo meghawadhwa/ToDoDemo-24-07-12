@@ -336,7 +336,7 @@ float lastContentOffset = 0;
     }];
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
     [self.nameTextField resignFirstResponder];
-    [editingDelegate disableGesturesOnTable:FALSE];
+    [self.editingDelegate disableGesturesOnTable:FALSE];
     superView.scrollEnabled = YES;
 return YES;
 }
@@ -344,7 +344,7 @@ return YES;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.nameTextField.enablesReturnKeyAutomatically = YES;
-    
+    [self.editingDelegate disableGesturesOnTable:TRUE];
     UITableView * superView = (UITableView *)[self superview];
     lastContentOffset = superView.contentOffset.y;
     [UIView animateWithDuration:0.3 animations:^{
@@ -352,7 +352,6 @@ return YES;
 }];
     [self createDoneOverlayAtHeight:CGRectGetMaxY(self.frame)];
     [superView addSubview:self.doneOverlayView];
-    [editingDelegate disableGesturesOnTable:TRUE];
     superView.scrollEnabled = NO;
 }
 
@@ -381,7 +380,7 @@ return YES;
 
     }];
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];  
-    [editingDelegate disableGesturesOnTable:FALSE];
+    [self.editingDelegate disableGesturesOnTable:FALSE];
     superView.scrollEnabled = YES;
 }
 

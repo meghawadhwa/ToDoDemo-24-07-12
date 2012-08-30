@@ -451,14 +451,6 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 }
 }
 
-- (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-//    BOOL checked = [self getCheckedStatusForRowAtIndex:indexPath];
-//    return (!checked);
-    if (self.editingFlag == TRUE) {
-        return NO;
-    }
-    return YES;
-}
 
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
