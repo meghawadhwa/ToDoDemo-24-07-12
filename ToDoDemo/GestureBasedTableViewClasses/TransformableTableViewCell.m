@@ -130,7 +130,6 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        //self.textLabel.userInteractionEnabled = YES;
         [self addTapGestureForTextLabel];
         self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         self.tintColor = [UIColor whiteColor];
@@ -149,7 +148,7 @@
     if (self) {
         // Initialization code
         [self addTapGestureForTextLabel];
-        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         self.tintColor = [UIColor whiteColor];
         self.countLabel = [[UILabel alloc] initWithFrame:CGRectMake(260, 0, 60, 60)];
         self.countLabel.backgroundColor = [TDCommon getColorByPriority:-6];
@@ -269,7 +268,7 @@ float lastContentOffset = 0;
         self.nameTextField.hidden = NO;
         return;
     }
-    self.nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 10, 300, 20)];
+    self.nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 10, 300, 25)];
     self.nameTextField.center = self.center;
     self.nameTextField.text = self.textLabel.text;
     self.nameTextField.textColor = [UIColor whiteColor];
@@ -295,6 +294,7 @@ float lastContentOffset = 0;
                 [self.updateDelegate updateCurrentRowAtIndexpath:indexpath];
             }
         }
+        [self readjustCellFrame];
         [self removeOverlayAndTextField];
     }
     else {
@@ -380,10 +380,17 @@ return YES;
         [superView setContentOffset:CGPointMake(0, lastContentOffset) animated:NO];
 
     }];
-    [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];    
+    [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];  
     [editingDelegate disableGesturesOnTable:FALSE];
     superView.scrollEnabled = YES;
 }
 
+- (void)readjustCellFrame{
+    CGRect frame = self.textLabel.frame;
+    CGSize textSize = [self.textLabel.text sizeWithFont:[self.textLabel font]];
+    frame.size.width = ((textSize.width + 5 ) > 260.0) ? 260.0 :(textSize.width + 5 );
+    frame.size.height = textSize.height + 5;
+    self.textLabel.frame = frame;
+}
 
 @end

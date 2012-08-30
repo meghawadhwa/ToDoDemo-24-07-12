@@ -154,6 +154,12 @@
             cell.deleteDelegate = self;
             cell.createDelegate = self;
         }
+        CGRect frame = cell.textLabel.frame;
+        CGSize textSize = [cell.textLabel.text sizeWithFont:[cell.textLabel font]];
+        frame.size.width = textSize.width + 5;
+        frame.size.height = textSize.height + 5;
+        cell.textLabel.frame = frame;
+        
         if (![object isEqual:DUMMY_CELL]) {
             cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
             cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
