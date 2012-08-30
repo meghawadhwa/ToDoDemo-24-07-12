@@ -392,12 +392,12 @@
 - (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
 {
     if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
-        [uncheckedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
+        [self.uncheckedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
         NSLog(@"UPDATE PRIORITYunchecked  item priority: %d index %i",[newItem.priority intValue], indexPath.row);
 
     }
     else {
-         int unchecked =[uncheckedArray count];
+         int unchecked = [self.uncheckedArray count];
         int checkedIndex = indexPath.row - unchecked;
         [checkedArray replaceObjectAtIndex:checkedIndex  withObject:newItem];
         NSLog(@"UPDATE PRIORITY checked  item priority: %d index %i",[newItem.priority intValue], indexPath.row);
@@ -462,7 +462,7 @@
             
             
             cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 3) {
                 cell.imageView.image = [UIImage imageNamed:@"arrow-up.png"];
                 cell.tintColor = [UIColor blackColor];
                 cell.textLabel.text = [NSString stringWithFormat:@"Return to %@",self.parentName];
@@ -471,9 +471,10 @@
                 cell.imageView.image = nil;
                 // Setup tint color
                 cell.tintColor = backgroundColor;
-                cell.textLabel.text = @"Release to create cell...";
+                cell.textLabel.text = @"Release to insert new item";
                 cell.nameTextField.text = cell.textLabel.text;
             } else {
+                cell.textLabel.text = @"Pull Down to create new item";
                 cell.imageView.image = nil;
                 // Setup tint color
                 cell.tintColor = backgroundColor;

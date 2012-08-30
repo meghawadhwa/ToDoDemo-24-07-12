@@ -23,7 +23,7 @@
 @end
 @protocol TDUpdateDbDelegate<NSObject>
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath;
-
+- (void)readjustCellFrameAtIndexpath: (NSIndexPath *)indexpath;
 @end
 
 @protocol TDDeleteFromDbDelegate<NSObject>

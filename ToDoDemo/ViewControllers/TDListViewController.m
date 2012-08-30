@@ -89,7 +89,7 @@
             }
             
             cell.finishedHeight = COMMITING_CREATE_CELL_HEIGHT;
-            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2) {
+            if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 3) {
                 cell.imageView.image = [UIImage imageNamed:@"arrow-up.png"];
                 cell.tintColor = [UIColor blackColor];
                 cell.textLabel.text = [NSString stringWithFormat:@"Return to %@",self.parentName];
@@ -98,9 +98,10 @@
                 cell.imageView.image = nil;
                 // Setup tint color
                 cell.tintColor = backgroundColor;
-                cell.textLabel.text = @"Release to create cell...";
+                cell.textLabel.text = @"Release to insert new list";
                 cell.nameTextField.text = cell.textLabel.text;
             } else {
+                cell.textLabel.text = @"Pull Down To Create new list";
                 cell.imageView.image = nil;
                 // Setup tint color
                 cell.tintColor = backgroundColor;
@@ -154,12 +155,7 @@
             cell.deleteDelegate = self;
             cell.createDelegate = self;
         }
-        CGRect frame = cell.textLabel.frame;
-        CGSize textSize = [cell.textLabel.text sizeWithFont:[cell.textLabel font]];
-        frame.size.width = textSize.width + 5;
-        frame.size.height = textSize.height + 5;
-        cell.textLabel.frame = frame;
-        
+       
         if (![object isEqual:DUMMY_CELL]) {
             cell.countLabel.backgroundColor = [TDCommon getColorByPriority:(2+indexPath.row)];
             cell.countLabel.text = [NSString stringWithFormat:@"%d",[self getUncheckedItemsFromList:list]];
@@ -186,6 +182,15 @@
         return cell;
     }
     
+}
+
+- (void)readjustCellFrameAtIndexpath: (NSIndexPath*) indexpath{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexpath];
+    CGRect frame = cell.textLabel.frame;
+    CGSize textSize = [cell.textLabel.text sizeWithFont:[cell.textLabel font]];
+    frame.size.width = ((textSize.width + 5 ) > 260.0) ? 260.0 :(textSize.width + 5 );
+    frame.size.height = textSize.height + 5;
+    cell.textLabel.frame = frame;
 }
 
 -(int)getUncheckedItemsFromList:(ToDoList *)list

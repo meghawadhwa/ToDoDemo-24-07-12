@@ -533,6 +533,10 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     NSLog(@"tableView:didSelectRowAtIndexPath: %@", indexPath);
 }
 
+- (void)readjustCellFrameAtIndexpath: (NSIndexPath*) indexpath{
+    
+}
+
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
 
@@ -561,7 +565,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
             break;
         }
     } 
-    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2 && indexPath.row == 0) {
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 3 && indexPath.row == 0) {
         if ( modelType == TDModelItem)         [self deleteItemFromIndexPath:indexPath];
         [self.managedObjectContext rollback];
         [self.rows removeObjectAtIndex:indexPath.row];

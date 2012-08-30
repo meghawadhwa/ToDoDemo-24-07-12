@@ -294,7 +294,7 @@ float lastContentOffset = 0;
                 [self.updateDelegate updateCurrentRowAtIndexpath:indexpath];
             }
         }
-        [self readjustCellFrame];
+        [self.updateDelegate readjustCellFrameAtIndexpath:indexpath];
         [self removeOverlayAndTextField];
     }
     else {
@@ -383,14 +383,6 @@ return YES;
     [self performSelector:@selector(updateOrDeleteCell) withObject:nil afterDelay:0.2];  
     [editingDelegate disableGesturesOnTable:FALSE];
     superView.scrollEnabled = YES;
-}
-
-- (void)readjustCellFrame{
-    CGRect frame = self.textLabel.frame;
-    CGSize textSize = [self.textLabel.text sizeWithFont:[self.textLabel font]];
-    frame.size.width = ((textSize.width + 5 ) > 260.0) ? 260.0 :(textSize.width + 5 );
-    frame.size.height = textSize.height + 5;
-    self.textLabel.frame = frame;
 }
 
 @end
