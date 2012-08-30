@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TDCommon.h"
 
 @protocol TDDelegates <NSObject>
 
 @end
 
 @protocol TDCreatingCellDelegate<NSObject>
--(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
+-(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath ;
 -(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath;
 @end
 

@@ -10,8 +10,6 @@
 #import "TDDetailViewController.h"
 
 
-@interface TDParentViewController ()
-@end
 
 @implementation TDParentViewController
 
@@ -31,6 +29,7 @@
 @synthesize playedPinchInSoundOnce;
 @synthesize parentOverTopImageView;
 @synthesize overTopImage;
+@synthesize grabbedIndex;
 
 - (void)awakeFromNib
 {
@@ -311,6 +310,198 @@
     self.backgroundView.backgroundColor = color;
 }
 
+#pragma mark Core data Interactions
+
+#pragma mark- ADD
+-(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath withModelType:(TDModelType )modelType
+{
+    NSDate *methodStart = [NSDate date];
+    /* ... Do whatever you need to do ... */
+    
+    // u can change the model if u want
+    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    switch (modelType) {
+        case TDModelList:
+        {
+            ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+            currentList.listName = cell.textLabel.text;
+            break;
+        }   
+        case TDModelItem:
+        default:
+        {
+            ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+            currentItem.itemName = cell.textLabel.text;
+            // update unchecked array
+            break;
+        }
+    }
+    
+    [self updateRowsFromIndexPath:indexpath withModelType:modelType withCreationFlag:YES]; 
+    if (modelType == TDModelItem) {
+        [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexpath toIndexPath:nil]; // nil means till the end of array i.e last Object
+    }
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in saving list %@, %@", error, [error userInfo]);
+        abort();
+    } 
+    cell.addingCellFlag = FALSE;
+
+    NSLog(@" ***SAVED AFTER UPDATING OTHER ROWS**** adding Flag %d",cell.addingCellFlag);
+    NSDate *methodFinish = [NSDate date];
+    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+    NSLog(@"execution time : %f",executionTime);
+}
+
+
+-(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath{
+    [self deleteNewRowAtIndexpath:indexPath];
+    [self.managedObjectContext rollback];
+
+}
+
+- (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath{
+    [self.rows removeObjectAtIndex:indexpath.row];
+    [TDCommon playSound:self.deleteSound];
+    [self.tableView beginUpdates];
+    [UIView animateWithDuration:2 animations:^{
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+    }];
+    [self.tableView endUpdates];
+    [self reloadTableData];
+}
+
+#pragma mark - UPDATE NAME
+- (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
+    
+TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+    switch (modelType) {
+        case TDModelList:
+        {
+            ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+            currentList.listName = cell.textLabel.text;
+            break;
+        }
+        case TDModelItem:
+        default:
+        {       ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+            currentItem.itemName = cell.textLabel.text;
+            [self updateNewItem:currentItem atIndexPath:indexpath];
+            break;
+        }
+            
+    }
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in updating a list %@, %@", error, [error userInfo]);
+        abort();
+    }
+}
+
+#pragma  mark - UPDATE PRIORITY
+- (void)updateRowsFromIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType )modelType withCreationFlag:(BOOL)creationFlag
+{
+    int count = [self.rows count];
+    int startingIndex;
+    if (creationFlag) {
+        startingIndex = indexPath.row + 1;
+    }
+    else {
+        startingIndex = indexPath.row;
+    }
+    
+    for (int i = startingIndex ; i< count ; i++) {
+        switch (modelType) {
+            case TDModelList:
+            {
+                ToDoList *list = [self.rows objectAtIndex:i];
+                int newPriority; 
+                if (creationFlag == YES) {
+                    newPriority = [list.priority intValue] + 1;
+                }
+                else {
+                    newPriority = [list.priority intValue] - 1;
+                }
+                list.priority = [NSNumber numberWithInt:newPriority];
+                NSLog(@"list name :%@, priority %i",list.listName,newPriority);
+                break;
+            }
+            case TDModelItem:
+            default:
+            {        ToDoItem *item = [self.rows objectAtIndex:i];
+                int newPriority; 
+                if (creationFlag == YES) {
+                    newPriority = [item.priority intValue] + 1;
+                }
+                else {
+                    newPriority = [item.priority intValue] - 1;
+                }                item.priority = [NSNumber numberWithInt:newPriority];
+                NSLog(@"item name :%@, priority %i",item.itemName,newPriority);
+                break;
+            }
+        }
+        
+    }
+    
+}
+
+- (void) update: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
+    
+    switch (modelType) {
+        case TDModelList:
+        {
+            
+            break;
+        }
+        case TDModelItem:
+        default:
+        {   
+            break;
+        }
+    }  
+}
+
+#pragma mark - DELETE
+
+- (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
+    
+    switch (modelType) {
+        case TDModelList:
+        {
+            ToDoList *currentList = [self.rows objectAtIndex:indexpath.row];
+            [self.managedObjectContext deleteObject:currentList];
+            break;
+        }
+        case TDModelItem:
+        default:
+        {      
+            ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+            //update checked and unchecke arrays
+            [self deleteItemFromIndexPath:indexpath];
+            [self.managedObjectContext deleteObject:currentItem];
+            break;
+        }
+    } 
+    [self.rows removeObjectAtIndex:indexpath.row];
+    
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [TDCommon playSound:self.deleteSound];
+    [self.tableView beginUpdates];
+    [UIView animateWithDuration:2 animations:^{
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+    }];
+    [self.tableView endUpdates];
+    [self reloadTableData];
+
+}
+
+#pragma mark - DELETE AFTER SWIPE
+
 #pragma mark UITableViewDatasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -345,17 +536,53 @@
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
 
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.managedObjectContext rollback];
-    [self.rows removeObjectAtIndex:indexPath.row];
+#pragma mark JTTableViewGestureAddingRowDelegate
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
+
 }
 
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType)modelType{
+    TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
+    switch (modelType) {
+        case TDModelList:
+        {
+            ToDoList * list = [self.rows objectAtIndex:indexPath.row];
+            list.listName = @"Newly Added";  
+            break;
+        }
+        case TDModelItem:
+        default:
+        {       ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
+            item.itemName = @"New To Do"; 
+            [self updateNewItem:item atIndexPath:indexPath];
+            //NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
+
+            break;
+        }
+    } 
+    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2 && indexPath.row == 0) {
+        if ( modelType == TDModelItem)         [self deleteItemFromIndexPath:indexPath];
+        [self.managedObjectContext rollback];
+        [self.rows removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
+        // Return to list
+        [self removeCurrentView];
+    }
+    else {
+        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
+        cell.imageView.image = nil;
+        cell.textLabel.text = @"Just Added!";
+        [TDCommon playSound:self.pullDownToCreateSound];
+    }
 }
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
+}
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self deleteItemFromIndexPath:indexPath];
+    [self.managedObjectContext rollback];
+    [self.rows removeObjectAtIndex:indexPath.row];
 }
 
 // Uncomment to following code to disable pinch in to create cell gesture
@@ -366,6 +593,19 @@
 //    return nil;
 //}
 
+#pragma mark - DELEGATE TO POP
+- (void)removeCurrentView
+{
+    [TDCommon playSound:self.pullDownToMoveUpSound];
+    [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGRect myFrame = self.view.frame;
+        myFrame.origin.y = 480;
+        self.view.frame = myFrame; 
+    } completion:^ (BOOL finished) {
+        [self.tableView setHidden:YES];
+        [self.navigationController popViewControllerAnimated:NO]; 
+    }];
+}
 
 -(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
 {
@@ -381,7 +621,9 @@
 }
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCreatePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.grabbedIndex = nil;
     self.grabbedObject = [self.rows objectAtIndex:indexPath.row];
+    self.grabbedIndex = indexPath;
     [self.rows replaceObjectAtIndex:indexPath.row withObject:DUMMY_CELL];
 }
 
@@ -395,6 +637,7 @@
     [self.rows replaceObjectAtIndex:indexPath.row withObject:self.grabbedObject];
     [self updateAfterMovingToIndexpath:indexPath];
     self.grabbedObject = nil;
+    self.grabbedIndex = nil;
 }
 
 #pragma mark - Delegate methods
@@ -469,25 +712,48 @@
     return NO;
 }
 
--(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath{
-    [self deleteCurrentRowAtIndexpath:indexPath];
-    [self.managedObjectContext rollback];
-}
 
-- (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath{
-    [self.rows removeObjectAtIndex:indexpath.row];
-    [TDCommon playSound:self.deleteSound];
-    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
-}
 
--(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
-{
-    
-}
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
     
 }
- 
+
+#pragma mark- item methods
+- (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath{
+    
+}
+- (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath{
+    
+}
+- (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath{
+    
+}
+- (void)updateArraysAfterDeletionOrInsertionFromIndexpath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath*) toIndexPath{
+    int fromIndex,toIndex;
+
+    if (toIndexPath == nil) {
+        fromIndex = indexPath.row;
+        toIndex = [self.rows count]- 1;
+    }
+    else {
+        toIndex = toIndexPath.row;
+        
+        if (indexPath.row > toIndexPath.row) {
+            fromIndex = toIndexPath.row;
+            toIndex = indexPath.row;
+        }
+        else {
+            fromIndex = indexPath.row;
+            toIndex = toIndexPath.row;
+        }
+    }
+
+    for (int i = fromIndex; i<= toIndex; i ++)
+    {
+        ToDoItem *item = [self.rows objectAtIndex:i];
+        [self updateNewItem:item atIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+}
 
 @end

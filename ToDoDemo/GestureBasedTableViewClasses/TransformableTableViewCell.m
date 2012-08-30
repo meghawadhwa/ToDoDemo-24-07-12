@@ -285,7 +285,7 @@ float lastContentOffset = 0;
     NSIndexPath *indexpath = [tableView indexPathForCell:self]; 
     if (![self.nameTextField.text isEqualToString:@""]) {
         self.textLabel.text = self.nameTextField.text;
-        if (addingCellFlag) {
+        if (self.addingCellFlag == TRUE) {
              NSLog(@"INSERTED & Updating to %@",self.nameTextField.text);
             [self.createDelegate addNewRowInDBAtIndexPath:indexpath];
         }
@@ -300,9 +300,9 @@ float lastContentOffset = 0;
     else {
         //delete
         [self removeOverlayAndTextField];
-        NSLog(@"Deleting");
+        NSLog(@"Deleting adding Flag %d",self.addingCellFlag);
 
-        if (addingCellFlag) {
+        if (self.addingCellFlag == TRUE) {
             //rollback
             [self.createDelegate rollBackInDBAndDeleteAtIndexPath:indexpath];
         }

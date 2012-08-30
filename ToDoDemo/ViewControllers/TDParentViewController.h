@@ -53,8 +53,12 @@
 @property(nonatomic,retain) UIView *backgroundView;
 @property(nonatomic,assign) BOOL playedPinchInSoundOnce;
 @property(nonatomic,retain) UIImage *overTopImage;
+@property(nonatomic,retain) NSIndexPath * grabbedIndex;
+-(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath withModelType:(TDModelType )modelType;
+- (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType;
+- (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType;
+- (void)updateRowsFromIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType )modelType withCreationFlag:(BOOL)creationFlag;
 
--(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath;
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath;
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath;
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath;
@@ -65,9 +69,22 @@
 - (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath;
 - (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath;
 
+- (void) removeCurrentView;
+
+//adding 
+
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType )modelType;
+- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType )modelType;
+
 // parent views
 - (void)placeParentImageViews;
 - (void)animateParentViews;
 - (void)setInitialFramesForParentImages;
+@end
 
+@interface TDParentViewController (TDItem)
+- (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath;
+- (void)updateNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath;
+- (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath;
+- (void)updateArraysAfterDeletionOrInsertionFromIndexpath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath*) toIndexPath;
 @end

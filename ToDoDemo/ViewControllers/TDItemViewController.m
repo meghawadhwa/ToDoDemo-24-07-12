@@ -50,76 +50,7 @@
 {
     [super viewDidLoad];
     [self placeParentImageViews];
-        // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-
-//- (void)placeParentImageViews
-//{
-//    self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
-//    self.parentBottomImageView =[[UIImageView alloc] initWithImage:self.bottomImage];
-//    if (self.overTopImage !=nil) {
-//        self.parentOverTopImageView = [[UIImageView alloc] initWithImage:self.overTopImage];
-//    }
-//    [self setInitialFramesForParentImages];
-//    [self.backgroundView addSubview:self.parentTopImageView];
-//    [self.backgroundView addSubview:self.parentBottomImageView];
-//    
-//    self.tableView.userInteractionEnabled = NO;
-//    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
-//    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
-//    
-//    if (self.parentOverTopImageView !=nil) {
-//        [self.backgroundView addSubview:self.parentOverTopImageView];
-//        [self.backgroundView bringSubviewToFront:self.parentOverTopImageView];
-//    }
-//}
-//
-//- (void)setInitialFramesForParentImages
-//{
-//    if (self.parentOverTopImageView == nil) {
-//        self.parentTopImageView.frame = CGRectMake(0, 0, self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
-//        self.parentBottomImageView.frame = CGRectMake(0, 60, self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
-//        self.parentOverTopImageView = nil;
-//    }
-//    else {
-//        self.parentOverTopImageView.frame = CGRectMake(0, 0, self.parentOverTopImageView.frame.size.width, self.parentOverTopImageView.frame.size.height);
-//        self.parentTopImageView.frame = CGRectMake(0, CGRectGetMaxY(self.parentOverTopImageView.frame), self.parentTopImageView.frame.size.width, self.parentTopImageView.frame.size.height);
-//        self.parentBottomImageView.frame = CGRectMake(0, CGRectGetMaxY(self.parentTopImageView.frame), self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
-//    }
-//}
-//- (void)animateParentViews{
-//    
-//    [self setInitialFramesForParentImages];
-//    NSLog(@"########top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
-//    
-//    [UIView animateWithDuration:0.4 animations:^{
-//        if (self.parentOverTopImageView !=nil) {
-//            CGRect overFrame = self.parentOverTopImageView.frame;
-//            overFrame.origin.y = -overFrame.size.height - self.parentTopImageView.frame.size.height;
-//            self.parentOverTopImageView.frame = overFrame;
-//        }
-//        CGRect bottomFrame = self.parentBottomImageView.frame;
-//        bottomFrame.origin.y = 480;
-//        self.parentBottomImageView.frame = bottomFrame;
-//        self.parentTopImageView.alpha = 0.0;
-//    }completion:^ (BOOL finished) {
-//        if (finished) {
-//            self.backgroundView.hidden = YES;
-//            self.parentBottomImageView.hidden = YES;
-//            self.parentTopImageView.hidden = YES;
-//            if(self.parentOverTopImageView !=nil)self.parentOverTopImageView.hidden = YES;
-//            self.parentTopImageView.alpha = 1.0;
-//            CGRect topFrame = self.parentTopImageView.frame;
-//            topFrame.origin.y = -60;
-//            self.parentTopImageView.frame = topFrame;}}];
-//    self.tableView.userInteractionEnabled = YES;
-//    NSLog(@"$$$$$$top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
-//    
-//}
 
 - (void)viewDidUnload
 {
@@ -149,101 +80,6 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
-#pragma mark- Pinch Delegates
-//- (BOOL)animateImageViewsbydistance:(float)y
-//{
-//    [self.backgroundView bringSubviewToFront:self.parentOverTopImageView];
-//    [self.backgroundView bringSubviewToFront:self.parentTopImageView];
-//    [self.backgroundView bringSubviewToFront:self.parentBottomImageView];
-//    if (self.backgroundView.hidden == YES) {
-//        self.backgroundView.hidden = NO;
-//        self.parentOverTopImageView.hidden = NO;
-//        self.parentTopImageView.hidden = NO;
-//        self.parentBottomImageView.hidden = NO;
-//        self.parentTopImageView.alpha = 0.0;
-//        CGRect topFrame = self.parentTopImageView.frame;
-//        topFrame.origin.y = 0 ;
-//        self.parentTopImageView.frame = topFrame;
-//        NSLog(@"@@@@@@@");
-//    }
-//    float topEnd = CGRectGetMaxY(self.parentTopImageView.frame);
-//    float bottomStart = self.parentBottomImageView.frame.origin.y;
-//    float topStart = self.parentTopImageView.frame.origin.y;
-//    
-//    if (self.parentTopImageView.alpha < 1.0 && y >0) {
-//        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.01;
-//    }
-//    else if (self.parentTopImageView.alpha >0 && y<0) {
-//        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.01;
-//    }
-//    
-//    if ((topEnd >= bottomStart) && (y>0) && (self.playedPinchInSoundOnce == NO)) {
-//        [TDCommon playSound:self.pinchInSound];
-//        self.playedPinchInSoundOnce = YES;
-//    }
-//
-//    if (topStart <= 0 && y < 0)
-//    {
-//        return NO;
-//    }
-//    
-//    if (((topEnd >= bottomStart) && y >=0)) {
-//        if (self.parentOverTopImageView !=nil) {
-//            CGRect overFrame = self.parentOverTopImageView.frame;
-//            overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
-//            self.parentOverTopImageView.frame = overFrame;
-//        }
-//        CGRect bottomFrame = self.parentBottomImageView.frame;
-//        bottomFrame.origin.y = topEnd;
-//        self.parentBottomImageView.frame = bottomFrame;
-//        self.parentTopImageView.alpha = 1;
-//        NSLog(@"RETURN top End : %f bottom start : %f",topEnd,bottomStart);
-//        return NO;
-//    }
-//    
-//    if ((bottomStart - topEnd < 20.0 || topEnd >267.0) && !self.playedPinchInSoundOnce && y>=0) {
-//        if (self.parentOverTopImageView !=nil) {
-//            CGRect overFrame = self.parentOverTopImageView.frame;
-//            overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
-//            self.parentOverTopImageView.frame = overFrame;
-//        }
-//        CGRect bottomFrame = self.parentBottomImageView.frame;
-//        bottomFrame.origin.y = topEnd;
-//        self.parentBottomImageView.frame = bottomFrame;
-//        NSLog(@" IN here top End : %f bottom start : %f",topEnd,bottomStart);
-//        return YES;
-//    }
-//    if (y>0) {
-//        NSLog(@" IN BW top End : %f bottom start : %f",topEnd,bottomStart);
-//    }
-//    
-//    CGRect topFrame = self.parentTopImageView.frame;
-//    topFrame.origin.y += y ;
-//    self.parentTopImageView.frame = topFrame;
-//    
-//    if (self.parentOverTopImageView !=nil) {
-//        CGRect overFrame = self.parentOverTopImageView.frame;
-//        overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
-//        self.parentOverTopImageView.frame = overFrame;
-//    }
-//    self.playedPinchInSoundOnce = NO;
-//    CGRect bottomFrame = self.parentBottomImageView.frame;
-//    bottomFrame.origin.y -= y;
-//    self.parentBottomImageView.frame = bottomFrame;
-//    //NSLog(@"top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
-//    return YES;
-//}
-//
-//- (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
-//{
-//    [UIView animateWithDuration:timeInterval animations:^{
-//        [self setInitialFramesForParentImages];
-//    }completion:^ (BOOL finished) {
-//        if (finished) {
-//            [self.navigationController popViewControllerAnimated:NO];   
-//        }}];
-//}
 
 #pragma mark - calculate priority
 
@@ -279,40 +115,7 @@
 
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
 {
-    
-    // u can change the list if u want
-    //ToDoList *newList = [self.rows objectAtIndex:indexpath.row];
-    NSDate *methodStart = [NSDate date];
-    /* ... Do whatever you need to do ... */
-    
-    // u can change the list if u want
-    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
-    currentItem.itemName = cell.textLabel.text;
-    // update unchecked array
-    [self updateNewItem:currentItem atIndexPath:indexpath];
-    [self updateRowsAfterCreationFromIndexPath:indexpath];
-
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in adding a new item %@, %@", error, [error userInfo]);
-        abort();
-    }
-    NSLog(@" ***SAVED AFTER UPDATING OTHER ROWS****");
-    NSDate *methodFinish = [NSDate date];
-    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
-    NSLog(@"execution time : %f",executionTime);
-    
-}
-
-- (void)updateRowsAfterCreationFromIndexPath:(NSIndexPath *)indexPath
-{
-    int count = [self.rows count];
-    for (int i = indexPath.row + 1; i< count ; i++) {
-        ToDoItem *item = [self.rows objectAtIndex:i];
-        int newPriority = [item.priority intValue] + 1;
-        item.priority = [NSNumber numberWithInt:newPriority];
-    }
+    [self addNewRowInDBAtIndexPath:indexpath withModelType:TDModelItem];
 }
 
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
@@ -328,67 +131,73 @@
         item.doneStatus = [NSNumber numberWithBool:FALSE];
     }
     
-  //  [self reloadFromUpdatedDB];
 }
 
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
-    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
-    currentItem.itemName = cell.textLabel.text;
-    NSLog(@"done status %d",[currentItem.doneStatus boolValue]);
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in updating a item text%@, %@", error, [error userInfo]);
-        abort();
-    }
-    [self updateNewItem:currentItem atIndexPath:indexpath];
+    [self updateCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
+//    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+//    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
+//    currentItem.itemName = cell.textLabel.text;
+//    NSLog(@"done status %d",[currentItem.doneStatus boolValue]);
+//    NSError *error = nil;
+//    if (![self.managedObjectContext save:&error]) {
+//        NSLog(@"Error in updating a item text%@, %@", error, [error userInfo]);
+//        abort();
+//    }
+//    [self updateNewItem:currentItem atIndexPath:indexpath];
    // [self reloadFromUpdatedDB];
 }
 
-- (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
-{
-    int count = [self.rows count];
-    for (int i = indexPath.row; i< count ; i++) {
-        ToDoItem *item = [self.rows objectAtIndex:i];
-        int newPriority = [item.priority intValue] - 1;
-        item.priority = [NSNumber numberWithInt:newPriority];
-    }
-}
+//- (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
+//{
+//    int count = [self.rows count];
+//    for (int i = indexPath.row; i< count ; i++) {
+//        ToDoItem *item = [self.rows objectAtIndex:i];
+//        int newPriority = [item.priority intValue] - 1;
+//        item.priority = [NSNumber numberWithInt:newPriority];
+//    }
+//}
 
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
-    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-    [self deleteItemFromIndexPath:indexpath];
-    [self.managedObjectContext deleteObject:currentItem];
-    [self.rows removeObjectAtIndex:indexpath.row];
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
-        abort();
-    }
-    [TDCommon playSound:self.deleteSound];
-    [self.tableView beginUpdates];
-    [UIView animateWithDuration:2 animations:^{
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
-    }];
-    [self.tableView endUpdates];
-    [self reloadTableData];
+    [self deleteCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
+    [self updateRowsFromIndexPath:indexpath withModelType:TDModelItem withCreationFlag:NO];
+    [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexpath toIndexPath:nil];
+//    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+//    [self deleteItemFromIndexPath:indexpath];
+//    [self.managedObjectContext deleteObject:currentItem];
+//    [self.rows removeObjectAtIndex:indexpath.row];
+//    NSError *error = nil;
+//    if (![self.managedObjectContext save:&error]) {
+//        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
+//        abort();
+//    }
+//    [TDCommon playSound:self.deleteSound];
+//    [self.tableView beginUpdates];
+//    [UIView animateWithDuration:2 animations:^{
+//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
+//    }];
+//    [self.tableView endUpdates];
+//    [self reloadTableData];
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
-    [TDCommon playSound:self.deleteSound];
-    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-    [self deleteItemFromIndexPath:indexpath];
-    [self.rows removeObjectAtIndex:indexpath.row];
-    [self.managedObjectContext deleteObject:currentItem];
-    [self updateRowsAfterDeletionFromIndexPath:indexpath];
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
-        abort();
-    }    
+    [self deleteCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
+    [self updateRowsFromIndexPath:indexpath withModelType:TDModelItem withCreationFlag:NO];
+    [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexpath toIndexPath:nil];
+//    [TDCommon playSound:self.deleteSound];
+//    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
+//    [self deleteItemFromIndexPath:indexpath];
+//    [self.rows removeObjectAtIndex:indexpath.row];
+//    [self.managedObjectContext deleteObject:currentItem];
+//    [self updateRowsAfterDeletionFromIndexPath:indexpath];
+//    NSError *error = nil;
+//    if (![self.managedObjectContext save:&error]) {
+//        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
+//        abort();
+//    }    
 }
 
 #pragma mark - animation
@@ -400,7 +209,7 @@
     if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:TRUE]]) {
     int newCount = 0;
     if ([self.uncheckedArray count] > 0) {
-        newCount = [self.uncheckedArray count]-1;
+        newCount = [self.uncheckedArray count] - 1;
     }
         NewIndexPath = [NSIndexPath indexPathForRow:newCount inSection:0];
         NSLog(@"indexpath %@ indexPath %@",indexPath,NewIndexPath);
@@ -419,20 +228,69 @@
     return NewIndexPath;
 }
 
+#pragma mark -  UPDATE AFTER DONE
+
+-(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
+{
+    NSIndexPath *toIndexPath =[self moveRowDownFromIndexPath:indexPath];
+    [self updateArraysAfterDoneFromIndexpath:indexPath];
+    [self updateMainArray];
+    [self updateRowsAfterMovingFromIndexpath:indexPath ToIndexpath:toIndexPath];
+    [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexPath toIndexPath:toIndexPath];
+}
+
+- (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath{
+    ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
+    // This item is done now ,updated in core data, just need to change in arrays
+    if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
+        if (indexPath.row <[self.uncheckedArray count]) {
+            if ([[self.uncheckedArray objectAtIndex:indexPath.row] isEqual:item]) {
+                [self.uncheckedArray removeObjectAtIndex:indexPath.row];
+                [self.checkedArray insertObject:item atIndex:0];
+            }
+        }
+        else {// do nothing
+        }
+        //TODO :animation
+        NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
+    }
+    else {
+        if ([self.uncheckedArray count] == 0) {
+            if ([[self.checkedArray objectAtIndex:indexPath.row] isEqual:item]) {
+                [self.checkedArray removeObjectAtIndex:indexPath.row];
+                [self.uncheckedArray addObject:item];
+            }
+        }
+        else {
+            if (indexPath.row <[self.uncheckedArray count]) { // do no change
+            }
+            else {
+                if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
+                    [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
+                    [self.uncheckedArray addObject:item];
+                }
+            }
+        }
+    }
+}
+
 #pragma mark-
 - (void)updateMainArray
 {
     self.rows = [NSMutableArray arrayWithArray:self.uncheckedArray];
     [self.rows addObjectsFromArray:self.checkedArray];
 }
+
+# pragma mar- MOVE After LONG PRESS
+// Called after moving rows after long press
 - (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
     
+ //   ToDoItem *item = self.grabbedObject;
+//    int priorityIndex = [item.priority intValue];
+    //    NSIndexPath *fromIndexpath = [NSIndexPath indexPathForRow:priorityIndex inSection:0];    
     [self updateDoneStatusOfRowAtIndexPath:toIndexPath];
-    ToDoItem *item = self.grabbedObject;
-    int priorityIndex = [item.priority intValue];
-    NSIndexPath *fromIndexpath = [NSIndexPath indexPathForRow:priorityIndex inSection:0];
-    [self updateRowsAfterMovingFromIndexpath:fromIndexpath ToIndexpath:toIndexPath];
-    [self updateArraysAfterDoneFromIndexpath:fromIndexpath ToIndexPath:toIndexPath];
+    [self updateRowsAfterMovingFromIndexpath:self.grabbedIndex ToIndexpath:toIndexPath];
+    [self updateArraysAfterDoneFromIndexpath:self.grabbedIndex ToIndexPath:toIndexPath];
 }
 
 - (void)updateDoneStatusOfRowAtIndexPath:(NSIndexPath * )toIndexPath
@@ -483,7 +341,7 @@
     // This item is done now ,updated in core data, moved to new index,just need to change in arrays
     if ([item.doneStatus isEqualToNumber:[NSNumber numberWithBool:TRUE]]) { // item is checked now
         if (indexPath.row <[self.uncheckedArray count]) {
-            toIndex = toIndexPath.row - [self.uncheckedArray count] +1;
+            toIndex = toIndexPath.row  + 1 - [self.uncheckedArray count];
             if ([[self.uncheckedArray objectAtIndex:indexPath.row] isEqual:item]) {
                 [self.uncheckedArray removeObjectAtIndex:indexPath.row];
                 [self.checkedArray insertObject:item atIndex:toIndex];
@@ -518,49 +376,7 @@
     NSLog(@"From  : %d to %d",indexPath.row,toIndex);
 }
 
-- (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath{
-    ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
-    // This item is done now ,updated in core data, just need to change in arrays
-    if ([item.doneStatus isEqual:[NSNumber numberWithBool:TRUE]]) {
-        if (indexPath.row <[self.uncheckedArray count]) {
-            if ([[self.uncheckedArray objectAtIndex:indexPath.row] isEqual:item]) {
-                [self.uncheckedArray removeObjectAtIndex:indexPath.row];
-                [self.checkedArray insertObject:item atIndex:0];
-            }
-        }
-        else {// do nothing
-        }
-        //TODO :animation
-        NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
-    }
-    else {
-        if ([self.uncheckedArray count] == 0) {
-            if ([[self.checkedArray objectAtIndex:indexPath.row] isEqual:item]) {
-                [self.checkedArray removeObjectAtIndex:indexPath.row];
-                [self.uncheckedArray addObject:item];
-            }
-        }
-        else {
-             if (indexPath.row <[self.uncheckedArray count]) { // do no change
-             }
-             else {
-            if ([[self.checkedArray objectAtIndex:indexPath.row - [self.uncheckedArray count]] isEqual:item]) {
-                [self.checkedArray removeObjectAtIndex:indexPath.row - [self.uncheckedArray count]];
-                [self.uncheckedArray addObject:item];
-            }
-             }
-        }
-    }
-}
-
--(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
-{
-    NSIndexPath *toIndexPath =[self moveRowDownFromIndexPath:indexPath];
-    [self updateArraysAfterDoneFromIndexpath:indexPath];
-    [self updateMainArray];
-    [self updateRowsAfterMovingFromIndexpath:indexPath ToIndexpath:toIndexPath];
-}
-
+# pragma mark - CHECKED ARRAY METHODS
 - (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
 {
     if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
@@ -577,11 +393,15 @@
 {
     if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
         [uncheckedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
+        NSLog(@"UPDATE PRIORITYunchecked  item priority: %d index %i",[newItem.priority intValue], indexPath.row);
+
     }
     else {
-        [checkedArray replaceObjectAtIndex:indexPath.row withObject:newItem];
+         int unchecked =[uncheckedArray count];
+        int checkedIndex = indexPath.row - unchecked;
+        [checkedArray replaceObjectAtIndex:checkedIndex  withObject:newItem];
+        NSLog(@"UPDATE PRIORITY checked  item priority: %d index %i",[newItem.priority intValue], indexPath.row);
     }
-   // NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
 
 }
 
@@ -690,7 +510,7 @@
         }
         
     } else {
-        NSLog(@"donestatus:%@",item.doneStatus);
+        //NSLog(@"donestatus:%@",item.doneStatus);
         static NSString *cellIdentifier = @"DefaultTableViewCell";
         TransformableTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell == nil) {
@@ -714,7 +534,7 @@
             [cell.contentView addSubview:cell.strikedLabel];
             [cell.contentView bringSubviewToFront:cell.strikedLabel];
             cell.strikedLabel.hidden = NO;
-            NSLog(@"added strike label");
+          //  NSLog(@"added strike label");
             cell.strikedLabel.userInteractionEnabled = NO;
         } else if ([object isEqual:DUMMY_CELL]) {
             cell.textLabel.text = @"";
@@ -727,7 +547,7 @@
             if (cell.strikedLabel != nil) {
                 [cell.strikedLabel removeFromSuperview];
                 cell.strikedLabel = nil;
-                NSLog(@"removd strike label");
+          //      NSLog(@"removd strike label");
                 cell.editingDelegate = self;
             }
         }
@@ -748,8 +568,6 @@
         // An example to discard the cell at JTTableViewCellEditingStateLeft
         //[self.rows removeObjectAtIndex:indexPath.row];
         [self deleteCurrentRowAfterSwipeAtIndexpath:indexPath];
-        [self reloadTableData];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     } else if (state == JTTableViewCellEditingStateRight) {
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
         [self updateCurrentRowsDoneStatusAtIndexpath:indexPath]; 
@@ -831,63 +649,13 @@
     newItem.list = self.parentList;
     [self.rows insertObject:newItem atIndex:indexPath.row];
     //Also Unchecked Array
-    NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
+   // NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
 
     [self createNewItem:newItem atIndexPath:indexPath];
 }
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
-    ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
-    item.itemName = @"New To Do"; 
-    item.priority = [NSNumber numberWithInt:indexPath.row];
-    item.doneStatus = [NSNumber numberWithBool:FALSE];
-    item.list = self.parentList;
-
-    [self updateNewItem:item atIndexPath:indexPath];
-    NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
-    TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
-    if (cell.frame.size.height > COMMITING_CREATE_CELL_HEIGHT * 2  && indexPath.row == 0) {
-        [self deleteItemFromIndexPath:indexPath];
-        [self.rows removeObjectAtIndex:indexPath.row];
-        [self.managedObjectContext rollback];
-        //
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationMiddle];
-        // Return to list
-        [self removeCurrentView];
-    }
-    else {
-        cell.finishedHeight = NORMAL_CELL_FINISHING_HEIGHT;
-        cell.imageView.image = nil;
-        cell.textLabel.text = @"Just Added!";
-        [TDCommon playSound:self.pullDownToCreateSound];
-        //[cell labelTapped];
-        //cell.nameTextField.text = @"";
-
-        //[self addNewRowInDBAtIndexPath:indexPath];
-        //insert in db here
-    }
-}
-
-- (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self deleteItemFromIndexPath:indexPath];
-    [self.rows removeObjectAtIndex:indexPath.row];
-    [self.managedObjectContext rollback];
-}
-
-- (void)removeCurrentView
-{
-    [TDCommon playSound:self.pullDownToMoveUpSound];
-    [UIView animateWithDuration:BACK_ANIMATION delay:BACK_ANIMATION_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        CGRect myFrame = self.view.frame;
-        myFrame.origin.y = 480;
-        self.view.frame = myFrame; 
-    } completion:^ (BOOL finished) {
-        if (finished) {
-            [self.tableView setHidden:YES];
-            [self.navigationController popViewControllerAnimated:NO]; 
-        }
-    }];
-    
+    [self gestureRecognizer:gestureRecognizer needsCommitRowAtIndexPath:indexPath withModelType:TDModelItem];
 }
 
 #pragma mark - 

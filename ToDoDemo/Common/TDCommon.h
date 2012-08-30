@@ -23,3 +23,8 @@
 + (void)setLastIndexPath:(NSIndexPath *)indexPath;
 +(NSIndexPath *)getLastIndexPath;
 @end
+
+typedef enum {
+    TDModelList,
+    TDModelItem
+}TDModelType;
