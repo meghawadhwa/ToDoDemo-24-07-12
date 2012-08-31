@@ -646,10 +646,14 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         }
         return;
     }
-        //NSLog(@" Content Offset %f  bounds %f",scrollView.contentOffset.y,fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height));
+     float screen = fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height);
+    float contentOffset = scrollView.contentOffset.y;
+    float increasedOffset = scrollView.contentOffset.y + 180;
+                    
+        NSLog(@" screen diff %f  contentOffset %f  " ,screen,contentOffset);
 
     // We try to create a new cell when the user tries to drag the content to and offset of negative value
-    if (scrollView.contentOffset.y < 0) {
+    if (contentOffset < 0) {
         // Here we make sure we're not conflicting with the pinch event,
         // ! scrollView.isDecelerating is to detect if user is actually
         // touching on our scrollView, if not, we should assume the scrollView
@@ -673,7 +677,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     // ! scrollView.isDecelerating is to detect if user is actually
     // touching on our scrollView, if not, we should assume the scrollView
     // needed not to be adding cell
-    else if(self.tableView.contentOffset.y >= fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)  && self.state == JTTableViewGestureRecognizerStateNone && !scrollView.isDecelerating) {
+    else if(contentOffset >= screen +60  && self.state == JTTableViewGestureRecognizerStateNone && !scrollView.isDecelerating) {
         NSLog(@"Pull Up Detected");
         
         //if (! self.switchUpView && self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating)
@@ -681,17 +685,49 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         [self createViewForPullUp];
     }
 
-    else if ((self.tableView.contentOffset.y < fabs(self.tableView.contentSize.height - self.tableView.bounds.size.height)) && self.state == JTTableViewGestureRecognizerStatePullingUp){
-        self.state = JTTableViewGestureRecognizerStateNone;
-        if (self.switchUpView != nil) self.switchUpView.hidden = YES;
-        if (self.upArrowImageView != nil) self.upArrowImageView.hidden = YES;
-        if (self.smileyImageView != nil)self.smileyImageView.hidden = YES;
-}
+    else if (contentOffset < screen + 60 ){
+        if ( screen >150 && increasedOffset >= screen && self.state == JTTableViewGestureRecognizerStateNone && !scrollView.isDecelerating ) {
+            NSLog(@"Pull Up Detected");
+            //if (! self.switchUpView && self.state == JTTableViewGestureRecognizerStateNone && ! scrollView.isDecelerating)
+            self.state = JTTableViewGestureRecognizerStatePullingUp;
+            [self createViewForPullUp];
+
+        }
+        else if ((screen >150 && increasedOffset < screen && self.state == JTTableViewGestureRecognizerStatePullingUp && !scrollView.isDecelerating) || ( screen < 210 && self.state == JTTableViewGestureRecognizerStatePullingUp))
+            {          
+                NSLog(@"Pull Up Not Detected");
+                self.state = JTTableViewGestureRecognizerStateNone;
+                if (self.switchUpView != nil) self.switchUpView.hidden = NO;
+                if (self.upArrowImageView != nil) [self rotateImage:self.upArrowImageView duration:0.2 curve:1 degrees:180.0];
+                if (self.smileyImageView != nil)self.smileyImageView.hidden = NO;
+            }
+       }
+    
     if (self.state == JTTableViewGestureRecognizerStateDragging) {
         self.addingRowHeight += scrollView.contentOffset.y * -1;
         [self.tableView reloadData];
         [scrollView setContentOffset:CGPointZero];
     }
+}
+
+#define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
+
+- (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
+              curve:(int)curve degrees:(CGFloat)degrees
+{
+    // Setup the animation
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:duration];
+    [UIView setAnimationCurve:curve];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationRepeatCount:1.0];
+    // The transform matrix
+    CGAffineTransform transform = 
+    CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
+    image.transform = transform;
+    
+    // Commit the changes
+    [UIView commitAnimations];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -704,12 +740,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
     if (self.state == JTTableViewGestureRecognizerStatePullingUp)
     {
-        [self.pullUpToMoveDownDelegate addChildView];
         self.state = JTTableViewGestureRecognizerStateNone;
         [self.switchUpView removeFromSuperview];
         self.switchUpView = nil;
         [self.upArrowImageView removeFromSuperview];
         self.upArrowImageView = nil;
+        [self.pullUpToMoveDownDelegate addChildView];
     }
     
     if (self.state == JTTableViewGestureRecognizerStateNone)
@@ -757,8 +793,14 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 {
     if(self.state == JTTableViewGestureRecognizerStatePullingUp && !([[self.extraPullDelegate getParentName] isEqualToString:@"Menu"] && [[self getSwitchLabelTextForPullUp] isEqualToString:@"Nothing beyond it!!"]))
     {
-        [self createArrowImageViewWithImageName:BIG_ARROW_DOWN atHeight:self.tableView.contentSize.height + 60];
-        [self createSwitchUpViewAtHeight:self.tableView.contentSize.height + 60];
+        if (self.tableView.bounds.size.height > self.tableView.contentSize.height) {
+        [self createArrowImageViewWithImageName:BIG_ARROW_DOWN atHeight:self.tableView.bounds.size.height ];
+        [self createSwitchUpViewAtHeight:self.tableView.bounds.size.height ];
+        }
+        else {
+            [self createArrowImageViewWithImageName:BIG_ARROW_DOWN atHeight:self.tableView.contentSize.height + 20];
+            [self createSwitchUpViewAtHeight:self.tableView.contentSize.height + 20];
+        }
     }
     else {
         if (self.upArrowImageView) self.upArrowImageView.hidden = YES;
@@ -784,6 +826,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 - (void)createArrowImageViewWithImageName:(NSString *)imageName atHeight:(float)originY
 {
     if (self.upArrowImageView != nil) {
+        [self rotateImage:self.upArrowImageView duration:0.2 curve:1 degrees:360.0];
         self.upArrowImageView.hidden = NO;
         return;
     }
