@@ -27,7 +27,12 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 @property (nonatomic, assign) id<TDPullUpToMoveDownDelegate> pullUpToMoveDownDelegate;
 @property (nonatomic,assign) id<TDPinchInToClose> pinchDelegate;
 
+@property(nonatomic,assign) BOOL lastRowVisibleFlag;
+@property(nonatomic,assign) BOOL rowEditingFlag;
+
 + (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate;
+//- (void)setLastRowVisibleFlag:(BOOL)flag;
+//- (void)setEditingFlag:(BOOL)flag;
 
 @end
 

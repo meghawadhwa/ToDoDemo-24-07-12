@@ -33,6 +33,10 @@
 @protocol TDExtraPullDelegate<NSObject>
 - (NSString *)getParentName;
 - (NSString *)getChildName;
+- (BOOL) checkedRowsExist;
+- (int) getRowCount;
+- (void) playSound;
+- (void) deleteCheckedRows;
 @end
 
 @protocol TDPullUpToMoveDownDelegate<NSObject>

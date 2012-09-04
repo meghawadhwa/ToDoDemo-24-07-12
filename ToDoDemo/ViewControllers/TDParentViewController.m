@@ -590,14 +590,6 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     [self.rows removeObjectAtIndex:indexPath.row];
 }
 
-// Uncomment to following code to disable pinch in to create cell gesture
-//- (NSIndexPath *)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer willCreateCellAtIndexPath:(NSIndexPath *)indexPath {
-//    if (indexPath.section == 0 && indexPath.row == 0) {
-//        return indexPath;
-//    }
-//    return nil;
-//}
-
 #pragma mark - DELEGATE TO POP
 - (void)removeCurrentView
 {
@@ -659,12 +651,6 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 - (float)getLastRowHeight
 {
     float lastRowheight = 480;
-    //    if ([self.checkedViewsArray lastObject]) {
-    //        lastRowheight = [TDCommon getLastRowMaxYFromArray:self.checkedViewsArray];
-    //    }
-    //    else if([self.customViewsArray lastObject]){
-    //        lastRowheight = [TDCommon getLastRowMaxYFromArray:self.customViewsArray];
-    //    }
     lastRowheight = [self.rows count] * NORMAL_CELL_FINISHING_HEIGHT; 
     
     return lastRowheight;
@@ -698,10 +684,30 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 {
     return self.childName;
 }
+
+- (BOOL) checkedRowsExist
+{
+    return NO;
+}
+
+- (int) getRowCount
+{
+    return [self.rows count];
+}
+
+- (void) playSound{
+    [TDCommon playSound:self.pullUpToClearSound];
+
+}
+
+- (void) deleteCheckedRows{
+}
+
 #pragma mark - 
 - (void)disableGesturesOnTable:(BOOL)disableFlag
 {
     self.editingFlag = disableFlag;
+    self.tableViewRecognizer.rowEditingFlag = disableFlag;
 }
 
 #pragma mark-

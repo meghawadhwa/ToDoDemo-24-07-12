@@ -136,68 +136,22 @@
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     [self updateCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
-//    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-//    TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
-//    currentItem.itemName = cell.textLabel.text;
-//    NSLog(@"done status %d",[currentItem.doneStatus boolValue]);
-//    NSError *error = nil;
-//    if (![self.managedObjectContext save:&error]) {
-//        NSLog(@"Error in updating a item text%@, %@", error, [error userInfo]);
-//        abort();
-//    }
-//    [self updateNewItem:currentItem atIndexPath:indexpath];
-   // [self reloadFromUpdatedDB];
 }
-
-//- (void)updateRowsAfterDeletionFromIndexPath:(NSIndexPath *)indexPath
-//{
-//    int count = [self.rows count];
-//    for (int i = indexPath.row; i< count ; i++) {
-//        ToDoItem *item = [self.rows objectAtIndex:i];
-//        int newPriority = [item.priority intValue] - 1;
-//        item.priority = [NSNumber numberWithInt:newPriority];
-//    }
-//}
 
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
-    [self deleteCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
-    [self updateRowsFromIndexPath:indexpath withModelType:TDModelItem withCreationFlag:NO];
-    [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexpath toIndexPath:nil];
-//    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-//    [self deleteItemFromIndexPath:indexpath];
-//    [self.managedObjectContext deleteObject:currentItem];
-//    [self.rows removeObjectAtIndex:indexpath.row];
-//    NSError *error = nil;
-//    if (![self.managedObjectContext save:&error]) {
-//        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
-//        abort();
-//    }
-//    [TDCommon playSound:self.deleteSound];
-//    [self.tableView beginUpdates];
-//    [UIView animateWithDuration:2 animations:^{
-//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
-//    }];
-//    [self.tableView endUpdates];
-//    [self reloadTableData];
+    [self deleteCurrentRowAtIndexpath:indexpath];
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
+    [self deleteCurrentRowAtIndexpath:indexpath];
+}
+
+- (void)deleteRowAtIndexpath: (NSIndexPath *)indexpath{
     [self deleteCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
     [self updateRowsFromIndexPath:indexpath withModelType:TDModelItem withCreationFlag:NO];
     [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexpath toIndexPath:nil];
-//    [TDCommon playSound:self.deleteSound];
-//    ToDoItem *currentItem = [self.rows objectAtIndex:indexpath.row];
-//    [self deleteItemFromIndexPath:indexpath];
-//    [self.rows removeObjectAtIndex:indexpath.row];
-//    [self.managedObjectContext deleteObject:currentItem];
-//    [self updateRowsAfterDeletionFromIndexPath:indexpath];
-//    NSError *error = nil;
-//    if (![self.managedObjectContext save:&error]) {
-//        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
-//        abort();
-//    }    
 }
 
 #pragma mark - animation
@@ -560,6 +514,58 @@
 }
 
 #pragma mark - Delegates
+- (NSMutableArray *)convertToIndexPathArray:(NSMutableArray *)array{
+    NSMutableArray *indexPathArray = nil;
+    if (array == self.checkedArray) {
+        if ([array count] == 0 ) {
+            return nil;
+        }
+        else {
+            indexPathArray = [[NSMutableArray alloc] init];
+            int checkedArrayCount = [array count] ; 
+            int uncheckedArrayCount = [self.uncheckedArray count];
+        for(int i = (checkedArrayCount - 1); i >=0 ; i--){
+            int row = i + uncheckedArrayCount;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [indexPathArray addObject:indexPath];
+        }
+        }
+    }
+    return indexPathArray;
+}
+
+#pragma mark - Pull Up delegate
+- (void) deleteCheckedRows{
+    NSMutableArray *indexPathArray = [self convertToIndexPathArray:self.checkedArray];
+    [self performSelector:@selector(deleteRowsFromDatabase:) withObject:indexPathArray afterDelay:0.01];
+}
+
+- (void)deleteRowsFromDatabase:(NSArray *)indexPathArray
+{
+    for (int i =0; i <[indexPathArray count]; i++) {
+        NSIndexPath *indexPath = [indexPathArray objectAtIndex:i];
+        ToDoItem *currentItem = [self.rows objectAtIndex:indexPath.row];
+        //update checked and unchecked arrays
+        [self deleteItemFromIndexPath:indexPath];
+        [self.managedObjectContext deleteObject:currentItem];
+
+        // No need to update priority of other rows as these are last rows
+        [self.rows removeObjectAtIndex:indexPath.row];
+    }
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error in deleting item %@, %@", error, [error userInfo]);
+        abort();
+    }
+    [TDCommon playSound:self.deleteSound];
+    
+    [self.tableView beginUpdates];
+    //[UIView animateWithDuration:3 animations:^{
+        [self.tableView deleteRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
+//}];
+    [self.tableView endUpdates];
+}
+
 #pragma mark JTTableViewGestureEditingRowDelegate
 
 // This is needed to be implemented to let our delegate choose whether the panning gesture should work
@@ -655,6 +661,14 @@
 }
 
 #pragma mark - 
+- (BOOL) checkedRowsExist
+{
+    if ([self.checkedArray count] >0) {
+        return YES;
+    }
+    return NO;
+}
+
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
 {
     ToDoItem *currentItem = [self.rows objectAtIndex:indexPath.row];
