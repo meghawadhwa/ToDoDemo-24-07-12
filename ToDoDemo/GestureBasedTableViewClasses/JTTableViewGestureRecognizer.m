@@ -150,9 +150,9 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [UIView commitAnimations];
     
     self.state = JTTableViewGestureRecognizerStateNone;
-
+    NSLog(@"addedCell :%i, cell.frame.size.height %f, addingIndexPath %i",addedCell, cell.frame.size.height,self.addingIndexPath.row);
     //To make it editable
-    if (addedCell && cell.frame.size.height < (2 * commitingCellHeight)) {
+    if (addedCell && !(cell.frame.size.height > (3.0 * commitingCellHeight) && self.addingIndexPath.row ==0)) {
         [self performSelector:@selector(makeNewlyAddedCellEditable) withObject:nil afterDelay:0.3];
     }else {
         self.addingIndexPath = nil;
@@ -174,7 +174,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 - (void)pinchGestureRecognizer:(UIPinchGestureRecognizer *)recognizer {
     static int imageCount;
         NSLog(@"%d %f %f", [recognizer numberOfTouches], [recognizer velocity], [recognizer scale]);
-    if (recognizer.state == UIGestureRecognizerStateEnded || [recognizer numberOfTouches] < 2) {
+    if (recognizer.state == UIGestureRecognizerStateEnded || [recognizer numberOfTouches] < 2 || recognizer.state == UIGestureRecognizerStateCancelled) {
         if (self.addingIndexPath && self.state == JTTableViewGestureRecognizerStatePinching) {
             [self commitOrDiscardCell];
         }
@@ -239,13 +239,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         CGPoint newOffset   = (CGPoint){self.tableView.contentOffset.x, self.tableView.contentOffset.y+diffOffsetY};
         [self.tableView setContentOffset:newOffset animated:NO];
         }
-        else if (self.state = JTTableViewGestureRecognizerStatePinchingIn) {
-            float difference = self.previousLowerPoint.y - lowerPoint.y;
-            self.previousLowerPoint = lowerPoint;
-            NSLog(@"DIFFERENCE: %f",difference);
-
-            float scrollingAmount = difference * 5; //PINCH INWARDS IF DIFFERENCE is positive
-         
+        else if (self.state == JTTableViewGestureRecognizerStatePinchingIn) {
+            float scrollingAmount = 210.0;
+            if (recognizer.scale >=0.35) {
+                scrollingAmount = 20.0/13.0 * 210.0 * (1.0 - recognizer.scale);
+            }
             if (imageCount>0) {
         for (int i = imageCount - 1; i >=0; i--){
                 UIImageView *snapShotView = (UIImageView *)[self.tableView viewWithTag:CELL_SNAPSHOT_TAG +i +1];
@@ -256,19 +254,18 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     if (continuePinching)
     {
         if (imageCount >0) {
-        [self animateSnapShotViews:imageCount withVelocity:[recognizer velocity] byDistance:scrollingAmount];
+        [self animateSnapShotViews:imageCount withScale:recognizer.scale byDistance:scrollingAmount];
         }
         self.pinchToCloseCompleted = NO;
     }
-    else if((continuePinching == NO) && (scrollingAmount < 0.0))
+    else if(continuePinching == NO && scrollingAmount > 0)
     {
-        self.pinchToCloseCompleted = NO;
+        self.pinchToCloseCompleted = YES;
     }
     
     else{
-        self.pinchToCloseCompleted = YES;
+        self.pinchToCloseCompleted = NO;
     }
-
 }}
 }
 
@@ -286,53 +283,37 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 {
     [self resetAfterPinch:imageCount];
     [self.pinchDelegate animateOuterImageViewsAfterCompleteInTime:0.4];
+    self.state = JTTableViewGestureRecognizerStateNone;
 }
 
 - (void)resetAfterPinchInComplete:(int)imageCount
 {
-    float scrollDistance =-1;
-    while ([self.pinchDelegate animateImageViewsbydistance:scrollDistance]) {
-    [self animateSnapShotViews:imageCount withVelocity:0.1 byDistance:scrollDistance];
-    }
+    [UIView animateWithDuration:1.0 animations:^{
+    [self animateSnapShotViews:imageCount withScale:1 byDistance:0];
+    [self.pinchDelegate animateImageViewsbydistance:0];
+    }];
     [self resetAfterPinch:imageCount];  
     [self.pinchDelegate changeBackgroundViewColor:[UIColor clearColor]];
     [self.pinchDelegate hideBackgroundView:YES];
     [self.pinchDelegate resetParentViews];
+    self.state = JTTableViewGestureRecognizerStateNone;
 }
 
-- (void)animateSnapShotViews:(int)imageCount withVelocity:(float)velocity byDistance:(float)scrollAmount
+- (void)animateSnapShotViews:(int)imageCount withScale:(float)scale byDistance:(float)scrollAmount
 {
-   // if([self WhenParentImageViewsCrossStopAnimatingSnapShots:imageCount]) //return;
-    
     for (int i = 0; i < imageCount; i++){
         UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG + i + 1];
         CGRect frame =snapShotView.frame;
         float scrollAmountForImage;
-        scrollAmountForImage =  scrollAmount - (scrollAmount/3.4 *i);
-        frame.origin.y += scrollAmountForImage;
-        snapShotView.frame =frame;
-        // NSLog(@"Pinch out : y :%f",frame.origin.y);
-    }
-    
-}
-
-- (BOOL)WhenParentImageViewsCrossStopAnimatingSnapShots:(int) imageCount
-{
-    UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG  + 1];
-    
-    float topOrigin = [self.pinchDelegate getTopViewOrigin];
-    NSLog(@"$$$ TOP : %f",topOrigin -1 - snapShotView.frame.origin.y);
-    if ( topOrigin - 2 > snapShotView.frame.origin.y) {
-        for (int i = 0; i < imageCount; i++){
-           // UIImageView *snapShotView = (UIImageView *)[[self.tableView superview] viewWithTag:CELL_SNAPSHOT_TAG +i + 1];
-            CGRect frame =snapShotView.frame;
-            frame.origin.y = topOrigin;
-            snapShotView.frame =frame;
+        scrollAmountForImage =  scrollAmount - ((59 * i) * (1- scale) * 20/13);
+        if (scale < 0.35) {
+            scrollAmountForImage = scrollAmount -(59 *i)  ;
         }
-        return YES;
+        frame.origin.y = (60 * i) + scrollAmountForImage;
+        snapShotView.frame =frame;
+         NSLog(@"Pinch out : y :%f",frame.origin.y);
     }
     
-    return NO;
 }
 
 - (int)createPinchOutViewAndReturnImageCount
@@ -362,7 +343,6 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             snapShotView.frame = CGRectOffset(snapShotView.bounds, rect.origin.x, rect.origin.y);
            // [[self.tableView superview] addSubview:snapShotView];
             [self.pinchDelegate addSnapshotImageView:snapShotView];
-            NSLog(@"%%%%%% CHECK %@",[self.tableView superview]);
         }
     }
     }

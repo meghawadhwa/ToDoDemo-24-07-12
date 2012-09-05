@@ -140,12 +140,12 @@
 
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
-    [self deleteCurrentRowAtIndexpath:indexpath];
+    [self deleteRowAtIndexpath:indexpath];
 }
 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
-    [self deleteCurrentRowAtIndexpath:indexpath];
+    [self deleteRowAtIndexpath:indexpath];
 }
 
 - (void)deleteRowAtIndexpath: (NSIndexPath *)indexpath{

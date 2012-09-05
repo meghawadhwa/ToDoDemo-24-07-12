@@ -195,24 +195,20 @@
     float bottomStart = self.parentBottomImageView.frame.origin.y;
     float topStart = self.parentTopImageView.frame.origin.y;
     
-    if (self.parentTopImageView.alpha < 1.0 && y >0) {
-        self.parentTopImageView.alpha = self.parentTopImageView.alpha + 0.01;
-    }
-    else if (self.parentTopImageView.alpha >0 && y<0) {
-        self.parentTopImageView.alpha = self.parentTopImageView.alpha - 0.01;
-    }
-    
-    if ((topEnd >= bottomStart) && (y>0) && (self.playedPinchInSoundOnce == NO)) {
+    self.parentTopImageView.alpha = 1 * self.parentTopImageView.frame.origin.y/ 210;
+
+    if ((topEnd >= bottomStart) && (self.playedPinchInSoundOnce == NO)) {
+
         [TDCommon playSound:self.pinchInSound];
         self.playedPinchInSoundOnce = YES;
     }
     
-    if (topStart <= 0 && y < 0)
+    if (topStart < 0 && y <0)
     {
         return NO;
     }
     
-    if (((topEnd >= bottomStart) && y >=0)) {
+    if (topEnd >= bottomStart && y == 210) {
         if (self.parentOverTopImageView !=nil) {
             CGRect overFrame = self.parentOverTopImageView.frame;
             overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
@@ -226,24 +222,12 @@
         return NO;
     }
     
-    if ((bottomStart - topEnd < 20.0 || topEnd >267.0) && !self.playedPinchInSoundOnce && y>=0) {
-        if (self.parentOverTopImageView !=nil) {
-            CGRect overFrame = self.parentOverTopImageView.frame;
-            overFrame.origin.y = self.parentTopImageView.frame.origin.y - overFrame.size.height;
-            self.parentOverTopImageView.frame = overFrame;
-        }
-        CGRect bottomFrame = self.parentBottomImageView.frame;
-        bottomFrame.origin.y = topEnd;
-        self.parentBottomImageView.frame = bottomFrame;
-        NSLog(@" IN here top End : %f bottom start : %f",topEnd,bottomStart);
-        return YES;
-    }
-    if (y>0) {
+   if (y>0) {
         NSLog(@" IN BW top End : %f bottom start : %f",topEnd,bottomStart);
     }
     
     CGRect topFrame = self.parentTopImageView.frame;
-    topFrame.origin.y += y ;
+    topFrame.origin.y = 0.0 + y ;
     self.parentTopImageView.frame = topFrame;
     
     if (self.parentOverTopImageView !=nil) {
@@ -253,7 +237,7 @@
     }
     self.playedPinchInSoundOnce = NO;
     CGRect bottomFrame = self.parentBottomImageView.frame;
-    bottomFrame.origin.y -= y;
+    bottomFrame.origin.y = 480.0 - y;
     self.parentBottomImageView.frame = bottomFrame;
     //NSLog(@"top %@ frame %@",self.parentTopImageView.image,self.parentTopImageView);
     return YES;
