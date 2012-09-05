@@ -563,7 +563,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.editingFlag == FALSE) {
+    if (self.editingFlag == FALSE && [[self.rows objectAtIndex:indexPath.row] isKindOfClass:[ToDoList class]]) {
         [TDCommon playSound:self.navigateSound];
     TDListViewController *src = (TDListViewController *) self;
     TDItemViewController *destination = [self.storyboard instantiateViewControllerWithIdentifier:@"ItemViewController"];
