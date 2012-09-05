@@ -686,6 +686,10 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
         return;
     }
 
+    if (([[self.extraPullDelegate getParentName] isEqualToString:@"Menu"] && [[self getSwitchLabelTextForPullUp] isEqualToString:@"Nothing beyond it!!"]) ) {
+        return;
+    }
+    
     float contentOffsetY = scrollView.contentOffset.y;
     float initialContentOffsetY = 0;
     
@@ -844,7 +848,6 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
 -(void)createPullUpViewToMoveDown
 {
-    if (!([[self.extraPullDelegate getParentName] isEqualToString:@"Menu"] && [[self getSwitchLabelTextForPullUp] isEqualToString:@"Nothing beyond it!!"]) ) {
     if(self.state == JTTableViewGestureRecognizerStatePullingUp  || self.state == JTTableViewGestureRecognizerStateNone)
     {
         if (self.tableView.bounds.size.height > self.tableView.contentSize.height) {
@@ -855,12 +858,6 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             [self createArrowImageViewWithImageName:BIG_ARROW_UP atHeight:self.tableView.contentSize.height + 20];
             [self createSwitchUpViewAtHeight:self.tableView.contentSize.height + 20];
         }
-    }
-    } 
-    else {
-        if (self.upArrowImageView) self.upArrowImageView.hidden = YES;
-        else if(self.smileyImageView) self.smileyImageView.hidden = YES;
-        self.switchUpView.hidden = YES;
     }
 }
 
