@@ -145,7 +145,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     // Restore contentInset while touch ends
     [UIView beginAnimations:@"" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.3];  // Should not be less than the duration of row animation 
+    [UIView setAnimationDuration:0.25];  // Should not be less than the duration of row animation 
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     [UIView commitAnimations];
     
@@ -153,7 +153,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     NSLog(@"addedCell :%i, cell.frame.size.height %f, addingIndexPath %i",addedCell, cell.frame.size.height,self.addingIndexPath.row);
     //To make it editable
     if (addedCell && !(cell.frame.size.height > (3.0 * commitingCellHeight) && self.addingIndexPath.row ==0)) {
-        [self performSelector:@selector(makeNewlyAddedCellEditable) withObject:nil afterDelay:0.3];
+        float delay = 0.1;
+        if (self.addingIndexPath.row >0) {
+            delay = 0.25;
+        }
+        [self performSelector:@selector(makeNewlyAddedCellEditable) withObject:nil afterDelay:delay];
     }else {
         self.addingIndexPath = nil;
     }
