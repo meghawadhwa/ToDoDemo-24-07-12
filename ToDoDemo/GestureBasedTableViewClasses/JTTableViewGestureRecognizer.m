@@ -566,6 +566,11 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             NSLog(@"Should not begin pinch");
             return NO;
         }
+        if (  [self.pinchDelegate getEditingFlag]) {
+            NSLog(@"Should not begin pinch,editing");
+            return NO;
+        }
+
         CGPoint location1 = [gestureRecognizer locationOfTouch:0 inView:self.tableView];
         CGPoint location2 = [gestureRecognizer locationOfTouch:1 inView:self.tableView];
 

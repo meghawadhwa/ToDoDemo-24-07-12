@@ -431,22 +431,6 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     
 }
 
-- (void) update: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
-    
-    switch (modelType) {
-        case TDModelList:
-        {
-            
-            break;
-        }
-        case TDModelItem:
-        default:
-        {   
-            break;
-        }
-    }  
-}
-
 #pragma mark - DELETE
 
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
@@ -492,7 +476,6 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
-//    return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -694,6 +677,11 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     self.tableViewRecognizer.rowEditingFlag = disableFlag;
 }
 
+- (BOOL)getEditingFlag
+{
+    return self.editingFlag;
+}
+
 #pragma mark-
 - (void)fetchObjectsFromDb{
     
@@ -724,6 +712,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 - (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath{
     
 }
+// TO DO:  can be moved to TDITemViewController
 - (void)updateArraysAfterDeletionOrInsertionFromIndexpath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath*) toIndexPath{
     int fromIndex,toIndex;
 

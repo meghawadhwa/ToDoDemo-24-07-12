@@ -16,7 +16,7 @@
 +(UIColor *)getRedColorByPriority:(int)prioirity;
 + (NSString *)getTheme;
 + (void)setTheme: (NSString *)myTheme;
-+ (int)calculateLastIndexForArray:(NSMutableArray *)anyArray;
+//s+ (int)calculateLastIndexForArray:(NSMutableArray *)anyArray;
 + (float)calculateDistanceBetweenTwoPoints:(CGPoint)firstPoint :(CGPoint)secondPoint;
 + (SystemSoundID) createSoundID: (NSString*)name;
 + (void)playSound:(SystemSoundID)soundId;

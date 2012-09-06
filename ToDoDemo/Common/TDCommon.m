@@ -84,17 +84,17 @@ NSIndexPath *lastIndexPath = nil;
 }
 
 #pragma mark -Utility methods
-+ (int)calculateLastIndexForArray:(NSMutableArray *)anyArray
-{
-    if (anyArray && [anyArray count] >0) {
-        int lastObjectIndex = 0;
-        if ([anyArray count] >1) {
-            lastObjectIndex = [anyArray count] -1;
-        }
-        return lastObjectIndex;
-    }
-    return nil;
-}
+//+ (int)calculateLastIndexForArray:(NSMutableArray *)anyArray
+//{
+//    if (anyArray && [anyArray count] >0) {
+//        int lastObjectIndex = 0;
+//        if ([anyArray count] >1) {
+//            lastObjectIndex = [anyArray count] -1;
+//        }
+//        return lastObjectIndex;
+//    }
+//    return -1; //need to change -1
+//}
 
 + (float)calculateDistanceBetweenTwoPoints:(CGPoint)firstPoint :(CGPoint)secondPoint
 {

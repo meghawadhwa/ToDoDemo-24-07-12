@@ -602,7 +602,8 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 -(UIImage *)createSnapShotOfViewAfterCellAtIndexPath:(NSIndexPath *)indexPath{ 
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    CGRect rect = CGRectMake(0, CGRectGetMaxY(cell.frame), 320, 400);
+    CGRect rect = CGRectMake(0, CGRectGetMaxY(cell.frame), 320, self.tableView.contentSize.height - CGRectGetMaxY(cell.frame));
+    NSLog(@"HEIGHT : %f",rect.size.height);
     return [self createSnapshotOfRect:rect];
 }
 

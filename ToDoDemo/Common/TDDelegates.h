@@ -52,4 +52,5 @@
 - (void)hideBackgroundView:(BOOL)hide;
 - (void)resetParentViews;
 - (float)getTopViewOrigin;
+- (BOOL)getEditingFlag;
 @end
