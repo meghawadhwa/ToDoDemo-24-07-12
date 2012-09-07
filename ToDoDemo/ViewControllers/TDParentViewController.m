@@ -187,7 +187,7 @@
         self.parentBottomImageView.hidden = NO;
         self.parentTopImageView.alpha = 0.0;
         CGRect topFrame = self.parentTopImageView.frame;
-        topFrame.origin.y = 0 ;
+        topFrame.origin.y = 0.0;
         self.parentTopImageView.frame = topFrame;
         NSLog(@"@@@@@@@");
     }
@@ -286,6 +286,11 @@
 
 - (void)addSnapshotImageView:(UIImageView *)imageView
 {
+    if (self.backgroundView.frame.origin.y != self.tableView.contentOffset.y) {
+        CGRect rect =  self.backgroundView.frame;
+        rect.origin.y = self.tableView.contentOffset.y;
+        self.backgroundView.frame = rect;
+    }
     [self.backgroundView addSubview:imageView];
 }
 

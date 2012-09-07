@@ -70,7 +70,6 @@
         object = list.listName;
     }
     UIColor *backgroundColor = [TDCommon getColorByPriority:indexPath.row];
-    //[[UIColor redColor] colorWithHueOffset:0.12 * indexPath.row / [self tableView:tableView numberOfRowsInSection:indexPath.section]];
     if ([object isEqual:ADDING_CELL]) {
         NSString *cellIdentifier = nil;
         TransformableTableViewCell *cell = nil;
@@ -416,22 +415,13 @@ UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
 UIColor *backgroundColor = nil;
 switch (state) {
     case JTTableViewCellEditingStateMiddle:
-//        if (checked) {
-//            backgroundColor = [[TDCommon getColorByPriority:indexPath.row] colorWithAlphaComponent:0.8];
-//        }
-//        else {
             backgroundColor = [TDCommon getColorByPriority:indexPath.row];
-//        }
         break;
     case JTTableViewCellEditingStateRight:
         backgroundColor = [UIColor greenColor];
         break;
     default:
-//        if (checked) {
             backgroundColor = [TDCommon getColorByPriority:indexPath.row];
-//        }
-//        else {
-//            backgroundColor = [[TDCommon getColorByPriority:indexPath.row] colorWithAlphaComponent:0.8];        }
         break;
 }
 cell.contentView.backgroundColor = backgroundColor;
@@ -602,25 +592,27 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 -(UIImage *)createSnapShotOfViewAfterCellAtIndexPath:(NSIndexPath *)indexPath{ 
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    CGRect rect = CGRectMake(0, CGRectGetMaxY(cell.frame), 320, self.tableView.contentSize.height - CGRectGetMaxY(cell.frame));
-    NSLog(@"HEIGHT : %f",rect.size.height);
+    CGRect rect = CGRectMake(0,CGRectGetMaxY(cell.frame), 320, self.tableView.contentSize.height - CGRectGetMaxY(cell.frame));
+    NSLog(@"rect : %f  %fcontent size %f content offset y  %f",rect.origin.y, rect.size.height,self.tableView.contentSize.height, self.tableView.contentOffset.y);
     return [self createSnapshotOfRect:rect];
 }
 
 -(UIImage *)createSnapShotOfViewBeforeCellAtIndexPath:(NSIndexPath *)indexPath{ 
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     CGRect rect = CGRectMake(0, 0, 320, CGRectGetMinY(cell.frame));
+    NSLog(@"rect : %f %f",rect.origin.y, rect.size.height);
+
     return [self createSnapshotOfRect:rect];
 }
 
 - (UIImage *)createSnapshotOfRect:(CGRect)rect{
     UIGraphicsBeginImageContext(rect.size);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    [self.tableView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    CGImageRef subImageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+       CGImageRef subImageRef = CGImageCreateWithImageInRect([image CGImage], rect);
     CGRect smallBounds = CGRectMake(rect.origin.x, rect.origin.y, CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
-    
+    UIGraphicsEndImageContext();
+
     UIGraphicsBeginImageContext(smallBounds.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextDrawImage(context, smallBounds, subImageRef);

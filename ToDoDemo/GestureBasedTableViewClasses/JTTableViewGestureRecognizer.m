@@ -345,11 +345,12 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
             snapShotView.tag = CELL_SNAPSHOT_TAG + i+1;
             CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
             snapShotView.frame = CGRectOffset(snapShotView.bounds, rect.origin.x, rect.origin.y);
-           // [[self.tableView superview] addSubview:snapShotView];
             [self.pinchDelegate addSnapshotImageView:snapShotView];
         }
     }
     }
+    indexPathArray = nil;
+    imageArray = nil;
     [self.pinchDelegate changeBackgroundViewColor:[UIColor blackColor]];
     return imageCount;
 }
