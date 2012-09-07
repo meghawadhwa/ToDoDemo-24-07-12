@@ -23,6 +23,7 @@ NSIndexPath *lastIndexPath = nil;
     return self;
 }
 
+//this method fetches the color based on the theme of the view selected
 +(UIColor *)getColorByPriority:(int)prioirity
 {
     UIColor *color;
@@ -41,6 +42,7 @@ NSIndexPath *lastIndexPath = nil;
     return color;
 }
 
+//this method provides grayColor varied by gradient based on its index/priority 
 +(UIColor *)getGrayColorByPriority:(int)prioirity
 {
     float red =  0.250; 
@@ -55,6 +57,7 @@ NSIndexPath *lastIndexPath = nil;
     return color;
 }
 
+//this method provides blueColor varied by gradient based on its index/priority 
 +(UIColor *)getBlueColorByPriority:(int)prioirity
 {
     float red = 0.067;
@@ -69,6 +72,7 @@ NSIndexPath *lastIndexPath = nil;
     return color;
 }
 
+//this method provides redColor varied by gradient based on its index/priority 
 +(UIColor *)getRedColorByPriority:(int)prioirity
 {
     float red =  0.851; 
@@ -84,18 +88,7 @@ NSIndexPath *lastIndexPath = nil;
 }
 
 #pragma mark -Utility methods
-//+ (int)calculateLastIndexForArray:(NSMutableArray *)anyArray
-//{
-//    if (anyArray && [anyArray count] >0) {
-//        int lastObjectIndex = 0;
-//        if ([anyArray count] >1) {
-//            lastObjectIndex = [anyArray count] -1;
-//        }
-//        return lastObjectIndex;
-//    }
-//    return -1; //need to change -1
-//}
-
+//calculates the distance between two points ,not used
 + (float)calculateDistanceBetweenTwoPoints:(CGPoint)firstPoint :(CGPoint)secondPoint
 {
 	CGFloat deltaX = secondPoint.x - firstPoint.x;
@@ -103,6 +96,7 @@ NSIndexPath *lastIndexPath = nil;
 	return sqrt((deltaX*deltaX) + (deltaY*deltaY));
 };
 
+//this method is create a system sound
 + (SystemSoundID) createSoundID: (NSString*)name
 {    
     //Get a URL for the sound file
@@ -118,26 +112,31 @@ NSIndexPath *lastIndexPath = nil;
     return soundID;
 } 
 
+// this method plays the sound
 + (void)playSound:(SystemSoundID)soundId
 {
     AudioServicesPlaySystemSound(soundId);
 }
 
+// this method returns the selected theme for the view
 + (NSString *)getTheme
 {
     return currentViewTheme;
 }
 
+// this method sets the theme for the view
 + (void)setTheme: (NSString *)myTheme
 {
     currentViewTheme = myTheme;
 }
 
+// this method sets last row indexpath
 + (void)setLastIndexPath:(NSIndexPath *)indexPath
 {
     lastIndexPath = indexPath;
 }
 
+// this method returns last row indexpath
 +(NSIndexPath *)getLastIndexPath{
     return lastIndexPath;
 }

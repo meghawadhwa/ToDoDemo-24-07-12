@@ -273,7 +273,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 }}
 }
 
-#pragma mark - PINCH OUT methods 
+#pragma mark - RESET AFTER PINCH methods 
 - (void)resetAfterPinch:(int)imageCount
 {
     for (int i = 0; i<imageCount;i++) {
@@ -303,6 +303,8 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     self.state = JTTableViewGestureRecognizerStateNone;
 }
 
+#pragma mark- PINCH IN
+//this method is fired from pinchin state changed
 - (void)animateSnapShotViews:(int)imageCount withScale:(float)scale byDistance:(float)scrollAmount
 {
     for (int i = 0; i < imageCount; i++){
@@ -320,6 +322,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     
 }
 
+//this method creates pinch in view when pinch in began
 - (int)createPinchOutViewAndReturnImageCount
 {
     NSMutableArray *imageArray;
@@ -355,6 +358,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     return imageCount;
 }
 
+//this method creates a snapshot of row being used for animation while pinch in or long press
 -(UIImage *)createSnapShotOfCellAtIndexPath:(NSIndexPath *)indexPath{    
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
@@ -686,6 +690,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 
 }
 
+// this method handles when scroll view is pulled up
 - (void)scrollViewDidScrollUpForPull:(UIScrollView *)scrollView {
 
      if (self.rowEditingFlag) {
@@ -745,7 +750,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     
 }
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
-
+// this metho performed when pull up is detected or not detected
 - (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration 
               curve:(int)curve degrees:(CGFloat)degrees
 {
@@ -763,6 +768,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     [UIView commitAnimations];
 }
 
+//this method is called when scroll view stops dragging
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if ( ! [self.delegate conformsToProtocol:@protocol(JTTableViewGestureAddingRowDelegate)]) {
         if ([self.tableViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
@@ -827,7 +833,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
     }
 }
 
-
+//this method is to enable pull up not to get detected while editing
 - (void)setEditingFlag:(BOOL)flag
 {
     self.editingFlag = flag;
@@ -842,7 +848,7 @@ CGFloat const JTTableViewRowAnimationDuration          = 0.25;       // Rough gu
 #define EXTRA_PULL_UP_ORIGINY 485
 #define EXTRA_PULL_DOWN_ORIGINY -50
 
-
+//following methods are to create different views on pull up based on the view which is pulled up
 - (void)createViewForPullUp
 {
     // check If it is Items view controller,then create pull up view to remove checked items

@@ -25,6 +25,7 @@
     }
     return self;
 }
+//initial settings each time view appears
 - (void)initialSettings
 {
     [TDCommon setTheme:THEME_HEAT_MAP];
@@ -59,7 +60,7 @@
     // e.g. self.myOutlet = nil;
 }
 
-
+//sets the strike on checked items
 - (void)setStrikedLabel
 {
     int checkedRowCount = [self.checkedArray count];
@@ -81,43 +82,13 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - calculate priority
-
-- (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
-{
-    float priority = 20000.0;
-    
-    if ([self.rows count] == 0) {
-        return priority;
-    }
-    
-    if (indexPath.row == 0) {
-        ToDoList *list = [self.rows objectAtIndex:0];
-        float listPriority = [list.priority floatValue];
-        priority = listPriority - 1.0;
-    }
-    else if(indexPath.row == [self.rows count])
-    {
-        ToDoList *list = [self.rows objectAtIndex:[self.rows count]-1];
-        float listPriority = [list.priority floatValue];
-        priority = listPriority + 1.0 ;
-        
-    }
-    else {
-        ToDoList *firstList = [self.rows objectAtIndex:indexPath.row];
-        float firstListPriority = [firstList.priority floatValue];
-        ToDoList *secondList = [self.rows objectAtIndex:indexPath.row -1];
-        float secondListPriority = [secondList.priority floatValue];
-        priority = (firstListPriority +secondListPriority)/2.0;
-    }
-    return priority;
-}
-
+// this is implemented in parent view to add new item to db
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
 {
     [self addNewRowInDBAtIndexPath:indexpath withModelType:TDModelItem];
 }
 
+//this method simply updates the current rows done status after an update
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
 { 
     ToDoItem * item = [self.rows objectAtIndex:indexpath.row];
@@ -133,16 +104,19 @@
     
 }
 
+// this method updates th name
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     [self updateCurrentRowAtIndexpath:indexpath withModelType:TDModelItem];
 }
 
+//these methods are to delete if no text in name label
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     [self deleteRowAtIndexpath:indexpath];
 }
 
+//these methods are to delete if swipe left
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
     [self deleteRowAtIndexpath:indexpath];
@@ -156,6 +130,7 @@
 
 #pragma mark - animation
 
+//this method is called after an item is checked or unchecked
 - (NSIndexPath *)moveRowDownFromIndexPath:(NSIndexPath *)indexPath
 {
     ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
@@ -184,7 +159,7 @@
 }
 
 #pragma mark -  UPDATE AFTER DONE
-
+//this is starting point when the checked status of items is updated
 -(void)updateRowDoneAtIndexpath :(NSIndexPath *)indexPath
 {
     NSIndexPath *toIndexPath =[self moveRowDownFromIndexPath:indexPath];
@@ -194,6 +169,7 @@
     [self updateArraysAfterDeletionOrInsertionFromIndexpath:indexPath toIndexPath:toIndexPath];
 }
 
+//this is when the checked status of items is updated,arrays are updated 
 - (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath{
     ToDoItem * item = [self.rows objectAtIndex:indexPath.row];
     // This item is done now ,updated in core data, just need to change in arrays
@@ -206,7 +182,6 @@
         }
         else {// do nothing
         }
-        //TODO :animation
         NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
     }
     else {
@@ -230,6 +205,7 @@
 }
 
 #pragma mark-
+// this method updates the main array each time the checked and unchecked arrays are updated
 - (void)updateMainArray
 {
     self.rows = [NSMutableArray arrayWithArray:self.uncheckedArray];
@@ -239,15 +215,12 @@
 # pragma mar- MOVE After LONG PRESS
 // Called after moving rows after long press
 - (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
-    
- //   ToDoItem *item = self.grabbedObject;
-//    int priorityIndex = [item.priority intValue];
-    //    NSIndexPath *fromIndexpath = [NSIndexPath indexPathForRow:priorityIndex inSection:0];    
     [self updateDoneStatusOfRowAtIndexPath:toIndexPath];
     [self updateRowsAfterMovingFromIndexpath:self.grabbedIndex ToIndexpath:toIndexPath];
     [self updateArraysAfterDoneFromIndexpath:self.grabbedIndex ToIndexPath:toIndexPath];
 }
 
+//this method updates the done status when row is picked and moved
 - (void)updateDoneStatusOfRowAtIndexPath:(NSIndexPath * )toIndexPath
 {
     int toIndex = toIndexPath.row;
@@ -266,6 +239,7 @@
     
 }
 
+//this method updates the priority of rows after movement from one index to another
 - (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath
 {
     int fromIndex,toIndex;
@@ -290,6 +264,7 @@
     }
 }
 
+//updates the checked and unchecked arrays after moving the rows by long press
 - (void)updateArraysAfterDoneFromIndexpath:(NSIndexPath *)indexPath ToIndexPath:(NSIndexPath *)toIndexPath{
     ToDoItem * item = [self.rows objectAtIndex:toIndexPath.row];
     int toIndex;
@@ -332,6 +307,7 @@
 }
 
 # pragma mark - CHECKED ARRAY METHODS
+// this adds an item in the checked-unchecked arrays when a new row is created or done status changed
 - (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath
 {
     if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
@@ -340,10 +316,9 @@
     else {
         [checkedArray insertObject:newItem atIndex:indexPath.row];
     }
-   // NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
-
 }
 
+//this updates the items with the updated items whenever the name or donestatus is changed
 - (void)updateNewItem:(ToDoItem *)newItem atIndex:(int)index
 {
     if ([newItem.doneStatus isEqualToNumber:[NSNumber numberWithBool:FALSE]]) {
@@ -357,9 +332,9 @@
         [checkedArray replaceObjectAtIndex:checkedIndex  withObject:newItem];
         NSLog(@"UPDATE PRIORITY checked  item priority: %d index %i",[newItem.priority intValue], index);
     }
-
 }
 
+// deletes from these ararys when deleted from db
 - (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath
 {
     ToDoItem *item = [self.rows objectAtIndex:indexPath.row];
@@ -376,8 +351,6 @@
             [checkedArray removeObjectAtIndex:indexPath.row];
         }
     }
-    //NSLog(@"checked : %@ uncheckedArray %@",self.checkedArray,self.uncheckedArray);
-
 }
 
 #pragma mark - Table view data source
@@ -514,6 +487,7 @@
 }
 
 #pragma mark - Delegates
+//this method is to convert indexes to indexpaths while deleting all checked rows when pull is detected
 - (NSMutableArray *)convertToIndexPathArray:(NSMutableArray *)array{
     NSMutableArray *indexPathArray = nil;
     if (array == self.checkedArray) {
@@ -535,11 +509,13 @@
 }
 
 #pragma mark - Pull Up delegate
+// this method is fired when pull up is detected
 - (void) deleteCheckedRows{
     NSMutableArray *indexPathArray = [self convertToIndexPathArray:self.checkedArray];
     [self performSelector:@selector(deleteRowsFromDatabase:) withObject:indexPathArray afterDelay:0.01];
 }
 
+// this method deletes from db after pull up
 - (void)deleteRowsFromDatabase:(NSArray *)indexPathArray
 {
     for (int i =0; i <[indexPathArray count]; i++) {
@@ -560,15 +536,13 @@
     [TDCommon playSound:self.deleteSound];
     
     [self.tableView beginUpdates];
-    //[UIView animateWithDuration:3 animations:^{
         [self.tableView deleteRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationAutomatic];
-//}];
     [self.tableView endUpdates];
 }
 
 #pragma mark JTTableViewGestureEditingRowDelegate
 
-// This is needed to be implemented to let our delegate choose whether the panning gesture should work
+// This is needed to be implemented to commit after the panning gesture is completed
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableView *tableView = gestureRecognizer.tableView;
@@ -594,7 +568,7 @@
         [self performSelector:@selector(updateRowDoneAtIndexpath:) withObject:indexPath afterDelay:0.3];
     }
 }
-
+// this is when the panning takes place
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     BOOL checked = [self getCheckedStatusForRowAtIndex:indexPath];
@@ -626,22 +600,10 @@
     }
 }
 
-- (NSString *)returnStrikedOutTextFromString:(NSString *)mString
-{
-    NSString * mNewString = @"";
-    
-    for(int i = 0; i<[mString length]; i++)
-    {
-        mNewString = [NSString stringWithFormat:@"%@%@",mNewString, 
-                      NSLocalizedString([[mString substringToIndex:i+1] substringFromIndex:i],nil)];
-    }
-    
-    return mNewString;
-}
-
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
 
+//this is when a new row is added
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
     ToDoItem *newItem = (ToDoItem *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem"
                                                                   inManagedObjectContext:self.managedObjectContext];
@@ -651,16 +613,17 @@
     newItem.list = self.parentList;
     [self.rows insertObject:newItem atIndex:indexPath.row];
     //Also Unchecked Array
-   // NSLog(@"item %@",[self.rows objectAtIndex:indexPath.row]);
 
     [self createNewItem:newItem atIndexPath:indexPath];
 }
 
+//this is when a new row needs to be committed
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     [self gestureRecognizer:gestureRecognizer needsCommitRowAtIndexPath:indexPath withModelType:TDModelItem];
 }
 
 #pragma mark - 
+//this method enables pull up to clear
 - (BOOL) checkedRowsExist
 {
     if ([self.checkedArray count] >0) {
@@ -669,6 +632,7 @@
     return NO;
 }
 
+// this method returns the checked status of row
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
 {
     ToDoItem *currentItem = [self.rows objectAtIndex:indexPath.row];

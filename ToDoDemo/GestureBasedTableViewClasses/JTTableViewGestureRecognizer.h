@@ -31,8 +31,6 @@ extern CGFloat const JTTableViewRowAnimationDuration;
 @property(nonatomic,assign) BOOL rowEditingFlag;
 
 + (JTTableViewGestureRecognizer *)gestureRecognizerWithTableView:(UITableView *)tableView delegate:(id)delegate;
-//- (void)setLastRowVisibleFlag:(BOOL)flag;
-//- (void)setEditingFlag:(BOOL)flag;
 
 @end
 

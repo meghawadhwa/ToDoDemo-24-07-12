@@ -182,7 +182,7 @@
     }
     
 }
-
+// this method is called after editing a list name ,to readjust its width
 - (void)readjustCellFrameAtIndexpath: (NSIndexPath*) indexpath{
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexpath];
     CGRect frame = cell.textLabel.frame;
@@ -192,6 +192,7 @@
     cell.textLabel.frame = frame;
 }
 
+//this method gets the unchecked items from list set of items while table is populated
 -(int)getUncheckedItemsFromList:(ToDoList *)list
 {
     int count = 0;
@@ -203,6 +204,7 @@
     return count;
 }
 
+//this is to get the item count for a single indexpath while refreshing a single row after coming back
 - (int)getItemCountForIndexpath:(NSIndexPath *)indexPath
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -219,6 +221,7 @@
     return count;
 }
 
+//this is change the done status of the to-do list
 - (void)refreshCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexPath
 {
     ToDoList *list = [self.rows objectAtIndex:indexPath.row];
@@ -233,6 +236,7 @@
 }
 
 #pragma mark-
+//this is fetch from db when view is loaded 
 - (void)fetchObjectsFromDb
 {
     // Test listing all ToDoList from the store
@@ -252,6 +256,7 @@
     }  
 }
 
+//this method checks all items in a list
 - (void)checkAllItemsForSelectedList
 {
     ToDoList *list = [self.rows objectAtIndex:self.rowIndexToBeUpdated];
@@ -270,12 +275,13 @@
     } 
     
 }
-
+// this method add a new row in db
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath
  {
      [self addNewRowInDBAtIndexPath:indexpath withModelType:TDModelList];
 }
 
+// update the rows to checked if it is swiped to left
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath
 {
      NSError *error = nil;
@@ -311,6 +317,8 @@
 {
     [self updateCurrentRowAtIndexpath:indexpath withModelType:TDModelList];
 }
+
+// This when we edit the list name to empty,it deletes the list but presents an alert if a list to be deleted already has items
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath
 {
     [self deleteCurrentRowAfterSwipeAtIndexpath:indexpath];
@@ -319,14 +327,10 @@
     if (self.rowIndexToBeDeleted >=0  && ![cell.countLabel.text isEqualToString:@"0"]) {
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationRight];
     }else {
-//        [TDCommon playSound:self.deleteSound];
-//        [self.tableView beginUpdates];
-//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexpath] withRowAnimation:UITableViewRowAnimationLeft];
-//        [self.tableView endUpdates];
-//        [self reloadTableData];
     }
 }
 
+//This deletes the current row after swipe left,presents an alert if it has unchecked items to do 
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
     TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
@@ -368,7 +372,7 @@
 #pragma mark- Delegates
 #pragma mark JTTableViewGestureEditingRowDelegate
 
-// This is needed to be implemented to let our delegate choose whether the panning gesture should work
+// This is needed to be implemented to work after panning gesture completion
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableView *tableView = gestureRecognizer.tableView;
@@ -383,10 +387,7 @@
         if (self.rowIndexToBeDeleted >=0  && ![cell.countLabel.text isEqualToString:@"0"]) {
             [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
         }
-//            else {
-//            [TDCommon playSound:self.deleteSound];
-//        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-//        }
+
     } else if (state == JTTableViewCellEditingStateRight) {
         // An example to retain the cell at commiting at JTTableViewCellEditingStateRight
         [self updateCurrentRowsDoneStatusAtIndexpath:indexPath]; 
@@ -409,6 +410,7 @@
     }
 }
 
+// when starts panning,changes the color
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
 UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
 //BOOL checked = [self getCheckedStatusForRowAtIndex:indexPath];
@@ -433,7 +435,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
-
+// adds a model object to table array
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
     ToDoList *newList = (ToDoList *)[NSEntityDescription insertNewObjectForEntityForName:@"ToDoList"
                                                                   inManagedObjectContext:self.managedObjectContext];
@@ -444,43 +446,12 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     [self.rows insertObject:newList atIndex:indexPath.row];
 }
 
+//commits after creating a new cell
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
     [self gestureRecognizer:gestureRecognizer needsCommitRowAtIndexPath:indexPath withModelType:TDModelList];
 }
 
-
-#pragma mark - calculate priority
-
-- (float)getPriorityForIndexPath:(NSIndexPath *)indexPath
-{
-    float priority = 20000.0;
-    
-    if ([self.rows count] == 0) {
-        return priority;
-    }
-    
-    if (indexPath.row == 0) {
-        ToDoList *list = [self.rows objectAtIndex:0];
-        float listPriority = [list.priority floatValue];
-        priority = listPriority - 1.0;
-    }
-    else if(indexPath.row == [self.rows count])
-    {
-        ToDoList *list = [self.rows objectAtIndex:[self.rows count]-1];
-        float listPriority = [list.priority floatValue];
-        priority = listPriority + 1.0 ;
-        
-    }
-    else {
-        ToDoList *firstList = [self.rows objectAtIndex:indexPath.row];
-        float firstListPriority = [firstList.priority floatValue];
-        ToDoList *secondList = [self.rows objectAtIndex:indexPath.row -1];
-        float secondListPriority = [secondList.priority floatValue];
-        priority = (firstListPriority +secondListPriority)/2.0;
-    }
-    return priority;
-}
-
+// tells if the list is completed or not
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath
 {
  ToDoList *currentList = [self.rows objectAtIndex:indexPath.row];
@@ -489,12 +460,9 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 
 #pragma mark- move Rows, changing priority
 - (void)updateAfterMovingToIndexpath:(NSIndexPath*)toIndexPath{
-//    ToDoList *list = self.grabbedObject;
-//    int priorityIndex = [list.priority intValue];
-//    NSIndexPath *fromIndexpath = [NSIndexPath indexPathForRow:priorityIndex inSection:0];
     [self updateRowsAfterMovingFromIndexpath:self.grabbedIndex ToIndexpath:toIndexPath];
 }
-
+//this upates the rows after moving it to a new location 
 - (void)updateRowsAfterMovingFromIndexpath:(NSIndexPath *)indexPath ToIndexpath:(NSIndexPath*)toIndexPath
 {
     int fromIndex,toIndex;
@@ -520,12 +488,13 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 }
 
 #pragma mark - Table view delegate
-
+//this method is to decide wheather to show the pull up view to move down
 - (BOOL)lastVisitedListIsNotNil
 {
     return (self.lastVisitedList !=nil);
 }
 
+//this mothod is to push the next view onvce pull up to move down is detected
 - (void)addChildView
 {
     if (!lastVisitedList) {
@@ -581,6 +550,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
 }
 
 #pragma mark- view related
+//creates sanpshots of parent to pass onto the list
 -(UIImage *)createSnapShotOfCellAtIndexPath:(NSIndexPath *)indexPath{    
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
@@ -637,6 +607,7 @@ if ([cell isKindOfClass:[TransformableTableViewCell class]]) {
     self.rowIndexToBeDeleted = -1;
 }
 
+//this method is called after coming back from child view to refresh only that lists item count
 - (void)refreshCountForRowWithIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath != nil) {

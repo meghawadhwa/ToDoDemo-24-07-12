@@ -2,6 +2,7 @@
 #import "UIColor+JTGestureBasedTableViewHelper.h"
 
 @implementation UIColor (JTGestureBasedTableViewHelper)
+// used to add brightness to a color,can be removed not used in the code now
 - (UIColor *)colorWithBrightness:(CGFloat)brightnessComponent {
     
     UIColor *newColor = nil;
@@ -35,6 +36,7 @@
     return newColor;
 }
 
+// used to add hue offset to a colorwhile pinching to create or pull down to create
 - (UIColor *)colorWithHueOffset:(CGFloat)hueOffset {
     UIColor *newColor = nil;
     if ( ! newColor) {

@@ -244,7 +244,7 @@ float lastContentOffset = 0;
 }
 
 #pragma mark - add text field
-
+// this method makes the cell label editable by tapping onto it
 - (void)addTapGestureForTextLabel
 {
     self.textLabel.userInteractionEnabled = YES;
@@ -252,6 +252,7 @@ float lastContentOffset = 0;
     [self.textLabel addGestureRecognizer:self.labelTapGestureRecognizer];
 }
 
+//this method is called when label is tapped
 - (void)labelTapped
 {   
     [self createTextField];
@@ -262,6 +263,7 @@ float lastContentOffset = 0;
     [self.nameTextField becomeFirstResponder];
 }
 
+//this method internally creates a textfield to edit the name
 - (void)createTextField
 {
     if (self.nameTextField !=nil) {
@@ -278,6 +280,7 @@ float lastContentOffset = 0;
     self.nameTextField.returnKeyType = UIReturnKeyDone;
 }
 
+//this method is to update the cell if label text is changed or removed ,accordingly row is deleted or upadated
 - (void)updateOrDeleteCell
 {
     UITableView *tableView = (UITableView *)[self superview];
@@ -312,6 +315,7 @@ float lastContentOffset = 0;
     }
 }
 
+//this method is fired after editing is complete when done button is clicked
 - (void)removeOverlayAndTextField
 {
     if (self.nameTextField !=nil) {
@@ -356,7 +360,7 @@ return YES;
 }
 
 #pragma mark - done overlay methods
-
+//created done overlay while editing
 - (void)createDoneOverlayAtHeight:(float)height
 {
     if (self.doneOverlayView) {
@@ -368,6 +372,7 @@ return YES;
     [self.doneOverlayView addGestureRecognizer:tapGestureRecognizer];
 }
 
+//this method removes the overlay and enables the gestures after tapping on the overlay or when done button is clicked
 - (void)doneOverlayViewTapped
 {
     [self.nameTextField resignFirstResponder];

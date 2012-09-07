@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TDCommon.h"
 
+//This class defines protocols to be followed for each cell gesture
 @protocol TDDelegates <NSObject>
 
 @end

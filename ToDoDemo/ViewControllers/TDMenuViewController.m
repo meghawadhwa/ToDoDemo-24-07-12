@@ -40,12 +40,6 @@
                               @"Themes",
                               @"Tips & Tricks",
                               @"Settings", nil];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
@@ -107,7 +101,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 
@@ -162,9 +155,9 @@
     return 60;
 }
 
+// this fetched the number of lists from dbwhen the view appears
 - (int)getListCount
 {
-    
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity: [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.managedObjectContext]];
     
@@ -184,6 +177,7 @@
 }
 
 #pragma mark - view methods
+//creates snapshots of the view to pass on to child view for pinch in effect
 -(UIImage *)createSnapShotOfCellAtIndexPath:(NSIndexPath *)indexPath{    
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     UIGraphicsBeginImageContextWithOptions(cell.bounds.size, NO, 0);
@@ -193,8 +187,8 @@
     return cellImage;
 }
 
+//creates snapshots of the bottom view to pass on to child view for pinch in effect
 -(UIImage *)createSnapShotOfViewAfterCellAtIndexPath:(NSIndexPath *)indexPath{ 
-   // UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     CGRect rect = CGRectMake(0, 60, 320, 400);
     UIGraphicsBeginImageContext(rect.size);
     [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];

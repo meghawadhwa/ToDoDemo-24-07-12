@@ -7,10 +7,6 @@
 //
 #import "TDParentViewController.h"
 
-#import "TDDetailViewController.h"
-
-
-
 @implementation TDParentViewController
 
 @synthesize managedObjectContext = __managedObjectContext;
@@ -63,11 +59,13 @@
     [self createSoundIdsForAllSounds];
 }
 
+// background view for pinch in effect is created
 - (void)setBackgroundForPinch{
     self.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
     self.backgroundView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.backgroundView];
 }
+// When screen is empty ,starting label is added which gives information to pull down
 - (void)setBackgroundWhenNoRows{
     self.backgroundLabel = [[UILabel alloc] initWithFrame:self.view.frame];
     self.backgroundLabel.backgroundColor = [UIColor clearColor];
@@ -78,6 +76,7 @@
     [self.view addSubview:self.backgroundLabel];
 }
 
+// this method creates all sound ids for all sound effects
 - (void)createSoundIdsForAllSounds{
     self.checkSound = [TDCommon createSoundID:kCheckSound];
     self.uncheckSound = [TDCommon createSoundID:kUncheckSound];
@@ -94,11 +93,13 @@
     self.pullUpToClearSound = [TDCommon createSoundID:kPullUpToClearSound];
 }
 
+//called to refresh the table contents
 - (void)reloadTableData
 {
     [self.tableView reloadData];
 }
 
+//hides the pinch in background view before of after the effect
 - (void)hideBackgroundView:(BOOL)hide{
 
     if (hide) {
@@ -109,7 +110,7 @@
     }
 }
 # pragma  mark - Parent Image Views
-
+//this method is to add the images of the parent view for pinch in effect 
 - (void)placeParentImageViews
 {
     self.parentTopImageView =[[UIImageView alloc] initWithImage:self.topImage];
@@ -131,6 +132,7 @@
     }
 }
 
+//this method is to set the initial frames of the images of the parent view for pinch in effect 
 - (void)setInitialFramesForParentImages
 {
     if (self.parentOverTopImageView == nil) {
@@ -144,6 +146,8 @@
         self.parentBottomImageView.frame = CGRectMake(0, CGRectGetMaxY(self.parentTopImageView.frame), self.parentBottomImageView.frame.size.width, self.parentBottomImageView.frame.size.height);
     }
 }
+
+//this method is to animate the images of the parent view when we navigate from parent to child view 
 - (void)animateParentViews{
     
     [self setInitialFramesForParentImages];
@@ -175,6 +179,7 @@
 }
 
 #pragma mark- Pinch Delegates
+//this method is to animate the images while pinching in  
 - (BOOL)animateImageViewsbydistance:(float)y
 {
     [self.backgroundView bringSubviewToFront:self.parentOverTopImageView];
@@ -243,6 +248,7 @@
     return YES;
 }
 
+//this method is to animate the parent views after pinch in is completed
 - (void)animateOuterImageViewsAfterCompleteInTime:(float)timeInterval
 {
     [UIView animateWithDuration:timeInterval animations:^{
@@ -253,6 +259,7 @@
         }}];
 }
 
+//this method is to reset the parent views if pinch in was incomplete effect
 - (void)resetParentViews
 {
     if (self.parentTopImageView !=nil) {
@@ -277,6 +284,7 @@
     }
 }
 
+//this method is get the top view origin
 - (float)getTopViewOrigin{
     if (!self.parentTopImageView) {
         return self.parentBottomImageView.frame.origin.y;
@@ -284,6 +292,7 @@
     return self.parentTopImageView.frame.origin.y;
 }
 
+//this method add snapshot image views to the background view before pinch in effect starts
 - (void)addSnapshotImageView:(UIImageView *)imageView
 {
     if (self.backgroundView.frame.origin.y != self.tableView.contentOffset.y) {
@@ -294,6 +303,7 @@
     [self.backgroundView addSubview:imageView];
 }
 
+//change the color to hide or unhide the background view
 - (void)changeBackgroundViewColor:(UIColor*)color
 {
     self.backgroundView.backgroundColor = color;
@@ -302,6 +312,7 @@
 #pragma mark Core data Interactions
 
 #pragma mark- ADD
+//w.r.t model type, we add a model object in db and save, also updates the priority of following objects in db
 -(void)addNewRowInDBAtIndexPath:(NSIndexPath *)indexpath withModelType:(TDModelType )modelType
 {
     NSDate *methodStart = [NSDate date];
@@ -343,13 +354,14 @@
     NSLog(@"execution time : %f",executionTime);
 }
 
-
+//this method rollsback and reset the state of db if inserted model object has no name entered by user
 -(void)rollBackInDBAndDeleteAtIndexPath:(NSIndexPath *)indexPath{
     [self deleteNewRowAtIndexpath:indexPath];
     [self.managedObjectContext rollback];
 
 }
 
+//this method deletes the row and  model object from array if no name entered by user
 - (void)deleteNewRowAtIndexpath: (NSIndexPath *)indexpath{
     [self deleteItemFromIndexPath:indexpath];
     [self.rows removeObjectAtIndex:indexpath.row];
@@ -363,6 +375,7 @@
 }
 
 #pragma mark - UPDATE NAME
+//this method updates the name edited w.r.t model type
 - (void)updateCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
     
 TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView cellForRowAtIndexPath:indexpath];
@@ -390,6 +403,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 }
 
 #pragma  mark - UPDATE PRIORITY
+//this method updates the priorities of rows w.r.t model type when a new row is added or deletd 
 - (void)updateRowsFromIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType )modelType withCreationFlag:(BOOL)creationFlag
 {
     int count = [self.rows count];
@@ -437,7 +451,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 }
 
 #pragma mark - DELETE
-
+//this method deletes the cuurent row from db w.r.t its model type
 - (void)deleteCurrentRowAtIndexpath: (NSIndexPath *)indexpath withModelType:(TDModelType )modelType{
     
     switch (modelType) {
@@ -473,8 +487,6 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     [self reloadTableData];
 
 }
-
-#pragma mark - DELETE AFTER SWIPE
 
 #pragma mark UITableViewDatasource
 
@@ -513,12 +525,12 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 #pragma mark -
 #pragma mark JTTableViewGestureAddingRowDelegate
 
-#pragma mark JTTableViewGestureAddingRowDelegate
-
+//this method when a new row is created by pinch or pull down,then its model is created
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsAddRowAtIndexPath:(NSIndexPath *)indexPath {
 
 }
 
+//this method comits the newly added row w.r.t model type 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath withModelType:(TDModelType)modelType{
     TransformableTableViewCell *cell = (id)[gestureRecognizer.tableView cellForRowAtIndexPath:indexPath];
     switch (modelType) {
@@ -556,6 +568,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCommitRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
+// this method deletes and discard the row if it is pulled more than enoughto switch to parent view
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsDiscardRowAtIndexPath:(NSIndexPath *)indexPath {
     [self deleteItemFromIndexPath:indexPath];
     [self.managedObjectContext rollback];
@@ -563,6 +576,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 }
 
 #pragma mark - DELEGATE TO POP
+// this method pops the current view to go back to previous view after extra pull down
 - (void)removeCurrentView
 {
     [TDCommon playSound:self.pullDownToMoveUpSound];
@@ -581,7 +595,8 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
          
 }
 #pragma mark JTTableViewGestureMoveRowDelegate
-
+// delegates for moving row after long press
+// this disallows the move if the row is in editing state
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.editingFlag == TRUE) {
         return NO;
@@ -589,6 +604,7 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     return YES;
 }
 
+// this method is to create a placeholder for movement effect
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsCreatePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath {
     self.grabbedIndex = nil;
     self.grabbedObject = [self.rows objectAtIndex:indexPath.row];
@@ -596,12 +612,14 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
     [self.rows replaceObjectAtIndex:indexPath.row withObject:DUMMY_CELL];
 }
 
+//this is called after the row is moved from its cell to other cells
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsMoveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
     id object = [self.rows objectAtIndex:sourceIndexPath.row];
     [self.rows removeObjectAtIndex:sourceIndexPath.row];
     [self.rows insertObject:object atIndex:destinationIndexPath.row];
 }
 
+// this method is called after the effect is over
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer needsReplacePlaceholderForRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.rows replaceObjectAtIndex:indexPath.row withObject:self.grabbedObject];
     [self updateAfterMovingToIndexpath:indexPath];
@@ -629,15 +647,13 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 }
 #pragma mark JTTableViewGestureEditingRowDelegate
 
-// This is needed to be implemented to let our delegate choose whether the panning gesture should work
-
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer commitEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer didEnterEditingState:(JTTableViewCellEditingState)state forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 }
-
+// This is needed to be implemented to let our delegate choose whether the panning gesture should work
 - (BOOL)gestureRecognizer:(JTTableViewGestureRecognizer *)gestureRecognizer canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.editingFlag == TRUE) {
         return NO;
@@ -669,13 +685,13 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 
 - (void) playSound{
     [TDCommon playSound:self.pullUpToClearSound];
-
 }
 
 - (void) deleteCheckedRows{
 }
 
 #pragma mark - 
+//tis method sets a flag to disable gestures while editing row
 - (void)disableGesturesOnTable:(BOOL)disableFlag
 {
     self.editingFlag = disableFlag;
@@ -689,35 +705,30 @@ TransformableTableViewCell *cell = (TransformableTableViewCell*)[self.tableView 
 
 #pragma mark-
 - (void)fetchObjectsFromDb{
-    
 }
          
 - (void)updateCurrentRowsDoneStatusAtIndexpath: (NSIndexPath *)indexpath{
-             
 }
 
 - (BOOL)getCheckedStatusForRowAtIndex:(NSIndexPath *)indexPath{
     return NO;
 }
 
-
-
 - (void)deleteCurrentRowAfterSwipeAtIndexpath: (NSIndexPath *)indexpath
 {
-    
 }
 
-#pragma mark- item methods
+#pragma mark- item methods 
+// these methods are for update the checked and unchecked arrays in item
 - (void)createNewItem:(ToDoItem *)newItem atIndexPath:(NSIndexPath *)indexPath{
-    
 }
 - (void)updateNewItem:(ToDoItem *)newItem atIndex:(int)index{
-    
 }
 - (void)deleteItemFromIndexPath:(NSIndexPath *)indexPath{
-    
 }
+
 // TO DO:  can be moved to TDITemViewController
+//this method to update the checked and unchecked array after moving rows
 - (void)updateArraysAfterDeletionOrInsertionFromIndexpath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath*) toIndexPath{
     int fromIndex,toIndex;
 
